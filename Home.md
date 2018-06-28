@@ -2,7 +2,7 @@
 
  ## 1.  What is it?
 
-Steem Smart Contracts is a sidechain powered by Steem, it allows you to perform actions on a decentralized database via Smart Contracts.
+Steem Smart Contracts is a sidechain powered by Steem, it allows you to perform actions on a decentralized database via the power of Smart Contracts.
 
  ## 2.  How does it work?
 
