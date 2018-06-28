@@ -115,3 +115,35 @@ actions.removeUser = function (payload) {
   }
 }
 ```
+
+## 7.  find a record in a table of an other Smart Contract
+The "db" objects gives you the ability to perform queries on tables that are held by other Smart Contracts:
+
+ `findOneInTable(contract: string, table: string, query: object) returns the object found if it exists, null otherwise`
+ 
+  `findInTable(contract: string, table: string, query: object) returns an array of objects that match (empty array of no results)`
+  
+  examples:
+ ```js
+actions.addUser = function (payload) {
+  const users = db.getTable('users');
+
+  const book = db.findOneInTable('books_contract', 'books', { 'owner': sender });
+
+  if (book) {
+    // do something with the book
+  } 
+}
+```
+
+ ```js
+actions.addUser = function (payload) {
+  const users = db.getTable('users');
+
+  const books = db.findInTable('books_contract', 'books', { 'owner': sender });
+
+  if (results.length > 0) {
+    // do something we the results
+  } 
+}
+```
