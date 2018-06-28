@@ -1,3 +1,5 @@
+You can find all the database related functions under the global variable "db"
+
 ## 1.  Create a table
  You can create a table that will be available for you Smart Contract only during the deployment of the Smart Contract. The method that we will be using is:
  
