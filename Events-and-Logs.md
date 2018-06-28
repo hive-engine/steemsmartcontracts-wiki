@@ -12,7 +12,7 @@ Transaction {
   contract: 'contract',
   action: 'deploy',
   payload:
-   '{"name":"test_contract","params":"","code":"CiAgICAgIGFjdGlvbnMuY3JlYXRlID0gZnVuY3Rpb24gKHBheWxvYWQpIHsKICAgICAgICAvLyBJbml0aWFsaXplIHRoZSBzbWFydCBjb250cmFjdCB2aWEgdGhlIGNyZWF0ZSBhY3Rpb24KICAgICAgICBlbWl0KCdjb250cmFjdF9jcmVhdGUnLCB7ICJjb250cmFjdE5hbWUiOiAidGVzdF9jb250cmFjdCIgfSkKICAgICAgfQogICAg"}',
+   '{"name":"test_contract","params":"","code":"..."}',
   hash:
    'f5694249af602a1d0b3f3b4855f4b1766eb01059b00022c3a7f202c2a3ab87e8',
   logs:
