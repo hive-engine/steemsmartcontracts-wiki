@@ -16,7 +16,8 @@ Transaction {
   hash:
    'f5694249af602a1d0b3f3b4855f4b1766eb01059b00022c3a7f202c2a3ab87e8',
   logs:
-   '{"events":[{"event":"contract_create","data":{"contractName":"test_contract"}}]}' }
+   '{"events":[{"event":"contract_create","data":{"contractName":"test_contract"}}]}' 
+}
 ```
 
 ```js
@@ -31,7 +32,8 @@ Transaction {
   hash:
    '5c39a8878244d0b71b1030e5f1b89eb0e0310cdc0d40b4b8f7064334c52ed79d',
   logs:
-   '{"error":{"name":"SyntaxError","message":"Unexpected identifier"}}' }
+   '{"error":{"name":"SyntaxError","message":"Unexpected identifier"}}' 
+}
 ```
 
 
