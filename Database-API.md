@@ -100,7 +100,7 @@ actions.updateUser = function (payload) {
  ## 6.  remove a record from a table
 Similarly to MongoDB, to update a record we will be using:
 
-  `remove(record: object) returns an array of objects that match (empty array of no results)`
+  `remove(record: object)`
   
   example:
  ```js
