@@ -1,9 +1,9 @@
-To deploy a Smart Contract you'll need to post a message on Steem like this:
+To deploy a Smart Contract, you'll need to post a message like this on Steem:
 
 `##STEEMCONTRACTSBEGIN##contract####deploy##{"name": "MySmartContractName", "code": "BASE64EncodedJavascriptCode"}##STEEMCONTRACTSEND##`
 
  - name: this is the name of the Smart Contract you want to deploy, it has to be unique on the sidechain
- - code: this is the code of your Smart Contract, it is basically your Javascript code encoded on Base64 (you can easily encode your code via this tool https://www.base64encode.org/)
+ - code: this is the code of your Smart Contract, it is basically your Javascript code encoded on Base64 (you can easily encode your code via this tool: https://www.base64encode.org/)
 
 Example of the deployment of a Smart Contract
 
