@@ -1,7 +1,7 @@
 You can find all the database related functions under the global variable "db"
 
 ## 1.  Create a table
- You can create a table that will be available for you Smart Contract only during the deployment of the Smart Contract. The method that we will be using is:
+ You can create a table that will be available for your Smart Contract only during the deployment of the Smart Contract. The method that we will be using is:
  
  `createTable(tableName: string)`
  
@@ -27,7 +27,7 @@ actions.addUser = function (payload) {
 ```
 
  ## 3.  Add a record in a table
-Once you retrieved a table via the getTable method you can perform actions on it similarly to MongoDB, so to add a record we will be using:
+Once you retrieve a table via the getTable method, you can perform actions on it similarly to MongoDB. So to add a record, we will be using:
 
 `insert(record: object)`
  
@@ -44,10 +44,10 @@ actions.addUser = function (payload) {
 }
 ```
 
- ## 4.  find a record in a table
-Similarly to MongoDB, to find a record we will be using two different methods:
+ ## 4.  Find a record in a table
+Similarly to MongoDB, to find a record, we will be using two different methods:
 
- `findOne(params: object) returns the object found if it exists, null otherwise`
+ `findOne(params: object) returns the object found if it exists, null if otherwise`
  
   `find(params: object) returns an array of objects that match (empty array of no results)`
   
@@ -71,13 +71,13 @@ actions.addUser = function (payload) {
   let results = users.find({ 'name': 'Dan' });
 
   if (results.length > 0) {
-    // do something we the results
+    // do something with the results
   } 
 }
 ```
 
  ## 5.  update a record in a table
-Similarly to MongoDB, to update a record we will be using:
+Similarly to MongoDB, to update a record, we will be using:
 
   `update(record: object)`
   
@@ -97,8 +97,8 @@ actions.updateUser = function (payload) {
 }
 ```
 
- ## 6.  remove a record from a table
-Similarly to MongoDB, to update a record we will be using:
+ ## 6.  Remove a record from a table
+Similarly to MongoDB, to update a record, we will be using:
 
   `remove(record: object)`
   
@@ -116,10 +116,10 @@ actions.removeUser = function (payload) {
 }
 ```
 
-## 7.  find a record in a table of an other Smart Contract
+## 7.  Find a record in a table of another Smart Contract
 The "db" objects gives you the ability to perform queries on tables that are held by other Smart Contracts:
 
- `findOneInTable(contract: string, table: string, query: object) returns the object found if it exists, null otherwise`
+ `findOneInTable(contract: string, table: string, query: object) returns the object found if it exists, null if otherwise`
  
   `findInTable(contract: string, table: string, query: object) returns an array of objects that match (empty array of no results)`
   
@@ -143,7 +143,7 @@ actions.addUser = function (payload) {
   const books = db.findInTable('books_contract', 'books', { 'owner': sender });
 
   if (results.length > 0) {
-    // do something we the results
+    // do something with the results
   } 
 }
 ```
