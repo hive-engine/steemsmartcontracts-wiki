@@ -1,6 +1,7 @@
 ## 1.  Restrict actions to the owner of the Smart Contract only
-There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable you can restrict certain actions to the owner exclusively:
-  example:
+There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
+
+For example:
  ```js
 actions.removeUser = function (payload) {
   if (sender !== owner) return;
@@ -19,13 +20,13 @@ actions.removeUser = function (payload) {
 
 
 ## 2.  Execute a Smart Contract from another Smart Contract
-From a Smart Contract you can call another Smart Contract simply by using the following global function:
+From a Smart Contract, you can call another Smart Contract simply by using the following global function:
 
 `executeSmartContract(contract: string, action: string, payload: JSON stringified)`
 
-The Smart Contract will be executed with the same sender as the current sender
+The Smart Contract will be executed with the same sender as the current sender.
 
-  example:
+ For example:
  ```js
 actions.addUser = function (payload) {
   let users = db.getTable('users');
