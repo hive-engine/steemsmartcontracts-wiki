@@ -1,4 +1,4 @@
-When you execute a Smart Contract you are not able to return results however you are able to emit events that will be stored in the transaction, errors generated during the deployment or the execution of a Smart Contract are logged in the transaction as well.
+When you execute a Smart Contract, you are not able to return results. However, you are able to emit events that will be stored in the transaction. Errors generated during the deployment or the execution of a Smart Contract are logged in the transaction as well.
 
 These information are stored under the key "logs" of a transaction.
 
@@ -39,7 +39,7 @@ Transaction {
 
 
 ## Emit an event from a Smart Contract
-Emit an event from a Smart Contract is pretty straight forward and is performed by using the global function:
+Emitting an event from a Smart Contract is pretty straight forward and is performed by using the global function:
 
 `emit(event: string, data: JSON obj)`
 
