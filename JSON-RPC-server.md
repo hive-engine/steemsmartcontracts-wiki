@@ -1,11 +1,11 @@
-When running the application a JSON RPC server is made available to query the sidechain and its database on port 5000.
+When running the application, a JSON RPC server is made available to query the sidechain and its database on port 5000.
 
  ## 1. The "blockchain" endpoint (http://localhost:5000/blockchain)
 Available methods:
 
 **getLatestBlockInfo()**: get the latest block of the sidechain
 
-command:
+Command:
 ```
 {
     "jsonrpc": "2.0",
@@ -14,7 +14,7 @@ command:
 }
 ```
 
-result:
+Result:
 
 ```
 {
@@ -44,7 +44,7 @@ result:
 
 **getBlockInfo(blockNumber)**: get the block with the specified block number of the sidechain
 
-command:
+Command:
 ```
 {
     "jsonrpc": "2.0",
@@ -56,7 +56,7 @@ command:
 }
 ```
 
-example result:
+Result:
 
 ```
 {
@@ -89,7 +89,7 @@ Available methods:
 
 **getContract(contract)**: get the contract specified from the database
 
-command:
+Command:
 
 ```
 {
@@ -102,7 +102,7 @@ command:
 }
 ```
 
-example result:
+Result:
 
 ```
 {
@@ -131,7 +131,7 @@ example result:
 
 **findOneInTable(query)**: get the object that matches the query from the table of the specified contract
 
-command:
+Command:
 
 ```
 {
@@ -146,7 +146,7 @@ command:
 }
 ```
 
-example result:
+Result:
 
 ```
 {
@@ -168,7 +168,7 @@ example result:
 
 **findInTable(query)**: get an array of objects that match the query from the table of the specified contract
 
-command:
+Command:
 
 ```
 {
@@ -183,7 +183,7 @@ command:
 }
 ```
 
-example result:
+Result:
 
 ```
 {
