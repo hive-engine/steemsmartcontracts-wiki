@@ -1,6 +1,6 @@
- To make an action available in your Smart Contract you will need to hook up your code to the global variable **actions**
+ To make an action available in your Smart Contract, you will need to hook up your code to the global variable **actions**.
 
-for example, if I want to have an action called **addUser**:
+For example, if I want to have an action called **addUser**:
 
 ```js
 actions.addUser = function (payload) {
@@ -10,7 +10,7 @@ actions.addUser = function (payload) {
 }
 ```
 
-The "create" action is a reserved action, it is triggered only once during the whole life of the Smart Contract and this happens when the Smart Contract is deployed. This is the only place where you can initialize the storage for your Smart Contract for example.
+The "create" action is a reserved action that is triggered only once during the whole life of the Smart Contract, and this happens when the Smart Contract is deployed. This is the only place where you can initialize the storage for your Smart Contract. For example:
 
 ```js
 actions.create = function (payload) {
