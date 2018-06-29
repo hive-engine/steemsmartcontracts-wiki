@@ -1,4 +1,4 @@
-To send an action to the sidechain simply post a message on the Steem blockchain that follows this pattern:
+To send an action to the sidechain, simply post a message on the Steem blockchain that follows this pattern:
 
 ```
 ##STEEMCONTRACTSBEGIN##contract name##action to perform##payload for the Smart Contract##STEEMCONTRACTSEND##
