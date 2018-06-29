@@ -3,7 +3,7 @@ There is a global variable called "owner" that holds the id of the owner of the 
   example:
  ```js
 actions.removeUser = function (payload) {
-  if (sender != owner) return;
+  if (sender !== owner) return;
 
   const { userId } = payload;
 
