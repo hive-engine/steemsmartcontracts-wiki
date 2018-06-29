@@ -6,7 +6,7 @@ For example, if I want to have an action called **addUser**:
 actions.addUser = function (payload) {
 	// the code of my action here
 	// the parameter payload is passed to all the actions
-	// payload it is a JSON containing the payload that was passed by the user via the protocol
+	// payload is a JSON containing the payload that was passed by the user via the protocol
 }
 ```
 
