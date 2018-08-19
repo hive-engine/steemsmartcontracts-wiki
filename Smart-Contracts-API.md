@@ -40,3 +40,9 @@ actions.addUser = function (payload) {
   executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
 }
 ```
+
+## 3.  Check funds sent to a Smart Contract via a Steem transfer operation
+When a transaction is sent via a Steem transfer you can access to two variables in the payload of the action:
+
+- recipient: give you the username Steem of the recipient
+- amountSTEEMSBD: give you the amount of STEEM or SBD sent (ie. "10.000 STEEM" or "10.000 SBD")
