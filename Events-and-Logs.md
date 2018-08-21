@@ -1,4 +1,4 @@
-When you execute a Smart Contract, you are not able to return results. However, you are able to emit events that will be stored in the transaction. Errors generated during the deployment or the execution of a Smart Contract are logged in the transaction as well.
+When you execute a Smart Contract, you are not able to return results. However, you are able to emit events that will be stored in the transaction. Errors generated during the deployment or the execution of a Smart Contract (errors thrown or asserted) are logged in the transaction as well.
 
 These information are stored under the key "logs" of a transaction.
 
@@ -32,11 +32,22 @@ Transaction {
   hash:
    '5c39a8878244d0b71b1030e5f1b89eb0e0310cdc0d40b4b8f7064334c52ed79d',
   logs:
-   '{"error":{"name":"SyntaxError","message":"Unexpected identifier"}}' 
+   '{"errors":[{"name":"SyntaxError","message":"Unexpected identifier"}}]' 
 }
 ```
 
+## Assert an error from a Smart Contract
+Asserting an error from a Smart Contract is pretty straight forward and is performed by using the global function:
 
+`assert(condition: boolean, error: string)`
+
+  example:
+ ```js
+actions.create = function (payload) {
+  // Initialize the smart contract via the create action
+  assert(1 === 2, "1 is not equal to 2")
+}
+```
 
 ## Emit an event from a Smart Contract
 Emitting an event from a Smart Contract is pretty straight forward and is performed by using the global function:
