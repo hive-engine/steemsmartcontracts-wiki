@@ -32,7 +32,7 @@ Transaction {
   hash:
    '5c39a8878244d0b71b1030e5f1b89eb0e0310cdc0d40b4b8f7064334c52ed79d',
   logs:
-   '{"errors":[{"name":"SyntaxError","message":"Unexpected identifier"}}]' 
+   '{"errors":["SyntaxError: Unexpected identifier"]' 
 }
 ```
 
