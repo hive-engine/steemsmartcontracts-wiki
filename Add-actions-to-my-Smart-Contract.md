@@ -10,10 +10,10 @@ actions.addUser = function (payload) {
 }
 ```
 
-The "create" action is a reserved action that is triggered only once during the whole life of the Smart Contract, and this happens when the Smart Contract is deployed. This is the only place where you can initialize the storage for your Smart Contract. For example:
+The "createSSC" action is a reserved action that is triggered only once during the whole life of the Smart Contract, and this happens when the Smart Contract is deployed. This is the only place where you can initialize the storage for your Smart Contract. For example:
 
 ```js
-actions.create = function (payload) {
+actions.createSSC = function (payload) {
 	// initialize some stuffs here
 }
 ```
