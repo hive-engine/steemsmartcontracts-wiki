@@ -46,3 +46,8 @@ When a transaction is sent via a Steem transfer you can access to two variables 
 
 - recipient: give you the username Steem of the recipient
 - amountSTEEMSBD: give you the amount of STEEM or SBD sent (ie. "10.000 STEEM" or "10.000 SBD")
+
+## 4.  Check type of signature for custom_json operation
+When a transaction is sent via a custom_json operation you can access to the following variable via the payload:
+
+- isSignedWithActiveKey: true if the custom_json was signed with the active key of the account, false otherwise
