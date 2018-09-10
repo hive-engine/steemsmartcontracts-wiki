@@ -50,6 +50,8 @@ Similarly to MongoDB, to find a record, we will be using two different methods:
  `findOne(params: object) returns the object found if it exists, null if otherwise`
  
   `find(params: object) returns an array of objects that match (empty array of no results)`
+
+See [the LokiJS docs](https://github.com/techfort/LokiJS/wiki/Query-Examples) for the available params
   
   examples:
  ```js
