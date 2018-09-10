@@ -51,3 +51,7 @@ When a transaction is sent via a Steem transfer you can access to two variables 
 When a transaction is sent via a custom_json operation you can access to the following variable via the payload:
 
 - isSignedWithActiveKey: true if the custom_json was signed with the active key of the account, false otherwise
+
+## 5.  Steem reference block number
+The Steem block number from which the transaction was initiated is available via the following variable:
+- refSteemBlockNumber: Steem block number
