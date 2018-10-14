@@ -49,6 +49,6 @@ It is recommended to run the node via [PM2](http://pm2.keymetrics.io/) which is 
 
 Install PM2: ```npm install pm2 -g```
 
-Run the node: ```pm2 start app.js```
+Run the node: ```pm2 start app.pm2.js```
 
 Check the status of the node (CPU/RAM usage): ```pm2 monit```
