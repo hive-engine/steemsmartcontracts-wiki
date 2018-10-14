@@ -1,3 +1,4 @@
+
 ## 1. Requirements
 The only requirement is to have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
 
@@ -52,3 +53,11 @@ Install PM2: ```npm install pm2 -g```
 Run the node: ```pm2 start app.pm2.js```
 
 Check the status of the node (CPU/RAM usage): ```pm2 monit```
+
+## 5. Replay from file blocks.log
+When starting a node for the first time you can either replay the whole sidechain from the Steem blockchain (which can last very long) or replay from a file blocks.log.
+
+- Find a blocks.log file
+- Start the tool via ```node app.js -replay file```
+
+This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
