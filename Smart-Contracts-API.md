@@ -1,18 +1,18 @@
+
 ## 1.  Restrict actions to the owner of the Smart Contract only
 There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
 
 For example:
  ```js
-actions.removeUser = function (payload) {
+actions.removeUser = async (payload) => {
   if (sender !== owner) return;
 
   const { userId } = payload;
 
   if (userId && typeof userId === 'string') {
-    let users = db.getTable('users');
-    let user = users.findOne({ 'id': userId });
+    let user = await db.findOne('users', { 'id': userId });
     if (user)
-      users.remove(user);
+      await db.remove('users', user);
   }
 }
 ```
@@ -28,16 +28,14 @@ The Smart Contract will be executed with the same sender as the current sender.
 
  For example:
  ```js
-actions.addUser = function (payload) {
-  let users = db.getTable('users');
-
+actions.addUser = async (payload) => {
   const newUser = {
     'id': sender
   };
 
-  users.insert(newUser);
+  await db.insert('users', newUser);
 
-  executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
+  await executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
 }
 ```
 
