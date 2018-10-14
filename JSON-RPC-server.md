@@ -1,3 +1,4 @@
+
 When running the application, a JSON RPC server is made available to query the sidechain and its database on port 5000.
 
  ## 1. The "blockchain" endpoint (http://localhost:5000/blockchain)
@@ -96,7 +97,7 @@ Command:
     "jsonrpc": "2.0",
     "method": "getContract",
     "params": {
-        "contract": "CONTRAC_NAME"
+        "name": "CONTRAC_NAME"
     },
     "id": 1
 }
@@ -129,14 +130,14 @@ Result:
 }
 ```
 
-**findOneInTable(query)**: get the object that matches the query from the table of the specified contract
+**findOne(query)**: get the object that matches the query from the table of the specified contract
 
 Command:
 
 ```
 {
     "jsonrpc": "2.0",
-    "method": "findOneInTable",
+    "method": "findOne",
     "params": {
         "contract": "CONTRACT_NAME",
         "table": "TABLE_NAME",
@@ -166,18 +167,22 @@ Result:
 }
 ```
 
-**findInTable(query)**: get an array of objects that match the query from the table of the specified contract
+**find(query, limit, offset, index, descending)**: get an array of objects that match the query from the table of the specified contract
 
 Command:
 
 ```
 {
     "jsonrpc": "2.0",
-    "method": "findInTable",
+    "method": "find",
     "params": {
         "contract": "CONTRACT_NAME",
         "table": "TABLE_NAME",
-        "query": {}
+        "query": {},
+        "limit": 20,  // default: 1000
+		"offset": 20, // default: 0
+		"index": "indexToUse", // default: empty
+		"descending": true, // default: false
     },
     "id": 1
 }
