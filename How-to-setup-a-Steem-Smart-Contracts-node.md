@@ -20,7 +20,7 @@ You'll have to configure your node in order to make it listen to the Steem block
     "chainId": "b8923f70-c1f7-497f-961j", // the id of the sidechain that the node will listen to
     "rpcNodePort": 5000, // port of the JSON RPC server that people will use to retrieve data from your node
     "dataDirectory": "./data/", // directory where is stored the database
-    "databaseFilePath": "database.db", // name of the file for the database
+    "databaseFileName": "database.db", // name of the file for the database
     "blocksLogFilePath": "./blocks.log", // path to a blocks log file (used with the replay function)
     "autosaveInterval": 1800000, // interval for which the database will be saved, in milliseconds, if 0, the autosave will be deactivated
     "javascriptVMTimeout": 10000, // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
