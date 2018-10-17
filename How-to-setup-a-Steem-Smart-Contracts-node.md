@@ -1,4 +1,5 @@
 
+
 ## 1. Requirements
 The only requirement is to have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
 
@@ -40,7 +41,11 @@ You'll have to configure your node in order to make it listen to the Steem block
     "chainCertificate": "" // path to your chain.pem file
 }
 ```
+You'll also have to create a .env file in the root folder with the following entries:
 
+```
+NODE_ENV=production
+```
 ## 4. Start the node
 You can easily start the node by typing the following command in the folder where the node was installed:
 
@@ -61,3 +66,11 @@ When starting a node for the first time you can either replay the whole sidechai
 - Start the tool via ```node app.js -replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
+
+## 6. Run a test node on a Steem testnet
+Simply create (or update) the .env file with the following information:
+
+```
+NODE_ENV=test
+```
+This will plug the tool to the testnet https://testnet.steem.vc/ ([more info on how to create test accounts on this testnet](https://testnet.steem.vc/))
