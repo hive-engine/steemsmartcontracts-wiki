@@ -1,5 +1,6 @@
 
 
+
 ## 1. Requirements
 The only requirement is to have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
 
@@ -45,6 +46,7 @@ You'll also have to create a .env file in the root folder with the following ent
 
 ```
 NODE_ENV=production
+ACTIVE_SIGNING_KEY=... // active signing key of a Steem account, required to sign the blocks
 ```
 ## 4. Start the node
 You can easily start the node by typing the following command in the folder where the node was installed:
