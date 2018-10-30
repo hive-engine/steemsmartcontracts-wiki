@@ -1,4 +1,5 @@
 
+
 ## 1.  Restrict actions to the owner of the Smart Contract only
 There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
 
@@ -53,3 +54,14 @@ When a transaction is sent via a custom_json operation you can access to the fol
 ## 5.  Steem reference block number
 The Steem block number from which the transaction was initiated is available via the following variable:
 - refSteemBlockNumber: Steem block number
+
+## Additional libraries available via the smart contracts API
+ ### currency.js:
+ - keyword: currency
+ - link to the library's code source: https://github.com/scurker/currency.js
+ - purpose: make the management of numbers easier as javascript has issues with dealing with decimals
+
+### validator.js:
+-  keyword: validator
+ - link to the library's code source: https://github.com/chriso/validator.js
+ - purpose: allows you to perform validations within a smart contract as the Regular Expression are disabled
