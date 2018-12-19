@@ -21,7 +21,7 @@ actions.removeUser = async (payload) => {
 
 
 ## 2.  Execute a Smart Contract from another Smart Contract
-From a Smart Contract, you can call another Smart Contract simply by using the following global function:
+From a Smart Contract, you can call another Smart Contract simply by using the following global functions:
 
 `executeSmartContract(contract: string, action: string, payload: JSON stringified)`
 
@@ -37,6 +37,19 @@ actions.addUser = async (payload) => {
   await db.insert('users', newUser);
 
   await executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
+}
+
+```
+
+`executeSmartContractAsOwner(contract: string, action: string, payload: JSON stringified)`
+
+The Smart Contract will be executed with the sender set as the current contract owner.
+
+ For example:
+ ```js
+actions.transferTokens = async (payload) => {
+  const { to } = payload;
+  await executeSmartContractAsOwner('tokens', 'transfer', { symbol: 'TKN', quantity: 123.456, to });
 }
 ```
 
@@ -54,6 +67,10 @@ When a transaction is sent via a custom_json operation you can access to the fol
 ## 5.  Steem reference block number
 The Steem block number from which the transaction was initiated is available via the following variable:
 - refSteemBlockNumber: Steem block number
+
+## 6.  Steem transaction id
+The transaction id from which the transaction was initiated is available via the following variable:
+- transactionId: transaction id
 
 ## Additional libraries available via the smart contracts API
  ### currency.js:
