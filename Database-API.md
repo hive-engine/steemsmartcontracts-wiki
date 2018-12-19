@@ -1,4 +1,5 @@
 
+
 You can find all the database related functions under the global variable "db"
 
 ## 1.  Create a table
@@ -36,7 +37,7 @@ Similarly to MongoDB, to find a record, we will be using two different methods:
 
  `findOne(tableName: string, query: object) returns the object found if it exists, null if otherwise`
  
- `find(tableName: string, query: object, limit: integer  =  1000, offset: integer  =  0, index: string  =  '', descending: boolean  =  false) returns an array of objects that match (empty array of no results)`
+ `find(tableName: string, query: object, limit: integer  =  1000, offset: integer  =  0, indexes: Array<JSON>  =  []) returns an array of objects that match (empty array of no results)`
 
 See [the LokiJS docs](https://github.com/techfort/LokiJS/wiki/Query-Examples) for the available params
   
@@ -54,6 +55,25 @@ actions.addUser = async (payload) => {
  ```js
 actions.addUser = function (payload) {
   let results = await db.find('users', { 'name': 'Dan' });
+
+  if (results.length > 0) {
+    // do something with the results
+  } 
+}
+```
+
+examples with usage of indexes:
+
+ ```js
+actions.addUser = function (payload) {
+  let results = await db.find('users',
+  { 'name': 'Dan' },
+  1000, // limit of 1000 results
+  0, // offset of 0
+  [
+	  { index: 'age', descending: true }, // use the index age descending
+	  { index: 'country', descending: false } // use the index country ascending
+  ]);
 
   if (results.length > 0) {
     // do something with the results
@@ -121,12 +141,11 @@ The "db" objects gives you the ability to perform queries on tables that are hel
    * @param {JSON} query query to perform on the table
    * @param {Integer} limit limit the number of records to retrieve
    * @param {Integer} offset offset applied to the records set
-   * @param {String} index name of the index to use for the query
-   * @param {Boolean} descending the records set is sorted ascending if false, descending if true
+   * @param {Array<Object>}  indexes array of index definitions { index: string, descending: boolean }
    * @returns {Array<Object>} returns an array of objects if records found, an empty array otherwise
 */
 ```
-  `findInTable(contract: string, table: string, query: object, limit: integer, offset: integer, index: string, descending: boolean) returns an array of objects that match (empty array of no results)`
+  `findInTable(contract: string, table: string, query: object, limit: integer, offset: integer, indexes: Array<Object>) returns an array of objects that match (empty array of no results)`
   
   examples:
  ```js
