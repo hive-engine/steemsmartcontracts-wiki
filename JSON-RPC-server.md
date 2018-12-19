@@ -120,11 +120,6 @@ Result:
         "tables": [
             "users_contract_users"
         ],
-        "meta": {
-            "revision": 0,
-            "created": 1530230481158,
-            "version": 0
-        },
         "$loki": 1
     }
 }
@@ -157,11 +152,6 @@ Result:
         "id": "harpagon",
         "username": "AwesomeUsername",
         "verified": false,
-        "meta": {
-            "revision": 0,
-            "created": 1530230516595,
-            "version": 0
-        },
         "$loki": 1
     }
 }
@@ -180,9 +170,8 @@ Command:
         "table": "TABLE_NAME",
         "query": {},
         "limit": 20,  // default: 1000
-		"offset": 20, // default: 0
-		"index": "indexToUse", // default: empty
-		"descending": true, // default: false
+	"offset": 20, // default: 0
+	"indexes": [], // default: empty, an index is an object { index: string, descending: boolean }
     },
     "id": 1
 }
@@ -199,11 +188,6 @@ Result:
             "id": "harpagon",
             "username": "AwesomeUsername",
             "verified": false,
-            "meta": {
-                "revision": 0,
-                "created": 1530230516595,
-                "version": 0
-            },
             "$loki": 1
         }
     ]
