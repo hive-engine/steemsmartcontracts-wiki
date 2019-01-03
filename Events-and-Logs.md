@@ -1,6 +1,6 @@
 When you execute a Smart Contract, you are not able to return results. However, you are able to emit events that will be stored in the transaction. Errors generated during the deployment or the execution of a Smart Contract (errors thrown or asserted) are logged in the transaction as well.
 
-These information are stored under the key "logs" of a transaction.
+These information are stored under the key "logs" of a transaction. (the logs are stored as a 255 characters length string)
 
 Examples of transactions that have events or errors:
 
