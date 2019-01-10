@@ -1,5 +1,6 @@
 
 
+
 ## 1.  Restrict actions to the owner of the Smart Contract only
 There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
 
@@ -47,28 +48,47 @@ The Smart Contract will be executed with the sender set as the current contract 
 
  For example:
  ```js
-actions.transferTokens = async (payload) => {
+actions.transferTokensToUser = async (payload) => {
   const { to } = payload;
   await executeSmartContractAsOwner('tokens', 'transfer', { symbol: 'TKN', quantity: 123.456, to });
 }
 ```
 
-## 3.  Check funds sent to a Smart Contract via a Steem transfer operation
+## 3.  Transfer tokens from a smart contract to a user or another contract (available only if the "tokens" smart contract has been deployed)
+Smart Contracts have the ability to hold tokens that can only be moved within the Smart Contract itself.
+This can be done via the global function:
+
+`transferTokens(to: string, symbol: string, quantity: number, type: string ('user' | 'contract'))`
+
+The transfer will be executed with the 'null' account set as the sender.
+
+ For example:
+ ```js
+actions.sendRewards = async function (payload) {
+
+    const { to, quantity } = payload;
+
+    await transferTokens(to, 'TKN', quantity, 'user');
+
+}
+```
+
+## 4.  Check funds sent to a Smart Contract via a Steem transfer operation
 When a transaction is sent via a Steem transfer you can access to two variables in the payload of the action:
 
 - recipient: give you the username Steem of the recipient
 - amountSTEEMSBD: give you the amount of STEEM or SBD sent (ie. "10.000 STEEM" or "10.000 SBD")
 
-## 4.  Check type of signature for custom_json operation
+## 5.  Check type of signature for custom_json operation
 When a transaction is sent via a custom_json operation you can access to the following variable via the payload:
 
 - isSignedWithActiveKey: true if the custom_json was signed with the active key of the account, false otherwise
 
-## 5.  Steem reference block number
+## 6.  Steem reference block number
 The Steem block number from which the transaction was initiated is available via the following variable:
 - refSteemBlockNumber: Steem block number
 
-## 6.  Steem transaction id
+## 7.  Steem transaction id
 The transaction id from which the transaction was initiated is available via the following variable:
 - transactionId: transaction id
 
