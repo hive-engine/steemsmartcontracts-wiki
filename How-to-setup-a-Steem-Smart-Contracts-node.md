@@ -36,11 +36,6 @@ You'll have to configure your node in order to make it listen to the Steem block
     ],
     "startSteemBlock": 25647669, // last Steem block parsed by the node
     "genesisSteemBlock": 25647669, // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
-    // the folowing keys need to be populated in order to run an HTTPS node
-    "keyCertificate": "", // path to your key.pem file
-    "certificate": "", // path to your certificate.pem file
-    "chainCertificate": "" // path to your chain.pem file
-}
 ```
 You'll also have to create a .env file in the root folder with the following entries:
 
