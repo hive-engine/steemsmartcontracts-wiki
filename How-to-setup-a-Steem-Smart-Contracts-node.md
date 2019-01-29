@@ -61,7 +61,7 @@ When starting a node for the first time you can either replay the whole sidechai
 The blocks.log file is actually the file "database.db.0" that you can find under the folder "data".
 
 - Find a blocks.log file
-- Start the tool via ```node app.js -replay file```
+- Start the tool via ```node app.js --replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
