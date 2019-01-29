@@ -20,7 +20,7 @@ You'll have to configure your node in order to make it listen to the Steem block
 
 ```js
 {
-    "chainId": "b8923f70-c1f7-497f-961j", // the id of the sidechain that the node will listen to
+    "chainId": "mainnet1", // the id of the sidechain that the node will listen to
     "rpcNodePort": 5000, // port of the JSON RPC server that people will use to retrieve data from your node
     "dataDirectory": "./data/", // directory where is stored the database
     "databaseFileName": "database.db", // name of the file for the database
@@ -34,10 +34,10 @@ You'll have to configure your node in order to make it listen to the Steem block
         "https://rpc.steemviz.com",
         "https://steemd.minnowsupportproject.org"
     ],
-    "startSteemBlock": 25647669, // last Steem block parsed by the node
-    "genesisSteemBlock": 25647669, // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
+    "startSteemBlock": 29862600, // last Steem block parsed by the node
+    "genesisSteemBlock": 29862600, // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
 ```
-You'll also have to create a .env file in the root folder with the following entries:
+(not necessary for now) You'll also have to create a .env file in the root folder with the following entries:
 
 ```
 NODE_ENV=production
@@ -46,7 +46,7 @@ ACTIVE_SIGNING_KEY=... // active signing key of a Steem account, required to sig
 ## 4. Start the node
 You can easily start the node by typing the following command in the folder where the node was installed:
 
-```node app.js```
+```npm run start```
 
 It is recommended to run the node via [PM2](http://pm2.keymetrics.io/) which is a tool that manage NodeJS apps:
 
@@ -58,6 +58,7 @@ Check the status of the node (CPU/RAM usage): ```pm2 monit```
 
 ## 5. Replay from file blocks.log
 When starting a node for the first time you can either replay the whole sidechain from the Steem blockchain (which can last very long) or replay from a file blocks.log.
+The blocks.log file is actually the file "database.db.0" that you can find under the folder "data".
 
 - Find a blocks.log file
 - Start the tool via ```node app.js -replay file```
