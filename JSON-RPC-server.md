@@ -85,6 +85,45 @@ Result:
 }
 ```
 
+**getTransactionInfo(txid)**: retrieve the specified transaction info of the sidechain
+
+Command:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "getTransactionInfo",
+    "params": {
+        "txid": TX_ID
+    },
+    "id": 1
+}
+```
+
+Result:
+
+```
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+	    "blockNumber": 12,
+	    "refSteemBlockNumber": 25797141,
+	    "transactionId": "b299d24be543cd50369dbc83cf6ce10e2e8abc9b",
+	    "sender": "smmarkettoken",
+	    "contract": "smmkt",
+	    "action": "updateBeneficiaries",
+	    "payload": {
+		"beneficiaries": [
+		    "harpagon"
+		],
+		"isSignedWithActiveKey": true
+	    },
+	    "hash": "ac33d2fcaf2d72477483ab1f2ed4bf3bb077cdb55d5371aa896e8f3fd034e6fd",
+	    "logs": "{}"
+	}
+}
+```
+
 ## 3. The "contracts" endpoint (http://localhost:5000/contracts)
 Available methods:
 
