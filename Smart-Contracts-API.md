@@ -93,9 +93,9 @@ The transaction id from which the transaction was initiated is available via the
 - transactionId: transaction id
 
 ## Additional libraries available via the smart contracts API
- ### currency.js:
- - keyword: currency
- - link to the library's code source: https://github.com/scurker/currency.js
+ ### BigNumber.js:
+ - keyword: BigNumber
+ - link to the library's code source: http://mikemcl.github.io/bignumber.js/
  - purpose: make the management of numbers easier as javascript has issues with dealing with decimals
 
 ### validator.js:
