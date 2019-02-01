@@ -1,5 +1,6 @@
-## Market contract
+# Market contract
 
+## Actions available:
 ### buy: 
 Buys STEEMP with tokens.
 The tokens that you are trying to exchange are locked into the smart contract. 
@@ -63,3 +64,35 @@ Will unlock any tokens that haven't been bought/sold.
     }
 }
 ```
+
+## Tables available:
+
+### buyBook:
+list of all the pending buy orders
+
+-	fields:
+	-	txId = transactionId
+
+	- account = account owning the order
+
+	- symbol = symbol of the token to exchange
+
+	- quantity = quantity of STEEMP to buy
+
+	- price = price (token/STEEMP)
+
+	- tokensLocked = number of remaining tokens that are locked into the smart contract
+
+### sellBook:
+list of all the pending sell orders
+
+-	fields:
+	-	txId = transactionId
+
+	- account = account owning the order
+
+	- symbol = symbol of the token to exchange
+
+	- quantity = quantity of STEEMP to sell
+
+	- price = price (token/STEEMP)
