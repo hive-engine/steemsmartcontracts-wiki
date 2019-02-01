@@ -7,6 +7,15 @@ id: "ssc-CHAIN-ID"
 
 json: 
 ```js
+[{
+
+"contractName": "NAME OF THE CONTRACT",
+
+"contractAction": "ACTION OF THE CONTRACT TO PERFORM",
+
+"contractPayload": { OBJECT THAT WILL BE PASSED TO THE CONTRACT ACTION }
+
+},
 {
 
 "contractName": "NAME OF THE CONTRACT",
@@ -15,7 +24,7 @@ json:
 
 "contractPayload": { OBJECT THAT WILL BE PASSED TO THE CONTRACT ACTION }
 
-}
+}]
 ```
 
 ### 2) via transfer
