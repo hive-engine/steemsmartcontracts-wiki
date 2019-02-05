@@ -39,7 +39,7 @@ The tokens that you are trying to exchange are locked into the smart contract.
     "contractAction": "sell",
     "contractPayload": {
         "symbol": "NKT",
-        "quantity": 000,
+        "quantity": 100,
         "price": 0.034
     }
 }
