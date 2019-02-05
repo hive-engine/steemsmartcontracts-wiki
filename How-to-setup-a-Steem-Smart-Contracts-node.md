@@ -16,7 +16,7 @@ To "install" the app, simply follow these steps:
 ## 3. Configure the node
 You'll have to configure your node in order to make it listen to the Steem blockchain, simply edit the ```config.json``` file: 
 
-(the following file is a pre-configuration that will listen to the sidechain id b8923f70-c1f7-497f-961j and will start up a HTTP JSON RPC server listening on port 5000)
+(the following file is a pre-configuration that will listen to the sidechain id "mainnet1" and will start up a HTTP JSON RPC server listening on port 5000)
 
 ```js
 {
