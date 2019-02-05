@@ -2,13 +2,13 @@
 
 ## Actions available:
 ### buy: 
-Buys STEEMP with tokens.
-The tokens that you are trying to exchange are locked into the smart contract. 
+Buys tokens with STEEMP.
+The STEEMP that you are trying to exchange are locked into the smart contract. 
 
  - parameters:
-	- symbol (string): symbol of the token you want to buy the STEEMP with
-	- quantity (number): quantity of STEEMP to buy
-	- price (number): number of tokens / STEEMP
+	- symbol (string): symbol of the token you want to buy
+	- quantity (number): quantity of tokens to buy
+	- price (number): maximum number of STEEMP/token you are willing to pay
 
 - example:
 ```
@@ -24,13 +24,13 @@ The tokens that you are trying to exchange are locked into the smart contract.
 ```
 	
 ### sell: 
-Sells STEEMP for tokens.
-The STEEMP that you are trying to exchange are locked into the smart contract. 
+Sells tokens for STEEMP.
+The tokens that you are trying to exchange are locked into the smart contract. 
 
  - parameters:
-	- symbol (string): symbol of the token you want to sell the STEEMP for
-	- quantity (number): quantity of STEEMP to sell
-	- price (number): number of tokens / STEEMP
+	- symbol (string): symbol of the token you want to sell
+	- quantity (number): quantity of tokens to sell
+	- price (number): minimum number of STEEMP/token you are willing to sell
 
 - example:
 ```
@@ -77,11 +77,11 @@ list of all the pending buy orders
 
 	- symbol = symbol of the token to exchange
 
-	- quantity = quantity of STEEMP to buy
+	- quantity = quantity of tokens to buy
 
-	- price = price (token/STEEMP)
+	- price = price (STEEMP/token)
 
-	- tokensLocked = number of remaining tokens that are locked into the smart contract
+	- tokensLocked = number of remaining STEEMP that are locked into the smart contract
 
 ### sellBook:
 list of all the pending sell orders
@@ -93,6 +93,6 @@ list of all the pending sell orders
 
 	- symbol = symbol of the token to exchange
 
-	- quantity = quantity of STEEMP to sell
+	- quantity = remaining quantity of tokens to sell
 
-	- price = price (token/STEEMP)
+	- price = price (STEEMP/token)
