@@ -108,4 +108,4 @@ list of all the trades (max 24hrs of history)
 
 	- price = price (STEEMP/token)
 
-        - timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
+	- timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
