@@ -96,3 +96,16 @@ list of all the pending sell orders
 	- quantity = remaining quantity of tokens to sell
 
 	- price = price (STEEMP/token)
+
+### tradesHistory:
+list of all the trades (max 24hrs of history)
+-	fields:
+	- type = 'buy' or 'sell'
+
+	- symbol = symbol of the token traded
+
+	- quantity = quantity of tokens traded
+
+	- price = price (STEEMP/token)
+
+        - timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
