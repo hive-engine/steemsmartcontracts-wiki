@@ -51,7 +51,7 @@ Will unlock any tokens that haven't been bought/sold.
 
  - parameters:
 	- type (string: "buy"|"sell"): type of order
-	- id (string): transaction id related to the order creation
+	- id (integer): unique id of the order assigned during the creation of the order (field called '$loki')
 
 - example:
 ```
@@ -60,7 +60,7 @@ Will unlock any tokens that haven't been bought/sold.
     "contractAction": "cancel",
     "contractPayload": {
         "type": "sell",
-        "id": "1f32152b0e82c4cc90a00ecfbad229a037435fe2-1"
+        "id": 7
     }
 }
 ```
