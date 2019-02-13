@@ -1,4 +1,4 @@
-To deploy a Smart Contract, you'll either need to post a custom_json operation or transfer funds with a memo on Steem, for both solutions you'll need to send a JSON like this:
+To deploy a Smart Contract, you'll either need to make a Steem post, post a custom_json operation or transfer funds with a memo on Steem (this will depend on how big the code of your contract is), for all the different solutions you'll need to send a JSON like this:
 
 ```js
 {
