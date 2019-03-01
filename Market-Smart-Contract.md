@@ -1,3 +1,4 @@
+
 # Market contract
 
 ## Actions available:
@@ -7,8 +8,8 @@ The STEEMP that you are trying to exchange are locked into the smart contract.
 
  - parameters:
 	- symbol (string): symbol of the token you want to buy
-	- quantity (number): quantity of tokens to buy
-	- price (number): maximum number of STEEMP/token you are willing to pay
+	- quantity (string): quantity of tokens to buy
+	- price (string): maximum number of STEEMP/token you are willing to pay
 
 - example:
 ```
@@ -29,8 +30,8 @@ The tokens that you are trying to exchange are locked into the smart contract.
 
  - parameters:
 	- symbol (string): symbol of the token you want to sell
-	- quantity (number): quantity of tokens to sell
-	- price (number): minimum number of STEEMP/token you are willing to sell
+	- quantity (string): quantity of tokens to sell
+	- price (string): minimum number of STEEMP/token you are willing to sell
 
 - example:
 ```
@@ -109,3 +110,17 @@ list of all the trades (max 24hrs of history)
 	- price = price (STEEMP/token)
 
 	- timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
+
+### metrics:
+list of the metrics per token
+-	fields:
+	- "symbol": symbol of the token
+    - "volume": 24h volume traded
+    - "volumeExpiration": unix timestamp when the volume is not relevant anymore (when no trades during the last 24h for example)
+    - "lastPrice": last price for which the token was traded
+    - "lowestAsk": lowest price from the sell order book
+    - "highestBid": highest price from the buy order book
+    - "lastDayPrice": price of the token 24h ago
+    -  "lastDayPriceExpiration": unix timestamp when lastDayPrice is not relevant anymore (when no trades during the last 24h for example)
+    - "priceChangeSteem": 24h price change in Steem
+    - "priceChangePercent": 24h price change in %
