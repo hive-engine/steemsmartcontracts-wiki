@@ -18,8 +18,8 @@ The STEEMP that you are trying to exchange are locked into the smart contract.
     "contractAction": "buy",
     "contractPayload": {
         "symbol": "TKN",
-        "quantity": 100000,
-        "price": 0.00001
+        "quantity": "100000",
+        "price": "0.00001"
     }
 }
 ```
@@ -40,8 +40,8 @@ The tokens that you are trying to exchange are locked into the smart contract.
     "contractAction": "sell",
     "contractPayload": {
         "symbol": "NKT",
-        "quantity": 100,
-        "price": 0.034
+        "quantity": "100",
+        "price": "0.034"
     }
 }
 ```
