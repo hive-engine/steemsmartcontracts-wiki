@@ -1,20 +1,20 @@
-
+The Smart Contract API is available under the "api" global object
 
 
 ## 1.  Restrict actions to the owner of the Smart Contract only
-There is a global variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
+There is a variable called "owner" that holds the id of the owner of the Smart Contract. By using this variable, you can restrict certain actions to the owner exclusively.
 
 For example:
  ```js
 actions.removeUser = async (payload) => {
-  if (sender !== owner) return;
+  if (api.sender !== api.owner) return;
 
   const { userId } = payload;
 
   if (userId && typeof userId === 'string') {
-    let user = await db.findOne('users', { 'id': userId });
+    let user = await api.db.findOne('users', { 'id': userId });
     if (user)
-      await db.remove('users', user);
+      await api.db.remove('users', user);
   }
 }
 ```
@@ -35,9 +35,9 @@ actions.addUser = async (payload) => {
     'id': sender
   };
 
-  await db.insert('users', newUser);
+  await api.db.insert('users', newUser);
 
-  await executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
+  await api.executeSmartContract('books_contract', 'addBook', '{ "title": "The Awesome Book" }')
 }
 
 ```
@@ -50,7 +50,7 @@ The Smart Contract will be executed with the sender set as the current contract 
  ```js
 actions.transferTokensToUser = async (payload) => {
   const { to } = payload;
-  await executeSmartContractAsOwner('tokens', 'transfer', { symbol: 'TKN', quantity: 123.456, to });
+  await api.executeSmartContractAsOwner('tokens', 'transfer', { symbol: 'TKN', quantity: 123.456, to });
 }
 ```
 
@@ -68,7 +68,7 @@ actions.sendRewards = async function (payload) {
 
     const { to, quantity } = payload;
 
-    await transferTokens(to, 'TKN', quantity, 'user');
+    await api.transferTokens(to, 'TKN', quantity, 'user');
 
 }
 ```
@@ -86,19 +86,23 @@ When a transaction is sent via a custom_json operation you can access to the fol
 
 ## 6.  Steem reference block number
 The Steem block number from which the transaction was initiated is available via the following variable:
-- refSteemBlockNumber: Steem block number
+- api.refSteemBlockNumber: Steem block number
 
 ## 7.  Steem transaction id
 The transaction id from which the transaction was initiated is available via the following variable:
-- transactionId: transaction id
+- api.transactionId: transaction id
+
+## 8. deterministic random number generation
+A deterministic random number generator is available via the following function:
+- api.random(): returns a random number between 0 and 1 based on the Steem transaction hash, the Steem block hash and the previous Steem block hash
 
 ## Additional libraries available via the smart contracts API
  ### BigNumber.js:
- - keyword: BigNumber
+ - keyword: api.BigNumber
  - link to the library's code source: http://mikemcl.github.io/bignumber.js/
  - purpose: make the management of numbers easier as javascript has issues with dealing with decimals
 
 ### validator.js:
--  keyword: validator
+-  keyword: api.validator
  - link to the library's code source: https://github.com/chriso/validator.js
  - purpose: allows you to perform validations within a smart contract as the Regular Expression are disabled
