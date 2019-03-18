@@ -1,6 +1,6 @@
 
 
-You can find all the database related functions under the global variable "db"
+You can find all the database related functions under the global object "api.db"
 
 ## 1.  Create a table
  You can create a table that will be available for your Smart Contract only during the deployment of the Smart Contract. Use the indexes array to add one or more indexes to the table.
@@ -12,7 +12,7 @@ The method that we will be using is:
  ```js
 actions.create = async (payload) => {
 	// let's create a table called users
-	await db.createTable('users', ['ages']);
+	await api.db.createTable('users', ['ages']);
 }
 ```
 
@@ -28,7 +28,7 @@ actions.addUser = async (payload) => {
     'id': sender
   };
 
-  await db.insert('users', newUser);
+  await api.db.insert('users', newUser);
 }
 ```
 
@@ -44,7 +44,7 @@ See [the LokiJS docs](https://github.com/techfort/LokiJS/wiki/Query-Examples) fo
   examples:
  ```js
 actions.addUser = async (payload) => {
-  let user = await db.findOne('users', { 'id': sender });
+  let user = await api.db.findOne('users', { 'id': sender });
 
   if (user) {
     // do something with the user
@@ -54,7 +54,7 @@ actions.addUser = async (payload) => {
 
  ```js
 actions.addUser = function (payload) {
-  let results = await db.find('users', { 'name': 'Dan' });
+  let results = await api.db.find('users', { 'name': 'Dan' });
 
   if (results.length > 0) {
     // do something with the results
@@ -66,7 +66,7 @@ examples with usage of indexes:
 
  ```js
 actions.addUser = function (payload) {
-  let results = await db.find('users',
+  let results = await api.db.find('users',
   { 'name': 'Dan' },
   1000, // limit of 1000 results
   0, // offset of 0
@@ -92,10 +92,10 @@ actions.updateUser = async (payload) => {
   const { username } = payload;
   
   if (username && typeof username === 'string'){
-    let user = await db.findOne('users', { 'id': sender });
+    let user = await api.db.findOne('users', { 'id': sender });
     if (user) {
       user.username = username;
-      await db.update('users', user);
+      await api.db.update('users', user);
     }
   }
 }
@@ -112,9 +112,9 @@ actions.removeUser = async (payload) => {
   const { userId } = payload;
 
   if (userId && typeof userId === 'string') {
-    let user = await db.findOne('users', { 'id': userId });
+    let user = await api.db.findOne('users', { 'id': userId });
     if (user)
-      await db.remove('users', user);
+      await api.db.remove('users', user);
   }
 }
 ```
@@ -151,7 +151,7 @@ The "db" objects gives you the ability to perform queries on tables that are hel
  ```js
 actions.addUser = async (payload) => {
 
-  const book = await db.findOneInTable('books_contract', 'books', { 'owner': sender });
+  const book = await api.db.findOneInTable('books_contract', 'books', { 'owner': sender });
 
   if (book) {
     // do something with the book
@@ -161,7 +161,7 @@ actions.addUser = async (payload) => {
 
  ```js
 actions.addUser = async (payload) => {
-  const books = await db.findInTable('books_contract', 'books', { 'owner': sender });
+  const books = await api.db.findInTable('books_contract', 'books', { 'owner': sender });
 
   if (results.length > 0) {
     // do something with the results
