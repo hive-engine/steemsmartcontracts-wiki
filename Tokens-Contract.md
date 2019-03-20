@@ -63,6 +63,24 @@ There is a cooldown period that is setup per token (see "enableStaking" action)
 }
 ```
 
+### cancelUnstake: 
+Cancels an initiated unstake.
+
+- requires active key: yes
+ - parameters:
+	- txID (string): transaction id when the unstake was initiated
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "cancelUnstake",
+    "contractPayload": {
+        "txID": "ABCDE0123"
+    }
+}
+```
+
 ### create: ...
 ### issue: ...
 ### transfer: ...
@@ -97,3 +115,6 @@ pending unstakes
 	- quantity: quantity of tokens being unstaked
 
 	- unstakeCompleteTimestamp: timestamp when the unstake will be completed (in milliseconds)
+        
+        - txID: transaction ID used to initiate the unstake
+  
