@@ -1,5 +1,3 @@
-
-
 # Tokens contract
 
 ## Actions available:
@@ -11,15 +9,37 @@ Enables the staking feature for a token.
  - parameters:
 	- symbol (string): symbol of the token you want to enable the staking feature
 	- unstakingCooldown (integer): number of days that a user will have to wait until the tokens are added to their balance (between 1 and 365 days)
+	- numberTransactions (integer): number of transactions that an unstake will be divided in (between 1 and 365 days)
 
-- example:
+- examples:
 ```
 {
     "contractName": "tokens",
     "contractAction": "enableStaking",
     "contractPayload": {
         "symbol": "TKN",
-        "unstakingCooldown": 7
+        "unstakingCooldown": 7, // 7 days to cooldown
+        "numberTransactions": 7, // 1 transaction / day
+    }
+}
+
+{
+    "contractName": "tokens",
+    "contractAction": "enableStaking",
+    "contractPayload": {
+        "symbol": "TKN",
+        "unstakingCooldown": 30, // 30 days to cooldown
+        "numberTransactions": 60, // 2 transactions / day
+    }
+}
+
+{
+    "contractName": "tokens",
+    "contractAction": "enableStaking",
+    "contractPayload": {
+        "symbol": "TKN",
+        "unstakingCooldown": 91, // 91 days to cooldown
+        "numberTransactions": 13, // 1 transaction / week
     }
 }
 ```
@@ -113,8 +133,11 @@ pending unstakes
 	- symbol:  symbol of the token being unstaked
 
 	- quantity: quantity of tokens being unstaked
+	
+	- quantityLeft: quantity of tokens still to unstake
 
-	- unstakeCompleteTimestamp: timestamp when the unstake will be completed (in milliseconds)
-        
-        - txID: transaction ID used to initiate the unstake
-  
+	- nextTransactionTimestamp: timestamp when the next unstake transaction will happen (in milliseconds)
+	
+	- numberTransactionsLeft: number of transactions left for this unstake
+
+	- txID: transaction ID used to initiate the unstake
