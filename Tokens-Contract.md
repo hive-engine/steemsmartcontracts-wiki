@@ -38,7 +38,7 @@ Enables the staking feature for a token.
     "contractAction": "enableStaking",
     "contractPayload": {
         "symbol": "TKN",
-        "unstakingCooldown": 91, // 91 days to cooldown
+        "unstakingCooldown": 91, // 13 weeks to cooldown
         "numberTransactions": 13, // 1 transaction / week
     }
 }
