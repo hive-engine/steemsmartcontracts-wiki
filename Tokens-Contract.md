@@ -118,7 +118,7 @@ Enables the delegation feature for a token.
 ```
 {
     "contractName": "tokens",
-    "contractAction": "enableStaking",
+    "contractAction": "enableDelegation",
     "contractPayload": {
         "symbol": "TKN",
         "undelegationCooldown": 7, // 7 days to cooldown
@@ -127,7 +127,7 @@ Enables the delegation feature for a token.
 
 {
     "contractName": "tokens",
-    "contractAction": "enableStaking",
+    "contractAction": "enableDelegation",
     "contractPayload": {
         "symbol": "TKN",
         "undelegationCooldown": 30, // 30 days to cooldown
@@ -136,7 +136,7 @@ Enables the delegation feature for a token.
 
 {
     "contractName": "tokens",
-    "contractAction": "enableStaking",
+    "contractAction": "enableDelegation",
     "contractPayload": {
         "symbol": "TKN",
         "undelegationCooldown": 91, // 13 weeks to cooldown
