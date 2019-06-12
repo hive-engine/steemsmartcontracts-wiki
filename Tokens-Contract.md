@@ -190,6 +190,28 @@ There is a cooldown period that is setup per token (see "enableDelegation" actio
 }
 ```
 
+## Tokens parameters
+
+### updatePrecision: 
+Update the precision of a token (it can only be increased)
+
+- requires active key: yes
+ - parameters:
+	- symbol (string): symbol of the token to update
+	- precision (integer): new precision for the token (can only be greater than the current precision)
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "updatePrecision",
+    "contractPayload": {
+        "symbol": "TKN",
+        "precision": 8
+    }
+}
+```
+
 ## Other actions available
 ### create: ...
 ### issue: ...
