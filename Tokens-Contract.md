@@ -146,7 +146,7 @@ Enables the delegation feature for a token.
 
 ### delegate: 
 Delegates tokens. (if it is a token that allows delegation)
-If a delegation already exists for that account it will update it with the new quantity if it is greater than the previous delegation (to decrease a delegation you need to undelegate)
+If a delegation already exists for that account it will add the new quantity to it (to decrease a delegation you need to undelegate)
 
 - requires active key: yes
  - parameters:
