@@ -173,7 +173,7 @@ There is a cooldown period that is setup per token (see "enableDelegation" actio
 
 - requires active key: yes
  - parameters:
-    - to (string): account that will see its delegation decreased/removed
+    - from (string): account that will see its delegation decreased/removed
 	- symbol (string): symbol of the token you want to undelegate
 	- quantity (string): quantity of tokens to undelegate
 
