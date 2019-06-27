@@ -96,6 +96,25 @@ The transaction id from which the transaction was initiated is available via the
 A deterministic random number generator is available via the following function:
 - api.random(): returns a random number between 0 and 1 based on the Steem transaction hash, the Steem block hash and the previous Steem block hash
 
+## 9. contract version
+The contract version is available via the following variable:
+- api.contractVersion: integer that represents the version of the contract (every time a contract is updated, the version is increased by 1 (the first version being 1)
+
+## 10. calling contract information
+If the contract action has been called by another contract you'll have the following object available in the payload:
+- callingContractInfo: object holding information about the contract that called the contract action
+ For example:
+ ```js
+actions.sendRewards = async function (payload) {
+
+    const { to, quantity, callingContractInfo } = payload;
+
+    if (callingContractInfo.name === 'tokens' && callingContractInfo.version === 3) {
+        await api.transferTokens(to, 'TKN', quantity, 'user');
+    }
+}
+```
+
 ## Additional libraries available via the smart contracts API
  ### BigNumber.js:
  - keyword: api.BigNumber
