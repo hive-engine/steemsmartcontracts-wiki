@@ -1,4 +1,5 @@
 
+
 # Tokens contract
 
 ## Actions available:
@@ -213,7 +214,32 @@ Update the precision of a token (it can only be increased)
 ```
 
 ## Other actions available
-### create: ...
+### create:
+Creates a token
+
+- requires active key: yes
+ - parameters:
+	- name (string): name of the token (letters, numbers, whitespaces only, max length of 50)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+	- precision (integer): precision for the token (between 0 and 8)
+	- maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991)
+	- url (string): url of the project (max length of 255)
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "create",
+    "contractPayload": {
+        "symbol": "TKN",
+        "name": "my token",
+        "precision": 8,
+        "maxSupply": "1000",
+        "url": "myawesomeproject.com"
+    }
+}
+```
+
 ### issue: ...
 ### transfer: ...
 ### transferToContract: ...
