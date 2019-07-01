@@ -215,7 +215,7 @@ Update the precision of a token (it can only be increased)
 
 ## Other actions available
 ### create:
-Creates a token
+Creates a token (a token creation fee might be enforced)
 
 - requires active key: yes
  - parameters:
@@ -240,11 +240,136 @@ Creates a token
 }
 ```
 
-### issue: ...
-### transfer: ...
-### transferToContract: ...
-### updateUrl: ...
-### updateMetadata: ...
+### issue:
+Issue tokens to an account (can only be triggered by the account that created the token)
+
+- requires active key: yes
+ - parameters:
+	 - to (string): account that will receive the newly created tokens (3 <= length <= 16)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "issue",
+    "contractPayload": {
+        "symbol": "TKN",
+        "to": "harpagon",
+        "quantity": "15.21548745"
+    }
+}
+```
+### transfer:
+Transfer tokens to an account
+
+- requires active key: yes
+ - parameters:
+	 - to (string): account that will receive the tokens (3 <= length <= 16)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "transfer",
+    "contractPayload": {
+        "symbol": "TKN",
+        "to": "harpagon",
+        "quantity": "15.21548745"
+    }
+}
+```
+### transferToContract:
+Transfer tokens to a contract
+
+- requires active key: yes
+ - parameters:
+	 - to (string): contract that will receive the tokens (3 <= length <= 50)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+	- quantity (string): quantity of tokens to issue (must match the requirements of the token (maxSupply limit, precision, etc...)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "transferToContract",
+    "contractPayload": {
+        "symbol": "TKN",
+        "to": "market",
+        "quantity": "15.21548745"
+    }
+}
+```
+### transferOwnership:
+Transfer ownership of a token from the current token issuer to an other account
+
+- requires active key: yes
+ - parameters:
+	 - to (string): contract that will receive the ownership of the token (3 <= length <= 50)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "transferOwnership",
+    "contractPayload": {
+        "symbol": "TKN",
+        "to": "harpagon"
+    }
+}
+```
+### updateUrl:
+Update the url of a token
+
+- requires active key: no
+ - parameters:
+	 - url (string): the new url for the token (0 <= length <= 255)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "updateUrl",
+    "contractPayload": {
+        "symbol": "TKN",
+        "url": "mynewurl.com"
+    }
+}
+```
+
+### updateMetadata:
+Update the metadata of a token
+
+- requires active key: no
+ - parameters:
+	 - metadata (JSON): the metadata for the token (the JSON when stringified can't exceed 1000 characters)
+	- symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+
+- example:
+```
+{
+    "contractName": "tokens",
+    "contractAction": "updateMetadata",
+    "contractPayload": {
+        "symbol": "TKN",
+        "metadata": {
+	        "url": "mynewurl.com",
+	        "description": "my description"
+	    }
+    }
+}
+```
 
 ## Tables available:
 
