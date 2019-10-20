@@ -2,7 +2,8 @@
 
 
 ## 1. Requirements
-The only requirement is to have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
+- have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
+- have a MongoDB server installed on your server, see https://docs.mongodb.com/v3.2/administration/install-community/
 
 ## 2. Install the Steem Smart Contracts node
 To "install" the app, simply follow these steps:
@@ -22,8 +23,8 @@ You'll have to configure your node in order to make it listen to the Steem block
 {
     "chainId": "mainnet1", // the id of the sidechain that the node will listen to
     "rpcNodePort": 5000, // port of the JSON RPC server that people will use to retrieve data from your node
-    "dataDirectory": "./data/", // directory where is stored the database
-    "databaseFileName": "database.db", // name of the file for the database
+    "databaseURL": "mongodb://localhost:27017", // url to your MongoDB server
+    "databaseName": "ssc", // name of the MongoDB database
     "blocksLogFilePath": "./blocks.log", // path to a blocks log file (used with the replay function)
     "autosaveInterval": 1800000, // interval for which the database will be saved, in milliseconds, if 0, the autosave will be deactivated
     "javascriptVMTimeout": 10000, // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
@@ -37,39 +38,25 @@ You'll have to configure your node in order to make it listen to the Steem block
     "startSteemBlock": 29862600, // last Steem block parsed by the node
     "genesisSteemBlock": 29862600, // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
 ```
-(not necessary for now) You'll also have to create a .env file in the root folder with the following entries:
 
-```
-NODE_ENV=production
-ACTIVE_SIGNING_KEY=... // active signing key of a Steem account, required to sign the blocks
-```
 ## 4. Start the node
 You can easily start the node by typing the following command in the folder where the node was installed:
 
 ```npm run start```
 
-It is recommended to run the node via [PM2](http://pm2.keymetrics.io/) which is a tool that manage NodeJS apps:
+## 5a. Replay from a blocks.log file
+When starting a node for the first time you can either replay the whole sidechain from the Steem blockchain (which can last very long) or replay from a blocks.log file.
+The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
-Install PM2: ```npm install pm2 -g```
-
-Run the node: ```pm2 start app.pm2.json```
-
-Check the status of the node (CPU/RAM usage): ```pm2 monit```
-
-## 5. Replay from file blocks.log
-When starting a node for the first time you can either replay the whole sidechain from the Steem blockchain (which can last very long) or replay from a file blocks.log.
-The blocks.log file is actually the file "database.db.0" that you can find under the folder "data".
-
-- Find a blocks.log file
-- Delete the "data" folder (if this folder is not deleted, the new blocks are going to be added to the old chain)
+- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table)
 - Start the tool via ```node app.js --replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
-## 6. Run a test node on a Steem testnet
-Simply create (or update) the .env file with the following information:
+## 5b. Restore a MongoDB dump
+The fastest way to fire up a node is by restoring a MongoDB dump.
 
-```
-NODE_ENV=test
-```
-This will plug the tool to the testnet https://testnet.steem.vc/ ([more info on how to create test accounts on this testnet](https://testnet.steem.vc/))
+- Find a dump of the MongoDB database (ie: http://api.steem-engine.com/ssc.archive)
+- Restore it (mongorestore --gzip --archive=ssc.archive)
+- Update the "config.json" file with the "startSteemBlock" that matches the dump you just restored
+- Start the tool via ```npm run start```
