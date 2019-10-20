@@ -84,7 +84,7 @@ list of all the pending buy orders
 
 	- tokensLocked = number of remaining STEEMP that are locked into the smart contract
 
-- indexes available: symbol, account, priceDec, expiration, txId
+- indexes available: symbol, account, priceDec (index on price), expiration, txId
 
 ### sellBook:
 list of all the pending sell orders
@@ -100,7 +100,7 @@ list of all the pending sell orders
 
 	- price = price (STEEMP/token)
 
-- indexes available: symbol, account, priceDec, expiration, txId
+- indexes available: symbol, account, priceDec (index on price), expiration, txId
 
 ### tradesHistory:
 list of all the trades (max 24hrs of history)
