@@ -34,7 +34,7 @@ Result:
                 "action": "addUser",
                 "payload": "{ \"username\": \"AwesomeUsername\" }",
                 "hash": "a90155eab610384d027fbc1ce706c24acb5a1151d91483e76e39e61f59ed65cb",
-                "logs": "{\"events\":[{\"event\":\"newUserCreated\",\"data\":{\"id\":\"harpagon\",\"username\":\"AwesomeUsername\",\"verified\":false,\"meta\":{\"revision\":0,\"created\":1530230516595,\"version\":0},\"$loki\":1}}]}"
+                "logs": "{\"events\":[{\"event\":\"newUserCreated\",\"data\":{\"id\":\"harpagon\",\"username\":\"AwesomeUsername\",\"verified\":false,\"meta\":{\"revision\":0,\"created\":1530230516595,\"version\":0},\"_id\":1}}]}"
             }
         ],
         "hash": "48bd97fbc0b98a764d8f8d87e4469e21a3ab9f1c3eaa5d5d46d342b419f1b2f4",
@@ -159,7 +159,7 @@ Result:
         "tables": [
             "users_contract_users"
         ],
-        "$loki": 1
+        "_id": 1
     }
 }
 ```
@@ -191,7 +191,7 @@ Result:
         "id": "harpagon",
         "username": "AwesomeUsername",
         "verified": false,
-        "$loki": 1
+        "_id": 1
     }
 }
 ```
@@ -227,7 +227,7 @@ Result:
             "id": "harpagon",
             "username": "AwesomeUsername",
             "verified": false,
-            "$loki": 1
+            "_id": 1
         }
     ]
 }
