@@ -52,7 +52,7 @@ Will unlock any tokens that haven't been bought/sold.
 
  - parameters:
 	- type (string: "buy"|"sell"): type of order
-	- id (integer): unique id of the order assigned during the creation of the order (field called '$loki')
+	- id (string): Steem transaction ID that initiated the order
 
 - example:
 ```
@@ -61,7 +61,7 @@ Will unlock any tokens that haven't been bought/sold.
     "contractAction": "cancel",
     "contractPayload": {
         "type": "sell",
-        "id": 7
+        "id": "1b7e32719b76f07e144d15c8d3045545b896e90b"
     }
 }
 ```
@@ -98,6 +98,8 @@ list of all the pending sell orders
 
 	- price = price (STEEMP/token)
 
+- indexes available: symbol, account, priceDec, expiration, txId
+
 ### tradesHistory:
 list of all the trades (max 24hrs of history)
 -	fields:
@@ -110,6 +112,8 @@ list of all the trades (max 24hrs of history)
 	- price = price (STEEMP/token)
 
 	- timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
+
+- indexes available: symbol, account, priceDec, expiration, txId
 
 ### metrics:
 list of the metrics per token
@@ -124,3 +128,5 @@ list of the metrics per token
     -  "lastDayPriceExpiration": unix timestamp when lastDayPrice is not relevant anymore (when no trades during the last 24h for example)
     - "priceChangeSteem": 24h price change in Steem
     - "priceChangePercent": 24h price change in %
+
+- indexes available: symbol
