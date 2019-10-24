@@ -58,5 +58,5 @@ The fastest way to fire up a node is by restoring a MongoDB dump.
 
 - Find a dump of the MongoDB database (ie: https://api.steem-engine.com/ssc.archive)
 - Restore it (mongorestore --gzip --archive=ssc.archive)
-- Update the "config.json" file with the "startSteemBlock" that matches the dump you just restored
+- Update the "config.json" file with the "startSteemBlock" that matches the dump you just restored (ie: https://api.steem-engine.com/ssc.archive.txt)
 - Start the tool via ```npm run start```
