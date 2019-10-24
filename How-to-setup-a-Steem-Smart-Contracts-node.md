@@ -56,7 +56,7 @@ This command will basically read the file located under "blocksLogFilePath" from
 ## 5b. Restore a MongoDB dump
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-- Find a dump of the MongoDB database (ie: http://api.steem-engine.com/ssc.archive)
+- Find a dump of the MongoDB database (ie: https://api.steem-engine.com/ssc.archive)
 - Restore it (mongorestore --gzip --archive=ssc.archive)
 - Update the "config.json" file with the "startSteemBlock" that matches the dump you just restored
 - Start the tool via ```npm run start```
