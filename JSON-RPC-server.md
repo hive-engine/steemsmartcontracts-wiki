@@ -4,7 +4,7 @@ When running the application, a JSON RPC server is made available to query the s
  ## 1. The "blockchain" endpoint (http://localhost:5000/blockchain)
 Available methods:
 
-**getLatestBlockInfo()**: get the latest block of the sidechain
+### getLatestBlockInfo(): get the latest block of the sidechain
 
 Command:
 ```
@@ -43,7 +43,7 @@ Result:
 }
 ```
 
-**getBlockInfo(blockNumber)**: get the block with the specified block number of the sidechain
+### getBlockInfo(blockNumber): get the block with the specified block number of the sidechain
 
 Command:
 ```
@@ -85,7 +85,7 @@ Result:
 }
 ```
 
-**getTransactionInfo(txid)**: retrieve the specified transaction info of the sidechain
+### getTransactionInfo(txid): retrieve the specified transaction info of the sidechain
 
 Command:
 ```
@@ -124,10 +124,38 @@ Result:
 }
 ```
 
+### getStatus(): retrieve the status of the SSC node
+
+Command:
+```
+{
+    "jsonrpc": "2.0",
+    "method": "getStatus",
+    "params": {
+    },
+    "id": 1
+}
+```
+
+Result:
+
+```
+{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "result": {
+        "lastBlockNumber": 1,
+        "lastBlockRefSteemBlockNumber": 37899120,
+        "lastParsedSteemBlockNumber": 37900295,
+        "SSCnodeVersion": "0.1.0"
+    }
+}
+```
+
 ## 3. The "contracts" endpoint (http://localhost:5000/contracts)
 Available methods:
 
-**getContract(contract)**: get the contract specified from the database
+### getContract(contract): get the contract specified from the database
 
 Command:
 
@@ -164,7 +192,7 @@ Result:
 }
 ```
 
-**findOne(query)**: get the object that matches the query from the table of the specified contract
+### findOne(query): get the object that matches the query from the table of the specified contract
 
 Command:
 
@@ -196,7 +224,7 @@ Result:
 }
 ```
 
-**find(query, limit, offset, index, descending)**: get an array of objects that match the query from the table of the specified contract
+### find(query, limit, offset, index, descending): get an array of objects that match the query from the table of the specified contract
 
 Command:
 
