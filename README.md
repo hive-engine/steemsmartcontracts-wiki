@@ -20,8 +20,6 @@
 
 [How to setup a Steem Smart Contracts node](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/How-to-setup-a-Steem-Smart-Contracts-node.md)
 
-[Bootstrapped Smart Contracts](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/Bootstrapped-Smart-Contracts.md)
-
 [Tokens Contract](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/Tokens-Contract.md)
 
 [Market Smart Contract](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/Market-Smart-Contract.md)
