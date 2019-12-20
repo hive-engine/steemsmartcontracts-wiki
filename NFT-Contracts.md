@@ -958,6 +958,7 @@ contains definitions of each NFT
   * authorizedIssuingAccounts = list of Steem accounts authorized to issue tokens on behalf of the NFT owner
   * authorizedIssuingContracts = list of smart contracts authorized to issue tokens on behalf of the NFT owner
   * properties = schema definition of any data properties belonging to this NFT
+  * groupBy = list of data property names by which market orders for NFT instances should be grouped 
 
 The properties field is a dictionary mapping property names to schema that have their own structure as follows:
 * type = indicates the type of the data property. Can be string, number, or boolean.
@@ -1009,7 +1010,8 @@ example of a typical NFT definition:
             authorizedEditingAccounts: [ 'cryptomancer' ],
             authorizedEditingContracts: []
           }
-    }
+    },
+    groupBy: [ 'level', 'isFood' ]
 }
 ```
 
@@ -1029,6 +1031,8 @@ Every NFT symbol has its own separate table to store NFT instances (issued token
   * lockedTokens = describes all regular Steem Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
   * properties = values of all the data properties for this particular NFT instance. If there are no data properties set, the value will be {}
   * **(optional)** delegatedTo = if this token is delegated, will contain information about which account or contract the token is delegated to. If there is no delegation, this field will not exist (will be undefined).
+  * **(optional)** previousAccount = the Steem account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
+  * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Steem account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
 
 The delegatedTo field has its own structure as follows:
 * account = the Steem account or smart contract that the token is delegated to
@@ -1075,7 +1079,9 @@ examples of typical token data:
         account: 'contract2',
         ownedBy: 'c',
         undelegateAt: 1528243200000
-    }
+    },
+    previousAccount: 'aggroed',
+    previousOwnedBy: 'u'
 }
 ```
 
