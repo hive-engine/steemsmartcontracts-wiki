@@ -20,6 +20,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [addProperty](#addproperty)
   * [setPropertyPermissions](#setpropertypermissions)
   * [setProperties](#setproperties)
+  * [setGroupBy](#setgroupby)
 * [Token issuance](#token-issuance)
   * [fees](#fees)
   * [locked tokens](#locked-tokens)
@@ -414,6 +415,37 @@ A maximum of 50 tokens can be edited in a single call of this action.
 }
 ```
 Data properties that are not included in the list of properties to edit will have their values left unchanged.
+
+### setGroupBy:
+After you have created some data properties via the addProperty action, you can call setGroupBy in order to define a list of data properties by which market orders for NFT instances should be grouped by. You can think of this grouping as an index used to organize orders on the market, similar to how PeakMonsters groups Splinterlands cards according to type & gold foil status. NFT instances which have the same values for the designated data properties are considered equivalent as far as the market is concerned.
+
+Consider the following points carefully before calling this action:
+
+* Data properties which never change once set (i.e. read-only properties) are the best ones to use for this grouping.
+* Long text strings do not make ideal properties to group by. Integers and boolean types make the best grouping.
+* Numbers with fractional parts (for example 3.1415926) should be avoided due to possible rounding issues. Integers without fractional parts are ideal for grouping.
+* This grouping **can only be set once!** You can't change it later on, so don't call this action until you are completely ready to do so.
+* Token holders will not be able to place market orders until you have defined a valid grouping via this action.
+
+* requires active key: yes
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * properties (array of string): list of data property names to set as the grouping. The schema for each property must have been previously created via the addProperty action.
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "setGroupBy",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "properties": [ "level","isFood" ]
+    }
+}
+```
 
 ## Token issuance
 Once an NFT has been created, its data properties defined, and editing permissions set, it's time to issue some tokens!
