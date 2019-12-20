@@ -338,3 +338,36 @@ A couple points about the grouping:
 2. Grouping values will always be strings, regardless of the data property type, as shown in the second example above where the value 'true' is a boolean data type but represented here as a string.
 
 We can also infer that the above examples are orders for two different NFT symbols, because the grouped by data property names are fixed per symbol according to the setGroupBy action (i.e. grouped by names will be the same for all orders of a particular NFT symbol, although of course the data property values can vary to distinguish the various groupings).
+
+## SYMBOLopenInterest
+Every NFT symbol has its own separate table to store open interest metrics. The table name for a particular symbol is formed by taking the symbol and adding "openInterest" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTopenInterest table will store all open interest for that symbol. Note that this table will not exist if the enableMarket action has not been called yet.
+
+Open interest is defined to be the number of currently open (active) orders, grouped according to the data property values in each order's grouping field. Note that an open interest entry for a particular combination of data property values won't exist until at least 1 order whose NFT instance has that combination of values is created. Once created, open interest entries never get deleted. Thus it is perfectly reasonable to have an entry with 0 current active orders.
+
+The open interest count will be incremented as orders are created, and decremented as orders are cancelled or filled.
+
+* fields
+  * side = will be buy or sell depending on which side of the order book an order is on. Currently only sell side orders are supported, so every open interest entry will have this field set to 'sell'.
+  * priceSymbol = the token symbol of the order's payment method
+  * grouping = holds a copy of the data property values which together represent how these market orders should be grouped, according to the list set by the NFT contract setGroupBy action. Note that the combination of side, priceSymbol, and grouping uniquely identifies an open interest entry.
+  * count (integer) = the number of currently open (active) orders for this combination of side, priceSymbol, and grouping. Will be 0 or greater.
+
+examples of typical open interest entries:
+```
+{
+    _id: 29,
+    side: 'sell',
+    priceSymbol: 'ENG',
+    grouping: { level: '29', color: '' },
+    count: 567
+}
+
+{
+    _id: 800,
+    side: 'sell',
+    priceSymbol: 'STEEMP',
+    grouping: { level: '5', color: 'red' },
+    count: 0
+}
+```
+**Counting number of open orders:** simply sum together the count field for all open interest entries in the table, querying by priceSymbol and side if desired.
