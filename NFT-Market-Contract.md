@@ -232,6 +232,63 @@ example:
 }
 ```
 
+## Buy (hit an existing sell order)
+### buy:
+Buys one or more NFT instances that are currently listed for sale.
+* requires active key: yes
+
+* can be called by: Steem account
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * nfts (array of string): list of NFT instance IDs (NOT order IDs) that you want to buy
+  * marketAccount (string): Steem account to receive the market fee percentage of the total sale price
+  
+A maximum of 50 NFT instances can be bought in a single call of this action. You cannot fill your own orders, and all orders must have the same price symbol.
+
+* example:
+```
+{
+    "contractName": "nftmarket",
+    "contractAction": "buy",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "nfts": [ "1","2","3" ],
+        "marketAccount": "peakmonsters"
+    }
+}
+```
+A successful purchase will emit a "hitSellOrder" event for each NFT instance sold:
+``symbol, priceSymbol, account: the buyer, ownedBy: u, sellers: data structure giving info on all sellers, paymentTotal: total sale price of all orders sold, feeTotal: total market fee of all orders sold``
+example:
+```
+{
+    "contract": "nftmarket",
+    "event": "hitSellOrder",
+    "data": {
+        "symbol": "TESTNFT",
+        "priceSymbol": "ENG",
+        "account": "cryptomancer",
+        "ownedBy": "u",
+        "sellers": [
+            { "account": "aggroed",
+              "ownedBy": "u",
+              "nftIds": [ "1","2","3" ],
+              "paymentTotal": "8.95353150"
+            },
+            { "account": "marc",
+              "ownedBy": "u",
+              "nftIds": [ "4" ],
+              "paymentTotal": "7.60000000"
+            }
+        ],
+        "paymentTotal": "16.55353150",
+        "feeTotal": "0.87123850"
+    }
+}
+```
+In the above example, 4 NFT instances are bought at once by @cryptomancer, from separate sellers. Three of those tokens were sold by @aggroed, who received a payment of 8.95353150 ENG, and one token was sold by @marc who received a payment of 7.60000000 ENG. The total sale price for all 4 tokens was 16.55353150 ENG, and a market fee of 0.87123850 ENG was subtracted from that total before sending payment to the sellers in proportion to their original asking prices.
+
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions. The one exception is the NFT instance table, as the _id serves as the token ID used to refer to that particular token in data queries and various smart contract actions.
 
