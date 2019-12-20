@@ -5,6 +5,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 * [Enabling the market](#enabling-the-market)
   * actions:
   * [enableMarket](#enablemarket)
+  * [setGroupBy](#setgroupby)
 * [Managing Sell Orders](#managing-sell-orders)
   * actions:
   * [sell](#sell)
@@ -20,27 +21,74 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
 # Actions available:
 ## Enabling the market
+Before token holders can trade an NFT, the market must be enabled for a particular NFT symbol. Until this is done, no market orders can be placed. There are two steps required to enable the market:
+1. Call the enableMarket action on the nftmarket contract.
+2. Call the setGroupBy action on the nft contract.
+These actions require active key authority, and can only be called by the Steem account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
 ### enableMarket:
-Updates the user friendly name of an NFT.
-* requires active key: no
+Enables a market by creating necessary database tables for the given symbol.
+* requires active key: yes
 
 * can be called by: Steem account that owns the NFT
 
 * parameters:
-  * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
 
 * example:
 ```
 {
-    "contractName": "nft",
-    "contractAction": "updateName",
+    "contractName": "nftmarket",
+    "contractAction": "enableMarket",
     "contractPayload": {
-        "symbol": "TESTNFT",
-        "name": "My Awesome NFT"
+        "symbol": "TESTNFT"
     }
 }
 ```
+A successful enableMarket action will emit an "enableMarket" event:
+``symbol``
+example:
+```
+{
+    "contract": "nftmarket",
+    "event": "enableMarket",
+    "data": {
+        "symbol": "TESTNFT"
+    }
+}
+```
+
+### setGroupBy:
+**Note:** this is an action on the nft contract, NOT nftmarket.
+After you have created some data properties via the addProperty action, you can call setGroupBy in order to define a list of data properties by which market orders for NFT instances should be grouped by. You can think of this grouping as an index used to organize orders on the market, similar to how PeakMonsters groups Splinterlands cards according to type & gold foil status. NFT instances which have the same values for the designated data properties are considered equivalent as far as the market is concerned.
+
+Consider the following points carefully before calling this action:
+
+* Data properties which never change once set (i.e. read-only properties) are the best ones to use for this grouping.
+* Long text strings do not make ideal properties to group by. Integers and boolean types make the best grouping.
+* Numbers with fractional parts (for example 3.1415926) should be avoided due to possible rounding issues. Integers without fractional parts are ideal for grouping.
+* This grouping **can only be set once!** You can't change it later on, so don't call this action until you are completely ready to do so.
+* Token holders will not be able to place market orders until you have defined a valid grouping via this action.
+
+* requires active key: yes
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * properties (array of string): list of data property names to set as the grouping. The schema for each property must have been previously created via the addProperty action.
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "setGroupBy",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "properties": [ "level","isFood" ]
+    }
+}
+```
+
 ## Managing Sell Orders
 ### sell:
 Updates the url of the token's project web site.
