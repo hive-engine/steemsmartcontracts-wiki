@@ -24,6 +24,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 Before token holders can trade an NFT, the market must be enabled for a particular NFT symbol. Until this is done, no market orders can be placed. There are two steps required to enable the market:
 1. Call the enableMarket action on the nftmarket contract.
 2. Call the setGroupBy action on the nft contract.
+
 These actions require active key authority, and can only be called by the Steem account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
 ### enableMarket:
 Enables a market by creating necessary database tables for the given symbol.
@@ -59,6 +60,7 @@ example:
 
 ### setGroupBy:
 **Note:** this is an action on the nft contract, NOT nftmarket.
+
 After you have created some data properties via the addProperty action, you can call setGroupBy in order to define a list of data properties by which market orders for NFT instances should be grouped by. You can think of this grouping as an index used to organize orders on the market, similar to how PeakMonsters groups Splinterlands cards according to type & gold foil status. NFT instances which have the same values for the designated data properties are considered equivalent as far as the market is concerned.
 
 Consider the following points carefully before calling this action:
