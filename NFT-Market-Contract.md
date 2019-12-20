@@ -92,24 +92,55 @@ Consider the following points carefully before calling this action:
 ```
 
 ## Managing Sell Orders
-### sell:
-Updates the url of the token's project web site.
-* requires active key: no
+For now, the market only supports sell side orders. The ability to place bids will be added later. Also, only Steem accounts can place market orders. Smart contracts that hold tokens cannot currently use the market.
 
-* can be called by: Steem account that owns the NFT
+Sellers have the ability to put NFT instances up for sale, change the price of existing orders, and cancel existing orders. Buyers have the ability to buy (hit) existing sell orders.
+### sell:
+Puts one or more NFT instances up for sale. Separate market orders will be created for each individual token listed for sale. As with the regular token market, tokens up for sale are "locked" by transferring them to the NFT market contract for safekeeping. Tokens held by the market will be returned to their owners if the corresponding market order gets canceled. Unlike the regular token market, NFT market orders do not expire. Once listed for sale, a market order will persist until it is either canceled or bought.
+* requires active key: yes
+
+* can be called by: Steem account that holds the token(s) to be sold
 
 * parameters:
-  * url (string): new url for the token (0 <= length <= 255)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * nfts (array of string): list of NFT instance IDs to sell
+  * price (string): price that each individual token should be sold at
+  * priceSymbol (string): the regular token symbol that the seller wants to be paid in. Does not necessarily have to be STEEMP. Note that you cannot create multiple sell orders for the same NFT instance ID with different price symbols.
+  * fee (integer): a whole number ranging from 0 to 10000 inclusive. Represents a percentage of the price that will be taken as a fee and sent to a designated market account specified by buyers. These fees provide an incentive for construction of third-party marketplace apps by giving such apps a way to monetize themselves. To calculate the fee percentage, divide this number by 10000. For example, a fee value of 500 is 5% (0.05). A value of 1234 is 12.34% (0.1234).
+  
+A maximum of 50 tokens can be put up for sale in a single call of this action. Note that tokens cannot be put on the market if they are currently being delegated to another account.
 
 * example:
 ```
 {
-    "contractName": "nft",
-    "contractAction": "updateUrl",
+    "contractName": "nftmarket",
+    "contractAction": "sell",
     "contractPayload": {
         "symbol": "TESTNFT",
-        "url": "https://mynewurl.com"
+        "nfts": [ "1","2","3" ],
+        "price": "2.000",
+        "priceSymbol": "ENG",
+        "fee": 500
+    }
+}
+```
+A successful sell action will emit a "sellOrder" event for each market order created:
+``account: the seller, ownedBy: u, symbol, nftId: NFT instance ID for this order, timestamp: time of order creation in milliseconds, price, priceSymbol, fee, orderId: ID of the newly created order``
+example:
+```
+{
+    "contract": "nftmarket",
+    "event": "sellOrder",
+    "data": {
+        "account": "aggroed",
+        "ownedBy": "u",
+        "symbol": "TESTNFT",
+        "nftId": "1",
+        "timestamp": 1527811200000,
+        "price": "2.00000000",
+        "priceSymbol": "ENG",
+        "fee": 500,
+        "orderId": 1
     }
 }
 ```
