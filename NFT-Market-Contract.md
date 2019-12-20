@@ -375,3 +375,55 @@ examples of typical open interest entries:
 }
 ```
 **Counting number of open orders:** simply sum together the count field for all open interest entries in the table, querying by priceSymbol and side if desired.
+
+## SYMBOLtradesHistory
+**indexes:** priceSymbol, timestamp
+
+Every NFT symbol has its own separate table to store trade history. The table name for a particular symbol is formed by taking the symbol and adding "tradesHistory" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTtradesHistory table will store all trade history for that symbol. Note that this table will not exist if the enableMarket action has not been called yet.
+
+Only the last 24 hours worth of trade history is kept. Every time a trade is made, a check will be made to prune old information from this table.
+
+* fields
+  * type = will be buy or sell. Currently, the market only supports sell side orders. Thus all trades will have this field set to 'buy' (a trade is done when a buyer hits a sell order using the buy action).
+  * account = the buyer's Steem account name
+  * ownedBy = will always be u (smart contracts are not currently allowed to participate in the market)
+  * counterparties = contains detailed information about the counterparties from which NFT instances are bought or sold (these will always be the sellers for now)
+  * priceSymbol = the token symbol of the trade's payment method
+  * price = the total price for all NFT instances purchased in this trade (inclusive of market fees)
+  * marketAccount = the Steem account that received the market fee for this trade
+  * fee = the total fee paid to the market account by the purchaser for this trade
+  * timestamp (integer) = time of this trade in seconds
+  * volume (integer) = number of NFT instances exchanged in this trade
+
+an example of a trade involving multiple NFT instances bought from different sellers:
+```
+{
+    _id: 12345,
+    type: 'buy',
+    account: 'cryptomancer',
+    ownedBy: 'u',
+    counterparties: [
+        {
+            account: 'aggroed',
+            ownedBy: 'u',
+            nftIds: [ '147' ],
+            paymentTotal: '2.98451050'
+        },
+        {
+            account: 'marc',
+            ownedBy: 'u',
+            nftIds: [ '503' ],
+            paymentTotal: '7.60000000'
+        }
+    ],
+    priceSymbol: 'ENG',
+    price: '11.14159000',
+    marketAccount: 'peakmonsters',
+    fee: '0.55707950',
+    timestamp: 1527811200,
+    volume: 2
+}
+```
+In the above example, 2 NFT instances were bought by @cryptomancer from @aggroed and @marc. The total price for both NFT instances, inclusive of the market fee, was 11.14159000 ENG. From that amount, a fee of 0.55707950 ENG was subtracted and sent to the @peakmonsters account. The remaining amount was distributed as payment to the two sellers, with @aggroed receiving 2.98451050 ENG and @marc receiving 7.60000000 ENG. The market fee was 5% for each order hit.
+
+**Calculating daily volume metrics:** simply sum together the volume field for all trade history entries in the table, querying by priceSymbol if desired, to get the total number of NFT instances traded. Similarly, sum together the price field to get total value exchanged. Note that price is stored as a string, so you must convert to a floating point number in order to calculate the sum.
