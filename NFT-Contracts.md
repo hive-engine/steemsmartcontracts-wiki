@@ -41,6 +41,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [nfts](#nfts)
   * [pendingUndelegations](#pendingundelegations)
   * [SYMBOLinstances](#symbolinstances)
+* [Example smart contract for token issuance](#example-smart-contract-for-token-issuance)
 
 # Actions available:
 ## Creating new NFTs
@@ -1077,3 +1078,13 @@ examples of typical token data:
     }
 }
 ```
+
+# Example smart contract for token issuance
+
+The crittermanager contract serves as a reference example of how to do Splinterlands style NFT pack issuance. The comments in the source code should give a good idea of how it works. It demonstrates the following features:
+
+* allow NFT owner to configure different editions (think Splinterlands ALPHA, BETA, and UNTAMED)
+* programmatically create the CRITTER NFT through a contract action
+* open a "pack" to generate critters by randomly varying properties such as critter type, rarity, and whether the critter is a gold foil or not.
+* allow different pack tokens for each edition - the contract gives users a way to exchange pack tokens for newly issued critters
+* update data properties - a user can call a contract action to set a name for critters that he/she owns
