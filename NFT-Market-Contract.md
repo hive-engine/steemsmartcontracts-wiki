@@ -145,6 +145,49 @@ example:
 }
 ```
 
+### changePrice:
+Changes the price of one or more existing sell orders. Note that the price symbol cannot be changed (to do that you should cancel the sell order and place a new one).
+* requires active key: yes
+
+* can be called by: Steem account that originally placed the order(s) to be modified
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * nfts (array of string): list of NFT instance IDs (NOT order IDs) whose price you wish to change
+  * price (string): new price that each individual token should be sold at
+  
+A maximum of 50 orders can be modified in a single call of this action. All orders must have the same price symbol.
+
+* example:
+```
+{
+    "contractName": "nftmarket",
+    "contractAction": "changePrice",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "nfts": [ "1","2","3" ],
+        "price": "15.666"
+    }
+}
+```
+A successful action will emit a "changePrice" event for each market order updated:
+``symbol, nftId: NFT instance ID for this order, oldPrice, newPrice, priceSymbol, orderId: ID of the updated order``
+example:
+```
+{
+    "contract": "nftmarket",
+    "event": "changePrice",
+    "data": {
+        "symbol": "TEST",
+        "nftId": "1",
+        "oldPrice": "3.14159000",
+        "newPrice": "15.66600000",
+        "priceSymbol": "ENG",
+        "orderId": 1
+    }
+}
+```
+
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions. The one exception is the NFT instance table, as the _id serves as the token ID used to refer to that particular token in data queries and various smart contract actions.
 
