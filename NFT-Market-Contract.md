@@ -290,67 +290,51 @@ example:
 In the above example, 4 NFT instances are bought at once by @cryptomancer, from separate sellers. Three of those tokens were sold by @aggroed, who received a payment of 8.95353150 ENG, and one token was sold by @marc who received a payment of 7.60000000 ENG. The total payment amount distributed to the sellers for all 4 tokens was 16.55353150 ENG (8.95353150 + 7.60000000), and the market fee was 0.87123850 ENG. To get the total sale price of 17.42477000 ENG, add together paymentTotal and feeTotal. In this case, the fee for each order was 5%.
 
 # Tables available:
-Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions. The one exception is the NFT instance table, as the _id serves as the token ID used to refer to that particular token in data queries and various smart contract actions.
+Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
-## SYMBOLinstances
-Every NFT symbol has its own separate table to store NFT instances (issued tokens). The instance table name for a particular symbol is formed by taking the symbol and adding "instances" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTinstances table will store all the issued MYNFT tokens.
+## SYMBOLsellBook
+Every NFT symbol has its own separate table to store the sell side order book. The table name for a particular symbol is formed by taking the symbol and adding "sellBook" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTsellBook table will store all active sell orders. Note that this table will not exist if the enableMarket action has not been called yet.
 * fields
-  * _id = the token ID number
-  * account = the Steem account or smart contract that holds this particular token
-  * ownedBy = indicates if this token is held in a Steem account or smart contract. For a Steem account, the value will be "u".  For a smart contract, the value will be "c".
-  * lockedTokens = describes all regular Steem Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
-  * properties = values of all the data properties for this particular NFT instance. If there are no data properties set, the value will be {}
-  * **(optional)** delegatedTo = if this token is delegated, will contain information about which account or contract the token is delegated to. If there is no delegation, this field will not exist (will be undefined).
-  * **(optional)** previousAccount = the Steem account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
-  * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Steem account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
+  * account = the Steem account that created this particular order
+  * ownedBy = indicates if this order was created by a Steem account or smart contract. As smart contracts are not supported for now, the value will always be "u".
+  * nftId (string) = NFT instance ID for this particular order
+  * grouping = holds a copy of the data property values which together uniquely identify how this market order should be grouped, according to the list set by the NFT contract setGroupBy action
+  * timestamp (integer) = creation time of this order in milliseconds
+  * price (string) = price of this order
+  * priceDec (decimal) = price of this order as a decimal data type
+  * priceSymbol = the token symbol that the seller wants payment in
+  * fee (integer) = a whole number between 0 and 10000, inclusive, which represents the market fee percentage for this order
 
-The delegatedTo field has its own structure as follows:
-* account = the Steem account or smart contract that the token is delegated to
-* ownedBy = indicates if the token is delegated to a Steem account or smart contract. For a Steem account, the value will be "u".  For a smart contract, the value will be "c".
-* **(optional)** undelegateAt = if this token is pending undelegation, this will be the timestamp when the undelegation will be completed (in milliseconds). If there is no pending undelegation, this field will not exist (will be undefined)
-
-examples of typical token data:
+examples of typical sell orders:
 ```
 {
     _id: 4,
     account: 'marc',
     ownedBy: 'u',
-    lockedTokens: {},
-    properties: {}
+    nftId: '35',
+    grouping: { level: '', color: '' },
+    timestamp: 1527811200000,
+    price: '8.000',
+    priceDec: { '$numberDecimal': '8.000' },
+    priceSymbol: 'TKN',
+    fee: 500
 }
 
 {
-    _id: 605,
-    account: 'gamecontract',
-    ownedBy: 'c',
-    lockedTokens: { ENG: '10', SPT: '0.5' },
-    properties: { color: 'red', frozen: true }
-}
-
-{
-    _id: 222,
+    _id: 112,
     account: 'aggroed',
     ownedBy: 'u',
-    lockedTokens: { ENG: '10', TKN: '0.01' },
-    properties: { color: 'orange' },
-    delegatedTo: {
-        account: 'cryptomancer',
-        ownedBy: 'u'
-    }
-}
-
-{
-    _id: 12345,
-    account: 'testContract',
-    ownedBy: 'c',
-    lockedTokens: {},
-    properties: { color: 'blue', edition: 1 },
-    delegatedTo: {
-        account: 'contract2',
-        ownedBy: 'c',
-        undelegateAt: 1528243200000
-    },
-    previousAccount: 'aggroed',
-    previousOwnedBy: 'u'
+    nftId: '10',
+    grouping: { type: '3', isRare: 'true' },
+    timestamp: 1527811200000,
+    price: '2.00000000',
+    priceDec: { '$numberDecimal': '2.00000000' },
+    priceSymbol: 'ENG',
+    fee: 1000
 }
 ```
+A couple points about the grouping:
+1. If an NFT instance does not have one of the grouped by data properties set, the grouping will contain an empty string '' for that data property, as in the first example above.
+2. Grouping values will always be strings, regardless of the data property type, as shown in the second example above where the value 'true' is a boolean data type but represented here as a string.
+
+We can also infer that the above examples are orders for two different NFT symbols, because the grouped by data property names are fixed per symbol according to the setGroupBy action (i.e. grouped by names will be the same for all orders of a particular NFT symbol, although of course the data property values can vary to distinguish the various groupings).
