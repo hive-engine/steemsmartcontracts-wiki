@@ -234,7 +234,7 @@ example:
 
 ## Buy (hit an existing sell order)
 ### buy:
-Buys one or more NFT instances that are currently listed for sale. 
+Buys one or more NFT instances that are currently listed for sale. The buyer must have enough tokens in his account to pay for all NFT instances; there is no concept of a partial fill, either you buy everything requested or nothing.
 * requires active key: yes
 
 * can be called by: Steem account
