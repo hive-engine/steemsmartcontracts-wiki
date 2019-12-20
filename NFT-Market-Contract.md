@@ -188,6 +188,50 @@ example:
 }
 ```
 
+### cancel:
+Cancels one or more existing sell orders. Upon an order's successful cancelation, the corresponding NFT instance held by the NFT market contract will be transferred back to the owning account.
+* requires active key: yes
+
+* can be called by: Steem account that originally placed the order(s) to be canceled
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * nfts (array of string): list of NFT instance IDs (NOT order IDs) whose orders you wish to cancel
+  
+A maximum of 50 orders can be cancelled in a single call of this action. All orders must have the same price symbol.
+
+* example:
+```
+{
+    "contractName": "nftmarket",
+    "contractAction": "cancel",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "nfts": [ "1","2","3" ]
+    }
+}
+```
+A successful action will emit a "cancelOrder" event for each market order cancelled:
+``account: the seller, ownedBy: u, symbol, nftId: NFT instance ID for this order, timestamp: time of order creation in milliseconds, price, priceSymbol, fee, orderId: ID of the cancelled order``
+example:
+```
+{
+    "contract": "nftmarket",
+    "event": "cancelOrder",
+    "data": {
+        "account": "aggroed",
+        "ownedBy": "u",
+        "symbol": "TESTNFT",
+        "nftId": "1",
+        "timestamp": 1527811200000,
+        "price": "2.00000000",
+        "priceSymbol": "ENG",
+        "fee": 500,
+        "orderId": 1
+    }
+}
+```
+
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions. The one exception is the NFT instance table, as the _id serves as the token ID used to refer to that particular token in data queries and various smart contract actions.
 
