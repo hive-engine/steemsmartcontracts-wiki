@@ -375,7 +375,7 @@ Edits one or more data properties on one or more instances of an NFT.
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): the data properties to set and their corresponding NFT instance ID. Should be formatted as follows: ``[ {"id":"1", "properties": {"name1":"value1","name2":"value2",...}}, {"id":"2", "properties": {"name1":"value1","name2":"value2",...}, ...} ]``
 
-A maximum of 100 tokens can be edited in a single call of this action.
+A maximum of 50 tokens can be edited in a single call of this action.
 
 * examples:
 ```
@@ -647,7 +647,7 @@ Delegates one or more tokens to another account or smart contract. Can only be c
   * **(optional)** toType (string): indicates whether the target specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to delegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be delegated in a single call of this action. Note that tokens cannot be delegated to the null account.
+A maximum of 50 tokens can be delegated in a single call of this action. Note that tokens cannot be delegated to the null account.
 
 * examples:
 ```
@@ -734,7 +734,7 @@ Undelegates one or more tokens that have previously been delegated. If an undele
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the undelegation on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to undelegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be undelegated in a single call of this action.
+A maximum of 50 tokens can be undelegated in a single call of this action.
 
 * examples:
 ```
@@ -804,7 +804,7 @@ Transfers one or more tokens to another account or smart contract.
   * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to transfer. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be transferred in a single call of this action. Note that tokens cannot be transferred if they are currently being delegated to another account. Also, tokens cannot be transferred to null; for that you need to use the burn action.
+A maximum of 50 tokens can be transferred in a single call of this action. Note that tokens cannot be transferred if they are currently being delegated to another account. Also, tokens cannot be transferred to null; for that you need to use the burn action.
 
 * examples:
 ```
@@ -891,7 +891,7 @@ Burns one or more tokens. When a token is burned, it is sent to the null account
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to burn. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account.
+A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account.
 
 * examples:
 ```
