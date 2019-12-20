@@ -293,6 +293,7 @@ In the above example, 4 NFT instances are bought at once by @cryptomancer, from 
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
 ## SYMBOLsellBook
+**indexes:** ownedBy, account, nftId, grouping, priceSymbol
 Every NFT symbol has its own separate table to store the sell side order book. The table name for a particular symbol is formed by taking the symbol and adding "sellBook" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTsellBook table will store all active sell orders. Note that this table will not exist if the enableMarket action has not been called yet.
 * fields
   * account = the Steem account that created this particular order
@@ -340,6 +341,7 @@ A couple points about the grouping:
 We can also infer that the above examples are orders for two different NFT symbols, because the grouped by data property names are fixed per symbol according to the setGroupBy action (i.e. grouped by names will be the same for all orders of a particular NFT symbol, although of course the data property values can vary to distinguish the various groupings).
 
 ## SYMBOLopenInterest
+**indexes:** side, priceSymbol, grouping
 Every NFT symbol has its own separate table to store open interest metrics. The table name for a particular symbol is formed by taking the symbol and adding "openInterest" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTopenInterest table will store all open interest for that symbol. Note that this table will not exist if the enableMarket action has not been called yet.
 
 Open interest is defined to be the number of currently open (active) orders, grouped according to the data property values in each order's grouping field. Note that an open interest entry for a particular combination of data property values won't exist until at least 1 order whose NFT instance has that combination of values is created. Once created, open interest entries never get deleted. Thus it is perfectly reasonable to have an entry with 0 current active orders.
