@@ -258,7 +258,7 @@ A maximum of 50 NFT instances can be bought in a single call of this action. You
     }
 }
 ```
-A successful purchase will emit a "hitSellOrder" event for each NFT instance sold:
+A successful purchase will emit a single "hitSellOrder" event with data on all NFT instances sold:
 ``symbol, priceSymbol, account: the buyer, ownedBy: u, sellers: data structure giving info on all sellers, paymentTotal: total sale price of all orders sold (after subtracting the market fee), feeTotal: total market fee of all orders sold``
 example:
 ```
