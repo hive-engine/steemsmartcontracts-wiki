@@ -24,4 +24,6 @@
 
 [Market Smart Contract](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/Market-Smart-Contract.md)
 
-[NFT Contracts](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md)
+[NFT Contract](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md)
+
+[NFT Market Contract](https://github.com/harpagon210/steemsmartcontracts-wiki/blob/master/NFT-Market-Contract.md)

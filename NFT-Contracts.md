@@ -20,6 +20,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [addProperty](#addproperty)
   * [setPropertyPermissions](#setpropertypermissions)
   * [setProperties](#setproperties)
+  * [setGroupBy](#setgroupby)
 * [Token issuance](#token-issuance)
   * [fees](#fees)
   * [locked tokens](#locked-tokens)
@@ -41,6 +42,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [nfts](#nfts)
   * [pendingUndelegations](#pendingundelegations)
   * [SYMBOLinstances](#symbolinstances)
+* [Example smart contract for token issuance](#example-smart-contract-for-token-issuance)
 
 # Actions available:
 ## Creating new NFTs
@@ -374,7 +376,7 @@ Edits one or more data properties on one or more instances of an NFT.
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): the data properties to set and their corresponding NFT instance ID. Should be formatted as follows: ``[ {"id":"1", "properties": {"name1":"value1","name2":"value2",...}}, {"id":"2", "properties": {"name1":"value1","name2":"value2",...}, ...} ]``
 
-A maximum of 100 tokens can be edited in a single call of this action.
+A maximum of 50 tokens can be edited in a single call of this action.
 
 * examples:
 ```
@@ -413,6 +415,37 @@ A maximum of 100 tokens can be edited in a single call of this action.
 }
 ```
 Data properties that are not included in the list of properties to edit will have their values left unchanged.
+
+### setGroupBy:
+After you have created some data properties via the addProperty action, you can call setGroupBy in order to define a list of data properties by which market orders for NFT instances should be grouped by. You can think of this grouping as an index used to organize orders on the market, similar to how PeakMonsters groups Splinterlands cards according to type & gold foil status. NFT instances which have the same values for the designated data properties are considered equivalent as far as the market is concerned.
+
+Consider the following points carefully before calling this action:
+
+* Data properties which never change once set (i.e. read-only properties) are the best ones to use for this grouping.
+* Long text strings do not make ideal properties to group by. Integers and boolean types make the best grouping.
+* Numbers with fractional parts (for example 3.1415926) should be avoided due to possible rounding issues. Integers without fractional parts are ideal for grouping.
+* This grouping **can only be set once!** You can't change it later on, so don't call this action until you are completely ready to do so.
+* Token holders will not be able to place market orders until you have defined a valid grouping via this action.
+
+* requires active key: yes
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * properties (array of string): list of data property names to set as the grouping. The schema for each property must have been previously created via the addProperty action.
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "setGroupBy",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "properties": [ "level","isFood" ]
+    }
+}
+```
 
 ## Token issuance
 Once an NFT has been created, its data properties defined, and editing permissions set, it's time to issue some tokens!
@@ -646,7 +679,7 @@ Delegates one or more tokens to another account or smart contract. Can only be c
   * **(optional)** toType (string): indicates whether the target specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to delegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be delegated in a single call of this action. Note that tokens cannot be delegated to the null account.
+A maximum of 50 tokens can be delegated in a single call of this action. Note that tokens cannot be delegated to the null account.
 
 * examples:
 ```
@@ -733,7 +766,7 @@ Undelegates one or more tokens that have previously been delegated. If an undele
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the undelegation on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to undelegate. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be undelegated in a single call of this action.
+A maximum of 50 tokens can be undelegated in a single call of this action.
 
 * examples:
 ```
@@ -803,7 +836,7 @@ Transfers one or more tokens to another account or smart contract.
   * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
   * nfts (array of object): list of tokens to transfer. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be transferred in a single call of this action. Note that tokens cannot be transferred if they are currently being delegated to another account. Also, tokens cannot be transferred to null; for that you need to use the burn action.
+A maximum of 50 tokens can be transferred in a single call of this action. Note that tokens cannot be transferred if they are currently being delegated to another account. Also, tokens cannot be transferred to null; for that you need to use the burn action.
 
 * examples:
 ```
@@ -890,7 +923,7 @@ Burns one or more tokens. When a token is burned, it is sent to the null account
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to burn. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 100 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account.
+A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account.
 
 * examples:
 ```
@@ -957,6 +990,7 @@ contains definitions of each NFT
   * authorizedIssuingAccounts = list of Steem accounts authorized to issue tokens on behalf of the NFT owner
   * authorizedIssuingContracts = list of smart contracts authorized to issue tokens on behalf of the NFT owner
   * properties = schema definition of any data properties belonging to this NFT
+  * groupBy = list of data property names by which market orders for NFT instances should be grouped 
 
 The properties field is a dictionary mapping property names to schema that have their own structure as follows:
 * type = indicates the type of the data property. Can be string, number, or boolean.
@@ -1008,7 +1042,8 @@ example of a typical NFT definition:
             authorizedEditingAccounts: [ 'cryptomancer' ],
             authorizedEditingContracts: []
           }
-    }
+    },
+    groupBy: [ 'level', 'isFood' ]
 }
 ```
 
@@ -1028,6 +1063,8 @@ Every NFT symbol has its own separate table to store NFT instances (issued token
   * lockedTokens = describes all regular Steem Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
   * properties = values of all the data properties for this particular NFT instance. If there are no data properties set, the value will be {}
   * **(optional)** delegatedTo = if this token is delegated, will contain information about which account or contract the token is delegated to. If there is no delegation, this field will not exist (will be undefined).
+  * **(optional)** previousAccount = the Steem account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
+  * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Steem account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
 
 The delegatedTo field has its own structure as follows:
 * account = the Steem account or smart contract that the token is delegated to
@@ -1074,6 +1111,18 @@ examples of typical token data:
         account: 'contract2',
         ownedBy: 'c',
         undelegateAt: 1528243200000
-    }
+    },
+    previousAccount: 'aggroed',
+    previousOwnedBy: 'u'
 }
 ```
+
+# Example smart contract for token issuance
+
+The crittermanager contract serves as a reference example of how to do Splinterlands style NFT pack issuance. The comments in the source code should give a good idea of how it works. It demonstrates the following features:
+
+* allow NFT owner to configure different editions (think Splinterlands ALPHA, BETA, and UNTAMED)
+* programmatically create the CRITTER NFT through a contract action
+* open a "pack" to generate critters by randomly varying properties such as critter type, rarity, and whether the critter is a gold foil or not.
+* allow different pack tokens for each edition - the contract gives users a way to exchange pack tokens for newly issued critters
+* update data properties - a user can call a contract action to set a name for critters that he/she owns
