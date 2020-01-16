@@ -1119,7 +1119,11 @@ examples of typical token data:
 
 # Example smart contract for token issuance
 
-The crittermanager contract serves as a reference example of how to do Splinterlands style NFT pack issuance. The comments in the source code should give a good idea of how it works. It demonstrates the following features:
+The crittermanager contract serves as a reference example of how to do Splinterlands style NFT pack issuance. The comments in the source code should give a good idea of how it works.
+
+[Critter Manager smart contract source code](https://github.com/harpagon210/steemsmartcontracts/blob/witnesses/contracts/crittermanager.js)
+
+Everything done in this example contract can be done just as well from Python or Javascript. It's worth repeating that all NFT interactions can be boiled down to simply broadcasting the appropriate custom json commands. It demonstrates the following features:
 
 * allow NFT owner to configure different editions (think Splinterlands ALPHA, BETA, and UNTAMED)
 * programmatically create the CRITTER NFT through a contract action
