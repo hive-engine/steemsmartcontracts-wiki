@@ -10,6 +10,8 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [updateUrl](#updateurl)
   * [updateMetadata](#updatemetadata)
   * [updateName](#updatename)
+  * [updateOrgName](#updateorgname)
+  * [updateProductName](#updateproductname)
   * [addAuthorizedIssuingAccounts](#addauthorizedissuingaccounts)
   * [addAuthorizedIssuingContracts](#addauthorizedissuingcontracts)
   * [removeAuthorizedIssuingAccounts](#removeauthorizedissuingaccounts)
@@ -155,7 +157,7 @@ Updates the user friendly name of an NFT.
 * can be called by: Steem account that owns the NFT
 
 * parameters:
-  * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
+  * name (string): new name of the token (letters, numbers, whitespace only, max length of 50)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
 
 * example:
@@ -166,6 +168,50 @@ Updates the user friendly name of an NFT.
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "My Awesome NFT"
+    }
+}
+```
+
+### updateOrgName:
+Updates the name of the company/organization that manages an NFT.
+* requires active key: no
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * orgName (string): new name of the company/organization (letters, numbers, whitespace only, max length of 50)
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "updateOrgName",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "orgName": "Nifty Company Inc"
+    }
+}
+```
+
+### updateProductName:
+Updates the name of the product/brand that an NFT is associated with.
+* requires active key: no
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * productName (string): new name of the product/brand (letters, numbers, whitespace only, max length of 50)
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "updateProductName",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "productName": "Acme Exploding NFTs"
     }
 }
 ```
