@@ -23,6 +23,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [setPropertyPermissions](#setpropertypermissions)
   * [setProperties](#setproperties)
   * [setGroupBy](#setgroupby)
+  * [updatePropertyDefinition](#updatepropertydefinition)
 * [Token issuance](#token-issuance)
   * [fees](#fees)
   * [locked tokens](#locked-tokens)
@@ -396,7 +397,7 @@ Adds a new data property schema to an existing NFT definition. For every data pr
     }
 }
 ```
-Note that once a data property name and type are set, they can NOT be changed. Also, data property schemas cannot be deleted once added.
+Note that once a data property name and type are set, they normally CANNOT be changed (however under some limited circumstances this is possible; see [updatePropertyDefinition](#updatepropertydefinition) below). Also, data property schemas cannot be deleted once added.
 
 ### setPropertyPermissions:
 Can be used after calling the addProperty action to change the lists of authorized editing accounts & contracts for a given data property. There is a maximum limit of 10 accounts/contracts that can be on each list.
@@ -502,6 +503,56 @@ Consider the following points carefully before calling this action:
     "contractPayload": {
         "symbol": "TESTNFT",
         "properties": [ "level","isFood" ]
+    }
+}
+```
+
+### updatePropertyDefinition:
+Updates the schema of a data property. This action can be used to change a data property's name, type, or read only attribute, with a couple caveats.
+* requires active key: yes
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * name (string): name of the new data property (letters & numbers only, max length of 25)
+  * type (string): must be number, string, or boolean as explained above
+  * **(optional)** isReadOnly (boolean): if true, then this data property can be set exactly one time and never changed again. The default value is false if this parameter is not specified.
+  * **(optional)** authorizedEditingAccounts (array of string): a list of Steem accounts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
+  * **(optional)** authorizedEditingContracts (array of string): a list of smart contracts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then no smart contracts will be authorized as such.
+
+* examples:
+```
+{
+    "contractName": "nft",
+    "contractAction": "addProperty",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "color",
+        "type": "string"
+    }
+}
+
+{
+    "contractName": "nft",
+    "contractAction": "addProperty",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "edition",
+        "type": "number",
+        "isReadOnly": true
+    }
+}
+
+{
+    "contractName": "nft",
+    "contractAction": "addProperty",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "isPremium",
+        "type": "boolean",
+        "authorizedEditingAccounts": [ "cryptomancer" ],
+        "authorizedEditingContracts": [ "mycontract","myothercontract" ]
     }
 }
 ```
