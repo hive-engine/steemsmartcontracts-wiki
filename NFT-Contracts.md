@@ -55,6 +55,8 @@ Creates a new NFT. A creation fee of 100 ENG is required.
 * parameters:
   * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * **(optional)** orgName (string): name of the company/organization that created this NFT (letters, numbers, whitespace only, max length of 50)
+  * **(optional)** productName (string): product/brand that this NFT is associated with (letters, numbers, whitespace only, max length of 50)
   * **(optional)** url (string): url of the project (max length of 255)
   * **(optional)** maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991). If maxSupply is not specified, then the supply will be unlimited.
   * **(optional)** authorizedIssuingAccounts (array of string): a list of Steem accounts which are authorized to issue new tokens on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
@@ -62,6 +64,15 @@ Creates a new NFT. A creation fee of 100 ENG is required.
 
 * examples:
 ```
+{
+    "contractName": "nft",
+    "contractAction": "create",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "My Test NFT"
+    }
+}
+
 {
     "contractName": "nft",
     "contractAction": "create",
@@ -79,6 +90,8 @@ Creates a new NFT. A creation fee of 100 ENG is required.
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "My Test NFT",
+        "orgName": "My Company Inc",
+        "productName": "Uber Cool Product",
         "url": "https://mynft.com"
         "maxSupply": "1000",
         "authorizedIssuingAccounts": [ "cryptomancer","aggroed","harpagon" ],
