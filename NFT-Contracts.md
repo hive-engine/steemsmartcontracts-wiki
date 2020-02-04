@@ -509,50 +509,71 @@ Consider the following points carefully before calling this action:
 
 ### updatePropertyDefinition:
 Updates the schema of a data property. This action can be used to change a data property's name, type, or read only attribute, with a couple caveats.
+
+*This action can only be called if no tokens for this NFT have been issued yet.* Once tokens have been issued, data property schema definitions cannot be changed, and any attempt to use this action will fail. This action is primarily intended as a safeguard to protect against mistakes during NFT creation time, not for changing token characteristics later on.
+
+There are further restrictions on data property name changes (see newName parameter below).
 * requires active key: yes
 
 * can be called by: Steem account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
-  * name (string): name of the new data property (letters & numbers only, max length of 25)
-  * type (string): must be number, string, or boolean as explained above
-  * **(optional)** isReadOnly (boolean): if true, then this data property can be set exactly one time and never changed again. The default value is false if this parameter is not specified.
-  * **(optional)** authorizedEditingAccounts (array of string): a list of Steem accounts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
-  * **(optional)** authorizedEditingContracts (array of string): a list of smart contracts which are authorized to edit this data property on behalf of the NFT owner. If no list is provided, then no smart contracts will be authorized as such.
-
+  * name (string): name of the data property to change (letters & numbers only, max length of 25)
+  * **(optional)** newName (string): new name of the data property (letters & numbers only, max length of 25). There must not be an existing data property with this new name, and the data property being changed must not be part of a grouping previously created by [setGroupBy](#setgroupby).
+  * **(optional)** type (string): new type of the data property. Must be number, string, or boolean.
+  * **(optional)** isReadOnly (boolean): new read only attribute of the data property. If true, then this data property can be set exactly one time and never changed again.
+  
 * examples:
 ```
 {
     "contractName": "nft",
-    "contractAction": "addProperty",
+    "contractAction": "updatePropertyDefinition",
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "color",
+        "newName": "Color"
+    }
+}
+
+{
+    "contractName": "nft",
+    "contractAction": "updatePropertyDefinition",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "edition",
         "type": "string"
     }
 }
 
 {
     "contractName": "nft",
-    "contractAction": "addProperty",
+    "contractAction": "updatePropertyDefinition",
     "contractPayload": {
         "symbol": "TESTNFT",
-        "name": "edition",
+        "name": "frozen",
+        "newName": "age",
         "type": "number",
-        "isReadOnly": true
+        "isReadOnly": false
     }
 }
+```
 
+A successful updatePropertyDefinition action will emit an "updatePropertyDefinition" event:
+``symbol, originalName, originalType, originalIsReadOnly, newName (only if changed), newType (only if changed), newIsReadOnly (only if changed)``
+example:
+```
 {
-    "contractName": "nft",
-    "contractAction": "addProperty",
-    "contractPayload": {
-        "symbol": "TESTNFT",
-        "name": "isPremium",
-        "type": "boolean",
-        "authorizedEditingAccounts": [ "cryptomancer" ],
-        "authorizedEditingContracts": [ "mycontract","myothercontract" ]
+    "contract": "nft",
+    "event": "updatePropertyDefinition",
+    "data": {
+        "symbol": "TSTNFT",
+        "originalName": "frozen",
+        "originalType": "boolean",
+        "originalIsReadOnly": true,
+        "newName": "age",
+        "newType": "number",
+        "newIsReadOnly": false
     }
 }
 ```
