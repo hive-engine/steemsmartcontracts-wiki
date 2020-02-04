@@ -10,6 +10,8 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [updateUrl](#updateurl)
   * [updateMetadata](#updatemetadata)
   * [updateName](#updatename)
+  * [updateOrgName](#updateorgname)
+  * [updateProductName](#updateproductname)
   * [addAuthorizedIssuingAccounts](#addauthorizedissuingaccounts)
   * [addAuthorizedIssuingContracts](#addauthorizedissuingcontracts)
   * [removeAuthorizedIssuingAccounts](#removeauthorizedissuingaccounts)
@@ -21,6 +23,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [setPropertyPermissions](#setpropertypermissions)
   * [setProperties](#setproperties)
   * [setGroupBy](#setgroupby)
+  * [updatePropertyDefinition](#updatepropertydefinition)
 * [Token issuance](#token-issuance)
   * [fees](#fees)
   * [locked tokens](#locked-tokens)
@@ -55,6 +58,8 @@ Creates a new NFT. A creation fee of 100 ENG is required.
 * parameters:
   * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * **(optional)** orgName (string): name of the company/organization that created this NFT (letters, numbers, whitespace only, max length of 50)
+  * **(optional)** productName (string): product/brand that this NFT is associated with (letters, numbers, whitespace only, max length of 50)
   * **(optional)** url (string): url of the project (max length of 255)
   * **(optional)** maxSupply (string): maximum supply for the token (between 1 and 9,007,199,254,740,991). If maxSupply is not specified, then the supply will be unlimited.
   * **(optional)** authorizedIssuingAccounts (array of string): a list of Steem accounts which are authorized to issue new tokens on behalf of the NFT owner. If no list is provided, then the NFT owner (the account that calls create) will be the only such authorized account by default.
@@ -62,6 +67,15 @@ Creates a new NFT. A creation fee of 100 ENG is required.
 
 * examples:
 ```
+{
+    "contractName": "nft",
+    "contractAction": "create",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "My Test NFT"
+    }
+}
+
 {
     "contractName": "nft",
     "contractAction": "create",
@@ -79,6 +93,8 @@ Creates a new NFT. A creation fee of 100 ENG is required.
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "My Test NFT",
+        "orgName": "My Company Inc",
+        "productName": "Uber Cool Product",
         "url": "https://mynft.com"
         "maxSupply": "1000",
         "authorizedIssuingAccounts": [ "cryptomancer","aggroed","harpagon" ],
@@ -142,7 +158,7 @@ Updates the user friendly name of an NFT.
 * can be called by: Steem account that owns the NFT
 
 * parameters:
-  * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
+  * name (string): new name of the token (letters, numbers, whitespace only, max length of 50)
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
 
 * example:
@@ -153,6 +169,50 @@ Updates the user friendly name of an NFT.
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "My Awesome NFT"
+    }
+}
+```
+
+### updateOrgName:
+Updates the name of the company/organization that manages an NFT.
+* requires active key: no
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * orgName (string): new name of the company/organization (letters, numbers, whitespace only, max length of 50)
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "updateOrgName",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "orgName": "Nifty Company Inc"
+    }
+}
+```
+
+### updateProductName:
+Updates the name of the product/brand that an NFT is associated with.
+* requires active key: no
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * productName (string): new name of the product/brand (letters, numbers, whitespace only, max length of 50)
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+
+* example:
+```
+{
+    "contractName": "nft",
+    "contractAction": "updateProductName",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "productName": "Acme Exploding NFTs"
     }
 }
 ```
@@ -337,7 +397,7 @@ Adds a new data property schema to an existing NFT definition. For every data pr
     }
 }
 ```
-Note that once a data property name and type are set, they can NOT be changed. Also, data property schemas cannot be deleted once added.
+Note that once a data property name and type are set, they normally CANNOT be changed (however under some limited circumstances this is possible; see [updatePropertyDefinition](#updatepropertydefinition) below). Also, data property schemas cannot be deleted once added.
 
 ### setPropertyPermissions:
 Can be used after calling the addProperty action to change the lists of authorized editing accounts & contracts for a given data property. There is a maximum limit of 10 accounts/contracts that can be on each list.
@@ -443,6 +503,77 @@ Consider the following points carefully before calling this action:
     "contractPayload": {
         "symbol": "TESTNFT",
         "properties": [ "level","isFood" ]
+    }
+}
+```
+
+### updatePropertyDefinition:
+Updates the schema of a data property. This action can be used to change a data property's name, type, or read only attribute, with a couple caveats.
+
+*This action can only be called if no tokens for this NFT have been issued yet.* Once tokens have been issued, data property schema definitions cannot be changed, and any attempt to use this action will fail. This action is primarily intended as a safeguard to protect against mistakes during NFT creation time, not for changing token characteristics later on.
+
+There are further restrictions on data property name changes (see newName parameter below).
+* requires active key: yes
+
+* can be called by: Steem account that owns the NFT
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * name (string): name of the data property to change (letters & numbers only, max length of 25)
+  * **(optional)** newName (string): new name of the data property (letters & numbers only, max length of 25). There must not be an existing data property with this new name, and the data property being changed must not be part of a grouping previously created by [setGroupBy](#setgroupby).
+  * **(optional)** type (string): new type of the data property. Must be number, string, or boolean.
+  * **(optional)** isReadOnly (boolean): new read only attribute of the data property. If true, then this data property can be set exactly one time and never changed again.
+  
+* examples:
+```
+{
+    "contractName": "nft",
+    "contractAction": "updatePropertyDefinition",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "color",
+        "newName": "Color"
+    }
+}
+
+{
+    "contractName": "nft",
+    "contractAction": "updatePropertyDefinition",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "edition",
+        "type": "string"
+    }
+}
+
+{
+    "contractName": "nft",
+    "contractAction": "updatePropertyDefinition",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "name": "frozen",
+        "newName": "age",
+        "type": "number",
+        "isReadOnly": false
+    }
+}
+```
+
+A successful updatePropertyDefinition action will emit an "updatePropertyDefinition" event:
+``symbol, originalName, originalType, originalIsReadOnly, newName (only if changed), newType (only if changed), newIsReadOnly (only if changed)``
+example:
+```
+{
+    "contract": "nft",
+    "event": "updatePropertyDefinition",
+    "data": {
+        "symbol": "TSTNFT",
+        "originalName": "frozen",
+        "originalType": "boolean",
+        "originalIsReadOnly": true,
+        "newName": "age",
+        "newType": "number",
+        "newIsReadOnly": false
     }
 }
 ```
