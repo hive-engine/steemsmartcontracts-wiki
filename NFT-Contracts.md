@@ -619,7 +619,8 @@ Issues a new instance of an NFT to a Steem account or smart contract. Requires t
   * feeSymbol (string): the symbol of the regular Steem Engine token to be used for paying issuance fees. Initially, ENG and PAL are the only valid fee symbols, though other types may be added later.
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to perform the issuance on behalf of a Steem account rather than the calling contract itself.
   * **(optional)** toType (string): indicates whether the destination specified by the "to" parameter is a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user.
-  * **(optional)** lockTokens (dictionary object): if desired, specifies a basket of regular Steem Engine tokens to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``{"SYMBOLONE": "quantity to lock", "SYMBOLTWO": "quantity to lock", ...}``. Note that only regular tokens can be locked like this, not other NFTs.
+  * **(optional)** lockTokens (dictionary object): if desired, specifies a basket of regular Steem Engine tokens to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``{"SYMBOLONE": "quantity to lock", "SYMBOLTWO": "quantity to lock", ...}``.
+  * **(optional)** lockNfts (array of object): if desired, specifies a basket of other NFT instances to be locked within the newly issued NFT instance, as described above. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
   * **(optional)** properties (dictionary object): if desired, data properties can be set directly at issuance time using this parameter. Should be formatted as follows: ``{ "name1":"value1", "name2":"value2", ... }``
 
 * examples:
@@ -683,6 +684,10 @@ Issues a new instance of an NFT to a Steem account or smart contract. Requires t
         "lockTokens": {
             "SPT": "0.01"
         },
+        "lockNfts": [
+            {"symbol":"TSTNFT", "ids":["200"]},
+            {"symbol":"DRAGON", "ids":["1","1000","10000","9999"]}
+        ],
         "properties": {
             "type": "wyvern",
             "xp": 0,
@@ -693,7 +698,7 @@ Issues a new instance of an NFT to a Steem account or smart contract. Requires t
 }
 ```
 A successful issue action will emit an "issue" event for each token issued:
-``from: issuing account, fromType: user or contract, to: destination account, toType: user or contract, symbol, lockedTokens: list of locked tokens, properties: any data properties set, id: token ID of newly issued token as an integer``
+``from: issuing account, fromType: user or contract, to: destination account, toType: user or contract, symbol, lockedTokens: list of locked regular tokens, lockedNfts: list of locked NFT instances, properties: any data properties set, id: token ID of newly issued token as an integer``
 example:
 ```
 {
@@ -706,14 +711,15 @@ example:
         "toType": "user",
         "symbol": "TSTNFT",
         "lockedTokens": {"ENG": "10"},
+        "lockedNfts": [{"symbol": "TSTNFT", "ids":["3"]}, {"symbol": "TEST", "ids": ["1","2"]}]
         "properties": {"color": "yellow"},
-        "id": 2
+        "id": 4
     }
 }
 ```
 
 ### issueMultiple:
-Issues multiple NFT instances at once. A maximum of 10 tokens can be issued by calling this action. Issuance fees & other issuing behavior is same as for the issue action above.
+Issues multiple NFT instances at once. A maximum of 10 tokens can be issued by calling this action (there are some caveats however, see [locked tokens](#locked-tokens) above). Issuance fees & other issuing behavior is same as for the issue action above.
 * requires active key: yes
 
 * can be called by: Steem account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
@@ -1054,7 +1060,7 @@ Burns one or more tokens. When a token is burned, it is sent to the null account
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to burn. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account.
+A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account. There are some additional caveats, see [locked tokens](#locked-tokens) above.
 
 * examples:
 ```
@@ -1080,7 +1086,7 @@ A maximum of 50 tokens can be burned in a single call of this action. Note that 
 }
 ```
 A successful burn action will emit a "burn" event for each token burned:
-``account: who burned it, ownedBy: u or c, unlockedTokens: released token list, symbol, id``
+``account: who burned it, ownedBy: u or c, unlockedTokens: released regular token list, unlockedNfts: released NFT instance list, symbol, id``
 example:
 ```
 {
@@ -1090,6 +1096,7 @@ example:
         "account": "aggroed",
         "ownedBy": "u",
         "unlockedTokens": {"ENG":"15", "TKN":"0.75"},
+        "unlockedNfts": [{"symbol": "TSTNFT", "ids": ["1","2"]}, {"symbol": "OTHERNFT", "ids": ["320"]}],
         "symbol": "TSTNFT",
         "id": "305"
     }
