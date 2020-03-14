@@ -27,6 +27,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 * [Token issuance](#token-issuance)
   * [fees](#fees)
   * [locked tokens](#locked-tokens)
+  * [locked token restrictions](#locked-token-restrictions)
   * [token IDs](#token-ids)
   * actions:
   * [issue](#issue)
@@ -593,13 +594,23 @@ The base fee when paying with ENG or PAL is 0.001. The fee reflects the fact tha
 
 ### locked tokens
 
-When a token is issued, the issuer can optionally choose to lock up a basket of regular Steem Engine tokens within the issued NFT token. These locked tokens will be transferred from the issuing account or smart contract, and considered "owned" by the newly issued token itself. The locked tokens will stay attached to the issued NFT instance for the duration of its lifetime. Locked tokens cannot be spent or interacted with in any way, they are effectively out of circulation.
+When a token is issued, the issuer can optionally choose to lock up a basket of other tokens within the issued NFT token (or NFT instance, as we sometimes refer to them). These locked tokens will be transferred from the issuing account or smart contract, and considered "owned" by the newly issued token itself. The locked tokens will stay attached to the issued NFT instance for the duration of its lifetime. Locked tokens cannot be spent or interacted with in any way, they are effectively out of circulation.
 
-The only way to retrieve locked tokens is by burning the NFT token that contains them. When an NFT token is burned, any locked tokens are released & transferred back to the account or smart contract that held the burned token (they are NOT sent back to the issuing account!).
+The only way to retrieve locked tokens is by burning the NFT instance that contains them. When an NFT token is burned, any locked tokens are released & transferred back to the account or smart contract that held the burned token (they are NOT sent back to the issuing account!).
 
-Thus locked tokens are a way to give intrinsic value to an NFT, above & beyond what the NFT is worth in its own right. Token holders are incentivized to burn their NFTs in order to get back the value of the regular tokens locked within.
+Thus locked tokens are a way to give intrinsic value to an NFT, above & beyond what the NFT is worth in its own right. Token holders are incentivized to burn their NFTs in order to get back the value of the tokens locked within.
 
-A maximum of 10 different types of tokens can be locked up in a single NFT token (though the quantity of each has no limit).
+Note that both regular Steem Engine tokens and other NFT instances can be locked within tokens in this manner. You can even have a mix of different token types.
+
+### locked token restrictions
+
+For performance reasons, the following rules apply when dealing with locked tokens. For the purposes of these rules, we use the term **container token** to refer to an NFT instance that contains other NFT instances locked within it (an NFT instance that only contains regular Steem Engine tokens is NOT considered to be a container token).
+
+* A maximum of 10 different types of regular tokens can be locked up in a single NFT token (though the quantity of each has no limit).
+* A maximum of 50 NFT instances can be locked up in a single NFT token. A mix of different symbols is permitted without restriction.
+* Container tokens must be issued individually, you may not issue more than one of them at once using the issueMultiple action.
+* Container tokens must be burned individually, you may not burn more than one at a time using the burn action.
+* In the issueMultiple and burn actions, container tokens and non-container tokens cannot be mixed. You can burn up to EITHER 50 non-container tokens OR 1 container token at a time.
 
 ### token IDs
 
@@ -719,7 +730,7 @@ example:
 ```
 
 ### issueMultiple:
-Issues multiple NFT instances at once. A maximum of 10 tokens can be issued by calling this action (there are some caveats however, see [locked tokens](#locked-tokens) above). Issuance fees & other issuing behavior is same as for the issue action above.
+Issues multiple NFT instances at once. A maximum of 10 tokens can be issued by calling this action (there are some caveats however, see [locked token restrictions](#locked-token-restrictions) above). Issuance fees & other issuing behavior is same as for the issue action above.
 * requires active key: yes
 
 * can be called by: Steem account or smart contract on the authorized list of issuing accounts/contracts for the NFT in question
@@ -1060,7 +1071,7 @@ Burns one or more tokens. When a token is burned, it is sent to the null account
   * **(optional)** fromType (string): indicates whether this action is being called by a Steem account or a smart contract. Can be set to user or contract. If not specified, defaults to user. Note that a smart contract can still set this to user in order to execute the action on behalf of a Steem account rather than the calling contract itself.
   * nfts (array of object): list of tokens to burn. Should be formatted as follows: ``[ {"symbol":"SYMBOLONE", "ids":["1","2","3", ...]}, {"symbol":"SYMBOLTWO", "ids":["1","2","3", ...]}, ... ]``
 
-A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account. There are some additional caveats, see [locked tokens](#locked-tokens) above.
+A maximum of 50 tokens can be burned in a single call of this action. Note that tokens cannot be burned if they are currently being delegated to another account. There are some additional caveats, see [locked token restrictions](#locked-token-restrictions) above.
 
 * examples:
 ```
