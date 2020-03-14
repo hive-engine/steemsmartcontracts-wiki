@@ -1200,6 +1200,7 @@ Every NFT symbol has its own separate table to store NFT instances (issued token
   * ownedBy = indicates if this token is held in a Steem account or smart contract. For a Steem account, the value will be "u".  For a smart contract, the value will be "c".
   * lockedTokens = describes all regular Steem Engine tokens which are locked in this particular NFT instance. If there are no locked tokens, the value will be {}
   * properties = values of all the data properties for this particular NFT instance. If there are no data properties set, the value will be {}
+  * **(optional)** lockedNfts = describes all NFT instances which are locked in this particular NFT instance. If there are no locked NFT instances, this field will not exist (will be undefined). For burned tokens on the null account, this field *may* exist but with the value set to an empty array []
   * **(optional)** delegatedTo = if this token is delegated, will contain information about which account or contract the token is delegated to. If there is no delegation, this field will not exist (will be undefined).
   * **(optional)** previousAccount = the Steem account or smart contract that previously held this particular token. Will only be set if the token has been burned or transferred at least once. If a token was bought on the market, previousAccount will be the NFT market contract itself.
   * **(optional)** previousOwnedBy = same meaning as ownedBy, but for the Steem account or smart contract that previously held this particular token. Will only be set if previousAccount is set.
@@ -1244,6 +1245,8 @@ examples of typical token data:
     account: 'testContract',
     ownedBy: 'c',
     lockedTokens: {},
+    lockedNfts: [ { symbol: 'TSTNFT', ids: [ '333' ] },
+                  { symbol: 'TEST', ids: [ '101','202' ] } ],
     properties: { color: 'blue', edition: 1 },
     delegatedTo: {
         account: 'contract2',
