@@ -83,7 +83,7 @@ Creates a new NFT. A creation fee of 100 ENG is required.
     "contractPayload": {
         "symbol": "TESTNFT",
         "name": "My Test NFT",
-        "url": "https://mynft.com"
+        "url": "https://mynft.com",
         "maxSupply": "1000"
     }
 }
@@ -96,7 +96,7 @@ Creates a new NFT. A creation fee of 100 ENG is required.
         "name": "My Test NFT",
         "orgName": "My Company Inc",
         "productName": "Uber Cool Product",
-        "url": "https://mynft.com"
+        "url": "https://mynft.com",
         "maxSupply": "1000",
         "authorizedIssuingAccounts": [ "cryptomancer","aggroed","harpagon" ],
         "authorizedIssuingContracts": [ "mycontract","myothercontract" ]
