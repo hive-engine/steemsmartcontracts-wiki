@@ -8,8 +8,8 @@
 ## 2. Install the Steem Smart Contracts node
 To "install" the app, simply follow these steps:
 - get the files from the repository: 
-	- via the git cli: ```git clone https://github.com/harpagon210/steemsmartcontracts.git```
-	- by downloading the zip file: https://github.com/harpagon210/steemsmartcontracts/archive/master.zip
+	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
+	- by downloading the zip file: https://github.com/hive-engine/steemsmartcontracts/archive/master.zip
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
 	- ```npm install```
