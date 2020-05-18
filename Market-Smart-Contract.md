@@ -65,6 +65,25 @@ Executes a market buy with STEEMP or SWAP.HIVE. This action will try to buy as m
 }
 ```
 
+### marketSell: 
+Executes a market sell for STEEMP or SWAP.HIVE. This action will try to sell as many tokens as the quantity you specify, regardless of market price. As such, multiple buy orders could be filled by this action, and you may experience price slippage if the order book is thin. 
+
+ - parameters:
+	- symbol (string): symbol of the token you want to sell
+	- quantity (string): quantity of tokens to sell
+
+- example:
+```
+{
+    "contractName": "market",
+    "contractAction": "marketSell",
+    "contractPayload": {
+        "symbol": "DEC",
+        "quantity": "500.123",    // will sell exactly 500.123 DEC, regardless of price
+    }
+}
+```
+
 ### cancel: 
 Cancels an order.
 Will unlock any tokens that haven't been bought/sold.
