@@ -46,6 +46,25 @@ The tokens that you are trying to exchange are locked into the smart contract.
 }
 ```
 
+### marketBuy: 
+Executes a market buy with STEEMP or SWAP.HIVE. This action will try to buy as many tokens as it can with the amount you specify, regardless of market price. As such, multiple sell orders could be filled by this action, and you may experience price slippage if the order book is thin. 
+
+ - parameters:
+	- symbol (string): symbol of the token you want to buy
+	- quantity (string): quantity of STEEMP or SWAP.HIVE to spend
+
+- example:
+```
+{
+    "contractName": "market",
+    "contractAction": "marketBuy",
+    "contractPayload": {
+        "symbol": "DEC",
+        "quantity": "500.12345678",    // STEEMP or SWAP.HIVE to spend, NOT the amount of DEC to buy!
+    }
+}
+```
+
 ### cancel: 
 Cancels an order.
 Will unlock any tokens that haven't been bought/sold.
