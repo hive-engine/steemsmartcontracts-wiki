@@ -144,14 +144,24 @@ list of all the pending sell orders
 list of all the trades (max 24hrs of history)
 -	fields:
 	- type = 'buy' or 'sell'
+	
+	- buyer = account that is buying the tokens
+	
+	- seller = account that is selling the tokens
 
 	- symbol = symbol of the token traded
 
 	- quantity = quantity of tokens traded
 
-	- price = price (STEEMP/token)
+	- price = price (STEEMP or SWAP.HIVE per token)
 
 	- timestamp = unix timestamp of the trade (this timestamp is based on the timestamp of the reference Steem block)
+	
+	- volume = amount of STEEMP or SWAP.HIVE transacted
+	
+	- buyTxId = order transaction ID of the order hit on the buy side
+	
+	- sellTxId = order transaction ID of the order hit on the sell side
 
 - indexes available: symbol
 
