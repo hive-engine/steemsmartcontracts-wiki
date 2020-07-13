@@ -27,3 +27,6 @@
 [NFT Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md)
 
 [NFT Market Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Market-Contract.md)
+
+[Bot Controller Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Bot-Controller-Contract.md)
+
