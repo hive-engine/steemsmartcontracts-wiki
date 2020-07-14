@@ -37,6 +37,34 @@ Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can 
 The botcontroller smart contract provides the account management scaffolding of the market maker, separating out configuration data from the actual logic used to place orders (which is contained in the marketmaker smart contract). The botcontroller smart contract provides actions for doing things such as registering a user for the market maker system, upgrading users to premium service, adding/removing/updating market trading configuration, and enabling/disabling the bot for users. In addition, this contract contains all the logic for managing fees & cooldowns as described above. 
 
 # Actions available:
+## Account Management
+### register:
+Registers a Steem or Hive account to use the market maker system. A registration fee of 100 ENG or BEE is required. Once registered, an account stays registered permanently and cannot be unregistered (although trading for an account can always be turned off if desired).
 
-TODO: fill me in
+**Important Note:** registering an account gives implicit consent that the account owner authorizes the Engine platform to place market orders on the account owner's behalf, autonomously without requiring explicit approval of each order. Furthermore, this also represents acknowledgement that the account owner agrees not to hold the Engine platform responsible for any negative financial impact on the account owner that results directly or indirectly from use of the market maker system, for any reason including but not limited to bugs in the smart contract, improper trading configuration, or disadvantageous market movements.
+* requires active key: yes
 
+* can be called by: Steem or Hive account
+
+* parameters: none, the calling account will be the one registered
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "register",
+    "contractPayload": {}
+}
+```
+
+A successful register action will emit a "register" event: ``account``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "register",
+    "data": {
+        "account": "myaccountname"
+    }
+}
+```
