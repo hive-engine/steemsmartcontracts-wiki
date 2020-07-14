@@ -68,3 +68,39 @@ example:
     }
 }
 ```
+
+### upgrade:
+Upgrades a previously registered account to premium service. An upgrade fee of 100 ENG or BEE is required and the account must have at least 1000 ENG or BEE staked. Some things to note:
+
+1. If an account is on cooldown, upgrading it will remove the cooldown.
+2. It is possible for an account to lose premium status later on, for example if the amount of staked ENG or BEE falls below the minimumed required threshold of 1000 tokens.
+3. If an account previously had premium status (but lost it), the upgrade fee doesn't need to be paid again.
+
+If an account loses premium status later on, there may also be secondary side effects. For instance, premium users are allowed to have unlimited markets configured for bot trading, but basic service allows only one. So if you lose premium status but have multiple markets configured, they will all be disabled until you have removed the extra markets or upgraded to premium again.
+
+* requires active key: yes
+
+* can be called by: Steem or Hive account
+
+* parameters: none, the calling account will be the one upgraded
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "upgrade",
+    "contractPayload": {}
+}
+```
+
+A successful upgrade action will emit an "upgrade" event: ``account``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "upgrade",
+    "data": {
+        "account": "myaccountname"
+    }
+}
+```
