@@ -32,6 +32,10 @@ Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can 
 
 &ast; **Special note for duration:** when basic service is used, duration starts at 2 weeks worth of blockchain blocks, and the block count is decremented whenever the smart contract updates state. This gradual usage of time stops if the user turns off bot service, and resumes when bot service is re-enabled. When the duration remaining hits 0 blocks, service will be suspended until the cooldown period elapses. At end of cooldown, duration is reset and the user is free to re-enable the service.
 
+## Purpose of the Bot Controller
+
+The botcontroller smart contract provides the account management scaffolding of the market maker, separating out configuration data from the actual logic used to place orders (which is contained in the marketmaker smart contract). The botcontroller smart contract provides actions for doing things such as registering a user for the market maker system, upgrading users to premium service, adding/removing/updating market trading configuration, and enabling/disabling the bot for users. In addition, this contract contains all the logic for managing fees & cooldowns as described above. 
+
 # Actions available:
 
 TODO: fill me in
