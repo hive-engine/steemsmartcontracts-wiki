@@ -135,3 +135,33 @@ example:
     }
 }
 ```
+
+### turnOn:
+Re-enables a disabled account. Note that basic service accounts on cooldown cannot be turned on again until after the cooldown period expires. Once cooldown expires, accounts will not be automatically re-enabled. This action must be used to re-enable such an account (see "special note for duration" in [Basic vs Premium Models](#basic-vs-premium-models) section above).
+
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters: none, the calling account will be the one turned on
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "turnOn",
+    "contractPayload": {}
+}
+```
+
+A successful action will emit a "turnOn" event: ``account``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "turnOn",
+    "data": {
+        "account": "myaccountname"
+    }
+}
+```
