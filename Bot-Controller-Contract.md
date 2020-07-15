@@ -169,6 +169,8 @@ example:
 
 ## Market Management
 These actions control how the market maker bot places orders on individual markets configured for your account. They differ from the above [Account Management](#account-management) actions in that they don't have an account-wide effect, but are rather targeted at specific markets.
+
+Note that none of these actions have an explicit account parameter, because they always act only on configuration for the account that calls (triggers) the action.
 ### updateMarket:
 Updates the configuration for a previously added market. If your account is not premium, a 1 ENG or BEE service fee is required. Premium users can make unlimited updates for free.
 * requires active key: yes
@@ -211,6 +213,32 @@ Updates the configuration for a previously added market. If your account is not 
         "minTokensToSell": "100",
         "priceIncrement": "0.00001",
         "minSpread": "0.00001"
+    }
+}
+
+{
+    "contractName": "botcontroller",
+    "contractAction": "updateMarket",
+    "contractPayload": {
+        "symbol": "BETA",
+        "minSellPrice": "10000"      // useful if you just want to slowly accumulate tokens without selling
+    }
+}
+```
+
+A successful action will emit an "updateMarket" event: ``account, symbol, old field value #1, new field value #1, old field value #2, new field value #2, ...``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "updateMarket",
+    "data": {
+        "account": "myaccountname",
+        "symbol": "EGG",
+        "oldMinBaseToSpend": "100",
+        "newMinBaseToSpend": "120",
+        "oldPriceIncrement": "0.001",
+        "newPriceIncrement": "0.005"
     }
 }
 ```
