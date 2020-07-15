@@ -186,11 +186,31 @@ Updates the configuration for a previously added market. If your account is not 
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
 
-* example:
+* examples:
 ```
 {
     "contractName": "botcontroller",
-    "contractAction": "turnOn",
-    "contractPayload": {}
+    "contractAction": "updateMarket",
+    "contractPayload": {
+        "symbol": "EGG",
+        "minBaseToSpend": "120",
+        "priceIncrement": "0.005"
+    }
+}
+
+{
+    "contractName": "botcontroller",
+    "contractAction": "updateMarket",
+    "contractPayload": {
+        "symbol": "DEC",
+        "maxBidPrice": "100",        // effectively unlimited for this market (i.e. we don't care)
+        "minSellPrice": "0.00001",
+        "maxBaseToSpend": "200",
+        "minBaseToSpend": "10",
+        "maxTokensToSell": "60000",
+        "minTokensToSell": "100",
+        "priceIncrement": "0.00001",
+        "minSpread": "0.00001"
+    }
 }
 ```
