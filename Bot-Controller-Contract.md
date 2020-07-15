@@ -81,7 +81,7 @@ If an account loses premium status later on, there may also be secondary side ef
 
 * requires active key: yes
 
-* can be called by: Steem or Hive account
+* can be called by: previously registered Steem or Hive account
 
 * parameters: none, the calling account will be the one upgraded
 
@@ -100,6 +100,36 @@ example:
 {
     "contract": "botcontroller",
     "event": "upgrade",
+    "data": {
+        "account": "myaccountname"
+    }
+}
+```
+
+### turnOff:
+Completely disables an account. While disabled, the market maker will not place any orders on behalf of this account. However any existing orders will stay in place and need to be managed manually by the user. Also, time spent disabled does not count toward the usage time of a basic service account (see "special note for duration" in [Basic vs Premium Models](#basic-vs-premium-models) section above).
+
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters: none, the calling account will be the one turned off
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "turnOff",
+    "contractPayload": {}
+}
+```
+
+A successful action will emit a "turnOff" event: ``account``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "turnOff",
     "data": {
         "account": "myaccountname"
     }
