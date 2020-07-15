@@ -38,6 +38,7 @@ The botcontroller smart contract provides the account management scaffolding of 
 
 # Actions available:
 ## Account Management
+These actions affect the state of your account.
 ### register:
 Registers a Steem or Hive account to use the market maker system. A registration fee of 100 ENG or BEE is required. Once registered, an account stays registered permanently and cannot be unregistered (although trading for an account can always be turned off if desired).
 
@@ -163,5 +164,33 @@ example:
     "data": {
         "account": "myaccountname"
     }
+}
+```
+
+## Market Management
+These actions control how the market maker bot places orders on individual markets configured for your account. They differ from the above [Account Management](#account-management) actions in that they don't have an account-wide effect, but are rather targeted at specific markets.
+### updateMarket:
+Updates the configuration for a previously added market. If your account is not premium, a 1 ENG or BEE service fee is required. Premium users can make unlimited updates for free.
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters:
+  * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  * **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  * **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "turnOn",
+    "contractPayload": {}
 }
 ```
