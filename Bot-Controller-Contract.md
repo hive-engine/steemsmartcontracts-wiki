@@ -322,3 +322,36 @@ example:
     }
 }
 ```
+
+### removeMarket:
+Completely removes all configuration for a market. The market maker bot will no longer place new orders on this market until you add it back using the [addMarket action](#addmarket). However any existing orders will stay in place and need to be managed manually by the user. Removing markets can be useful if your account loses premium status and you need to delete extra markets. In other circumstances, when you need to only temporarily stop the bot (for example in periods of extreme market volatility), it may be better to use the [disableMarket action](#disablemarket) instead.
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters:
+  * symbol (string): symbol of the token identifying the market configuration to delete (cannot be SWAP.HIVE or STEEMP)
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "removeMarket",
+    "contractPayload": {
+        "symbol": "ALPHA"
+    }
+}
+```
+
+A successful action will emit a "removeMarket" event: ``account, symbol``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "removeMarket",
+    "data": {
+        "account": "myaccountname",
+        "symbol": "ALPHA"
+    }
+}
+```
