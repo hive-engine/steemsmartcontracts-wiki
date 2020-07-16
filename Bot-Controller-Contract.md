@@ -170,7 +170,44 @@ example:
 ## Market Management
 These actions control how the market maker bot places orders on individual markets configured for your account. They differ from the above [Account Management](#account-management) actions in that they don't have an account-wide effect, but are rather targeted at specific markets.
 
-Note that none of these actions have an explicit account parameter, because they always act only on configuration for the account that calls (triggers) the action.
+Note that none of these actions have an explicit account parameter, because they act only on configuration for the account that calls (triggers) the action. So the account is always implied.
+### addMarket:
+Instructs the market maker bot to begin placing orders on a new market for your account and, optionally, configure the trading parameters for the market. Accounts must have 200 ENG or BEE staked per market added. Basic service accounts are only allowed to add 1 market. Premium accounts can add unlimited markets.
+
+Examples of staking requirements:
+Markets | Requirement
+---- | ----
+Basic service, 1 market | 200 ENG or BEE staked
+Premium service, 1 market | 1200 ENG or BEE staked (1000 base for premium + 200 for the market)
+Premium service, 4 markets | 1800 ENG or BEE staked (1000 base for premium + 4x200 for the markets)
+
+ENG or BEE that is in the process of being unstaked will **not** count toward the staking requirement. If the number of staked tokens falls below the total requirement for all markets, then all markets will be disabled until the staking requirement is once again met.
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters:
+  * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  * **(optional)** minBaseToSpend (string): the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  * **(optional)** maxTokensToSell (string): the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+
+If any optional parameters are not specified, then sensible defaults will be set as follows:
+
+maxBidPrice: 1000
+minSellPrice: 0.00000001
+maxBaseToSpend: 100
+minBaseToSpend: 1
+maxTokensToSell: 100
+minTokensToSell: 1
+priceIncrement: 0.00001
+minSpread: 0.00000001
+
 ### updateMarket:
 Updates the configuration for a previously added market. If your account is not premium, a 1 ENG or BEE service fee is required. Premium users can make unlimited updates for free.
 * requires active key: yes
