@@ -197,16 +197,56 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
 
-If any optional parameters are not specified, then sensible defaults will be set as follows:
+  If any optional parameters are not specified, then sensible defaults will be set as follows:
 
-maxBidPrice: 1000
-minSellPrice: 0.00000001
-maxBaseToSpend: 100
-minBaseToSpend: 1
-maxTokensToSell: 100
-minTokensToSell: 1
-priceIncrement: 0.00001
-minSpread: 0.00000001
+  Parameter | Default
+  ---- | ----
+  maxBidPrice | 1000
+  minSellPrice | 0.00000001
+  maxBaseToSpend | 100
+  minBaseToSpend | 1
+  maxTokensToSell | 100
+  minTokensToSell | 1
+  priceIncrement | 0.00001
+  minSpread | 0.00000001
+
+* examples:
+```
+// add a market with default configuration
+{
+    "contractName": "botcontroller",
+    "contractAction": "addMarket",
+    "contractPayload": {
+        "symbol": "EGG"
+    }
+}
+
+// add a market and explicitly set some parameters, accepting defaults for the rest
+{
+    "contractName": "botcontroller",
+    "contractAction": "addMarket",
+    "contractPayload": {
+        "symbol": "EGG",
+        "maxBaseToSpend": "120",
+        "priceIncrement": "0.005"
+    }
+}
+```
+
+A successful action will emit an "addMarket" event: ``account, symbol``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "addMarket",
+    "data": {
+        "account": "myaccountname",
+        "symbol": "EGG"
+    }
+}
+```
+
+If any default trading configuration is overridden, there will also be an "updateMarket" event emitted as per below.
 
 ### updateMarket:
 Updates the configuration for a previously added market. If your account is not premium, a 1 ENG or BEE service fee is required. Premium users can make unlimited updates for free.
