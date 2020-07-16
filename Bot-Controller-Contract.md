@@ -29,8 +29,11 @@ Duration* | can be used for a total time of 2 weeks, then requires a 2 week "coo
 Markets | can only trade on one market pair at a time, must have 200 ENG/BEE staked to configure a market | can trade on unlimited markets, must have an additional 200 ENG/BEE staked on top of the 1000 base amount, per market pair
 Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>additional strategies TBD
 Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can adjust settings any time free of charge
+Tick Speed** | every 200 blocks (about 10 minutes) | every 100 blocks (about 5 minutes) 
 
 &ast; **Special note for duration:** when basic service is used, duration starts at 2 weeks worth of blockchain blocks, and the block count is decremented whenever the smart contract updates state. This gradual usage of time stops if the user turns off bot service, and resumes when bot service is re-enabled. When the duration remaining hits 0 blocks, service will be suspended until the cooldown period elapses. At end of cooldown, duration is reset and the user is free to re-enable the service.
+
+&ast;&ast; **Tick speed definition:** the rate at which the market maker bot updates orders in response to changing market conditions. When the bot ticks, it attempts to update as many orders as it can, but in some periods of high activity it may delay ticking some accounts so that blockchain processing is not slowed down. Thus the tick speed should be regarded as a "best attempt", not a guarantee, and your account may tick slower depending on overall system conditions at the time. In such cases, premium service accounts will be prioritized for faster ticking.
 
 ## Purpose of the Bot Controller
 
