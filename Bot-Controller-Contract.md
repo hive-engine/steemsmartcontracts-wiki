@@ -355,3 +355,36 @@ example:
     }
 }
 ```
+
+### disableMarket:
+Disables a market without removing its configuration. The market maker bot will no longer place new orders on this market until you re-enable it via the [enableMarket action](#enablemarket). However any existing orders will stay in place and need to be managed manually by the user. Note that disabled markets still count towards your maximum allowed number of markets (basic service accounts can have 1 market configured; premium service accounts can have unlimited markets).
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters:
+  * symbol (string): symbol of the token identifying the market configuration to disable (cannot be SWAP.HIVE or STEEMP)
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "disableMarket",
+    "contractPayload": {
+        "symbol": "ALPHA"
+    }
+}
+```
+
+A successful action will emit a "disableMarket" event: ``account, symbol``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "disableMarket",
+    "data": {
+        "account": "myaccountname",
+        "symbol": "ALPHA"
+    }
+}
+```
