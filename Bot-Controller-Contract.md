@@ -371,7 +371,7 @@ Disables a market without removing its configuration. The market maker bot will 
     "contractName": "botcontroller",
     "contractAction": "disableMarket",
     "contractPayload": {
-        "symbol": "ALPHA"
+        "symbol": "BETA"
     }
 }
 ```
@@ -384,7 +384,46 @@ example:
     "event": "disableMarket",
     "data": {
         "account": "myaccountname",
-        "symbol": "ALPHA"
+        "symbol": "BETA"
+    }
+}
+```
+
+### enableMarket:
+Re-enables a previously disabled market, so that the market maker bot will begin placing orders for it again. To enable a market, the following 2 requirements must be met:
+
+1. The number of markets configured for your account must not be greater than the maximum allowed (basic service accounts can have 1 market configured; premium service accounts can have unlimited markets).
+2. You must have enough ENG or BEE staked to cover the staking requirements of all your markets, regardless of whether some are disabled or not.
+
+For more info on staking requirements, refer to the [addMarket action section](#addmarket).
+
+* requires active key: yes
+
+* can be called by: previously registered Steem or Hive account
+
+* parameters:
+  * symbol (string): symbol of the token identifying the market configuration to enable (cannot be SWAP.HIVE or STEEMP)
+
+* example:
+```
+{
+    "contractName": "botcontroller",
+    "contractAction": "enableMarket",
+    "contractPayload": {
+        "symbol": "EGG"
+    }
+}
+```
+
+A successful action will emit an "enableMarket" event: ``account, symbol``
+example:
+```
+{
+    "contract": "botcontroller",
+    "event": "enableMarket",
+    "data": {
+        "account": "myaccountname",
+        "symbol": "EGG"
     }
 }
 ```
