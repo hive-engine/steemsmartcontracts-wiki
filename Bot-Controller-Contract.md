@@ -461,3 +461,24 @@ contains top level configuration for each account registered with the market mak
   * creationBlock = the sidechain block at which the account was registered
 
 There are database indexes on the account and lastTickBlock fields.
+
+## markets
+contains top level configuration for each account registered with the market maker system
+* fields
+  * account = Steem or Hive account name
+  * symbol = symbol of the token identifying the market to trade on
+  * precision = precision of this market's token (how many decimal places are allowed for fractional amounts)
+  * strategy = indicates the trading strategy the market maker should follow for this market. Currently not used.
+  * maxBidPrice = the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
+  * minSellPrice = the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
+  * maxBaseToSpend = the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
+  * minBaseToSpend = the smallest amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for less than this amount.
+  * maxTokensToSell = the maximum amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for larger than this amount.
+  * minTokensToSell = the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
+  * priceIncrement = the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
+  * minSpread = the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  * isEnabled = is the market currently enabled for market maker activity?
+  * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
+  * creationBlock = the sidechain block at which the account was registered
+
+There are database indexes on the account and symbol fields.
