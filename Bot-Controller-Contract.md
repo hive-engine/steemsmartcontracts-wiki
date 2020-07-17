@@ -444,3 +444,20 @@ contains contract parameters such as the current fees
   * premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in sidechain blocks (accounts are not guaranteed to tick at exactly this rate)
   * basicMaxTicksPerBlock = the maximum number of basic service accounts that are allowed by the system to tick in each block
   * premiumMaxTicksPerBlock = the maximum number of premium service accounts that are allowed by the system to tick in each block
+
+## users
+contains top level configuration for each account registered with the market maker system
+* fields
+  * account = Steem or Hive account name
+  * isPremium = is the account upgraded to premium service?
+  * isPremiumFeePaid = has the upgrade fee for premium service been paid?
+  * isOnCooldown = is the account currently on cooldown?
+  * isEnabled = is the account currently turned on for market maker activity?
+  * markets = the number of markets configured for this account
+  * enabledMarkets = the number of configured markets that are currently enabled for this account
+  * timeLimitBlocks = for basic service accounts, indicates the number of sidechain blocks remaining before the account will go into cooldown
+  * lastTickBlock = the last sidechain block at which the account was ticked (i.e. at which the market maker bot updated order status for current market conditions)
+  * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
+  * creationBlock = the sidechain block at which the account was registered
+
+There are database indexes on the account and lastTickBlock fields.
