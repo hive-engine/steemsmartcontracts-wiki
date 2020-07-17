@@ -460,10 +460,10 @@ contains top level configuration for each account registered with the market mak
   * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
   * creationBlock = the sidechain block at which the account was registered
 
-There are database indexes on the account and lastTickBlock fields.
+There are database indexes on the account and lastTickBlock fields. The account field can be used as a unique primary key.
 
 ## markets
-contains top level configuration for each account registered with the market maker system
+contains configuration for each market an account is configured for market making on
 * fields
   * account = Steem or Hive account name
   * symbol = symbol of the token identifying the market to trade on
@@ -481,4 +481,4 @@ contains top level configuration for each account registered with the market mak
   * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
   * creationBlock = the sidechain block at which the account was registered
 
-There are database indexes on the account and symbol fields.
+There are database indexes on the account and symbol fields. The combination of account and symbol fields can be used as a unique primary key.
