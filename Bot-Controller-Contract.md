@@ -2,7 +2,27 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
 # Table of Contents
 
-TODO: fill me in
+* [Introduction](#introduction)
+  * [Market Maker Bot](#market-maker-bot)
+  * [Basic vs Premium Models](#basic-vs-premium-models)
+  * [Purpose of the Bot Controller](#purpose-of-the-bot-controller)
+* [Account Management](#account-management)
+  * actions:
+  * [register](#register)
+  * [upgrade](#upgrade)
+  * [turnOff](#turnoff)
+  * [turnOn](#turnon)
+* [Market Management](#market-management)
+  * actions:
+  * [addMarket](#addmarket)
+  * [updateMarket](#updatemarket)
+  * [removeMarket](#removemarket)
+  * [disableMarket](#disablemarket)
+  * [enableMarket](#enablemarket)
+* [Tables available](#tables-available)
+  * [params](#params)
+  * [users](#users)
+  * [markets](#markets)
 
 # Introduction
 
