@@ -427,3 +427,20 @@ example:
     }
 }
 ```
+
+# Tables available:
+Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
+## params:
+contains contract parameters such as the current fees
+* fields
+  * basicFee = the cost in ENG or BEE to register an account
+  * basicSettingsFee = the cost in ENG or BEE to update market configuration
+  * premiumFee = the cost in ENG or BEE to upgrade a basic service account to premium
+  * premiumBaseStake = the amount of ENG or BEE that must be staked to maintain premium service
+  * stakePerMarket = the amount of ENG or BEE that must be staked for each market an account has configured
+  * basicDurationBlocks = the number of sidechain blocks that a basic service account is allowed to remain active before going into cooldown mode
+  * basicCooldownBlocks = the number of sidechain blocks that an account in cooldown must wait before being able to turn itself back on
+  * basicMinTickIntervalBlocks = the tick interval for a basic service account, measured in sidechain blocks (accounts are not guaranteed to tick at exactly this rate)
+  * premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in sidechain blocks (accounts are not guaranteed to tick at exactly this rate)
+  * basicMaxTicksPerBlock = the maximum number of basic service accounts that are allowed by the system to tick in each block
+  * premiumMaxTicksPerBlock = the maximum number of premium service accounts that are allowed by the system to tick in each block
