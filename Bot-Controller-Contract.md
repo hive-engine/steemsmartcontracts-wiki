@@ -458,12 +458,14 @@ contains contract parameters such as the current fees
   * premiumFee = the cost in ENG or BEE to upgrade a basic service account to premium
   * premiumBaseStake = the amount of ENG or BEE that must be staked to maintain premium service
   * stakePerMarket = the amount of ENG or BEE that must be staked for each market an account has configured
-  * basicDurationBlocks = the number of sidechain blocks that a basic service account is allowed to remain active before going into cooldown mode
-  * basicCooldownBlocks = the number of sidechain blocks that an account in cooldown must wait before being able to turn itself back on
-  * basicMinTickIntervalBlocks = the tick interval for a basic service account, measured in sidechain blocks (accounts are not guaranteed to tick at exactly this rate)
-  * premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in sidechain blocks (accounts are not guaranteed to tick at exactly this rate)
+  * basicDurationBlocks = the number of Hive/Steem blocks that a basic service account is allowed to remain active before going into cooldown mode
+  * basicCooldownBlocks = the number of Hive/Steem blocks that an account in cooldown must wait before being able to turn itself back on
+  * basicMinTickIntervalBlocks = the tick interval for a basic service account, measured in Hive/Steem blocks (accounts are not guaranteed to tick at exactly this rate)
+  * premiumMinTickIntervalBlocks = the tick interval for a premium service account, measured in Hive/Steem blocks (accounts are not guaranteed to tick at exactly this rate)
   * basicMaxTicksPerBlock = the maximum number of basic service accounts that are allowed by the system to tick in each block
   * premiumMaxTicksPerBlock = the maximum number of premium service accounts that are allowed by the system to tick in each block
+
+Note about time conversions: for basicDurationBlocks, basicCooldownBlocks, basicMinTickIntervalBlocks, and premiumMinTickIntervalBlocks, blocks are assumed to have an exactly 3 second block time. Thus to convert to a time interval in seconds, multiply these amounts by 3.
 
 ## users
 contains top level configuration for each account registered with the market maker system
@@ -475,7 +477,8 @@ contains top level configuration for each account registered with the market mak
   * isEnabled = is the account currently turned on for market maker activity?
   * markets = the number of markets configured for this account
   * enabledMarkets = the number of configured markets that are currently enabled for this account
-  * timeLimitBlocks = for basic service accounts, indicates the number of sidechain blocks remaining before the account will go into cooldown
+  * timeLimit = for basic service accounts, indicates the number of milliseconds remaining before the account will go into cooldown
+  * lastTickTimestamp = date & time when the account was last ticked (i.e. at which the market maker bot updated order status for current market conditions), in Unix epoch milliseconds
   * lastTickBlock = the last sidechain block at which the account was ticked (i.e. at which the market maker bot updated order status for current market conditions)
   * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
   * creationBlock = the sidechain block at which the account was registered
