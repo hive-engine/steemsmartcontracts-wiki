@@ -219,6 +219,8 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
   * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
+  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. 
 
   If any optional parameters are not specified, then sensible defaults will be set as follows:
 
@@ -232,6 +234,8 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
   minTokensToSell | 1
   priceIncrement | 0.00001
   minSpread | 0.00000001
+  maxDistFromNext | 0.0001
+  ignoreOrderQtyLt | 50
 
 * examples:
 ```
@@ -287,6 +291,8 @@ Updates the configuration for a previously added market. If your account is not 
   * **(optional)** minTokensToSell (string): the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
+  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. 
 
 * examples:
 ```
@@ -312,7 +318,9 @@ Updates the configuration for a previously added market. If your account is not 
         "maxTokensToSell": "60000",
         "minTokensToSell": "100",
         "priceIncrement": "0.00001",
-        "minSpread": "0.00001"
+        "minSpread": "0.00001",
+        "maxDistFromNext": "0.00005",
+        "ignoreOrderQtyLt": "3000"
     }
 }
 
