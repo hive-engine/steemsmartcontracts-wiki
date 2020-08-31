@@ -540,6 +540,10 @@ contains configuration for each market an account is configured for market makin
   * minTokensToSell = the smallest amount of tokens you’re willing to sell in a single order. The market maker bot will not place sell orders for less than this amount.
   * priceIncrement = the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * minSpread = the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
+  * maxDistFromNext = the maximum allowed price difference between top-of-the-book price and the next level of order depth.
+  * ignoreOrderQtyLt = ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders.
+  * placeAtBidWall = wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy.
+  * placeAtSellWall = wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy.
   * isEnabled = is the market currently enabled for market maker activity?
   * creationTimestamp = date & time the account was registered, in Unix epoch milliseconds
   * creationBlock = the sidechain block at which the account was registered
