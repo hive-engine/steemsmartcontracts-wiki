@@ -49,7 +49,7 @@ Feature | Basic | Premium
 Cost | 100 ENG/BEE | another 100 ENG/BEE fee + 1000 ENG/BEE staked
 Duration* | can be used for a total time of 2 weeks, then requires a 2 week "cooldown" before being used again | no usage restrictions while premium is active
 Markets | can only trade on one market pair at a time, must have 200 ENG/BEE staked to configure a market | can trade on unlimited markets, must have an additional 200 ENG/BEE staked on top of the 1000 base amount, per market pair
-Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>wall nestling<br><br>OR<br><br>additional strategies TBD
+Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>[wall nestling](#wall-nestling)<br><br>OR<br><br>additional strategies TBD
 Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can adjust settings any time free of charge
 Tick Speed** | 10 minutes | 5 minutes 
 
@@ -227,6 +227,7 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
 
 * parameters:
   * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  * **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be set by premium accounts (trying to set it with a basic service account will result in an error). If not provided, defaults to 1.
   * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
   * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
   * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
@@ -236,7 +237,9 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
   * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
-  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. 
+  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
+  * **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+  * **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
 
   If any optional parameters are not specified, then sensible defaults will be set as follows:
 
@@ -252,6 +255,13 @@ ENG or BEE that is in the process of being unstaked will **not** count toward th
   minSpread | 0.00000001
   maxDistFromNext | 0.0001
   ignoreOrderQtyLt | 50
+  
+  Defaults for the wall nestling order strategy are:
+  
+  Parameter | Default
+  ---- | ----
+  placeAtBidWall | 10000
+  placeAtSellWall | 10000
 
 * examples:
 ```
@@ -299,6 +309,7 @@ Updates the configuration for a previously added market. If your account is not 
 
 * parameters:
   * symbol (string): symbol of the token identifying the market to trade on (cannot be SWAP.HIVE or STEEMP)
+  * **(optional)** strategy (integer): the order strategy to use. Can be 1 or 2. Basic service top of the book strategy = 1, premium service wall nestling = 2. This setting can only be updated by premium accounts (trying to update it with a basic service account will result in an error).
   * **(optional)** maxBidPrice (string): the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
   * **(optional)** minSellPrice (string): the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
   * **(optional)** maxBaseToSpend (string): the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
@@ -308,7 +319,9 @@ Updates the configuration for a previously added market. If your account is not 
   * **(optional)** priceIncrement (string): the amount you want to increase/decrease the price by when placing new orders, in SWAP.HIVE or STEEMP. For example, if priceIncrement is 0.001 and the top-of-the-book buy price is 5.2, the bot will place a buy order for you at 5.201. Likewise if the top-of-the-book sell price is 5.5, the bot will place a sell order for you at 5.499.
   * **(optional)** minSpread (string): the minimum spread you desire to maintain between top-of-the-book bid and ask prices, in SWAP.HIVE or STEEMP. If the current spread is less than this amount, the market maker bot will not place orders.
   * **(optional)** maxDistFromNext (string): the maximum allowed price difference between top-of-the-book price and the next level of order depth. If the price "gap" between orders is larger than this amount, and your account currently has the top-of-the-book price, your order will be canceled and replaced lower down on the next tick. Otherwise, if your account *does not* have the top-of-the-book price, the top-of-the-book order will be ignored for the purpose of determining where to place new orders. For example, if priceIncrement is 0.001, maxDistFromNext is 0.01, top-of-the-book buy price is 5.2, and the next buy price lower down is 5.1, then the bot will place a buy order for you at 5.101.
-  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. 
+  * **(optional)** ignoreOrderQtyLt (string): ignore orders with token quantity less than or equal to this size, for the purpose of determining where to place new orders. For example, if ignoreOrderQtyLt is 10 and the first 3 orders on the order book all have quantity 8, but the 4th order down has quantity 12, then the 4th order will be considered top-of-the-book by the market maker. If using the wall nestling order strategy, will cause orders to be excluded from the order quantity summation.
+  * **(optional)** placeAtBidWall (string): wall size threshold that determines where buy orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
+  * **(optional)** placeAtSellWall (string): wall size threshold that determines where sell orders will be placed when using the wall nestling order strategy. Has no effect if strategy does not equal 2 (see [wall nestling](#wall-nestling) for details).
 
 * examples:
 ```
@@ -327,6 +340,7 @@ Updates the configuration for a previously added market. If your account is not 
     "contractAction": "updateMarket",
     "contractPayload": {
         "symbol": "DEC",
+        "strategy": 2,
         "maxBidPrice": "100",        // effectively unlimited for this market (i.e. we don't care)
         "minSellPrice": "0.00001",
         "maxBaseToSpend": "200",
@@ -336,7 +350,9 @@ Updates the configuration for a previously added market. If your account is not 
         "priceIncrement": "0.00001",
         "minSpread": "0.00001",
         "maxDistFromNext": "0.00005",
-        "ignoreOrderQtyLt": "3000"
+        "ignoreOrderQtyLt": "3000",
+        "placeAtBidWall": "50000",
+        "placeAtSellWall": "100000"
     }
 }
 
@@ -515,7 +531,7 @@ contains configuration for each market an account is configured for market makin
   * account = Steem or Hive account name
   * symbol = symbol of the token identifying the market to trade on
   * precision = precision of this market's token (how many decimal places are allowed for fractional amounts)
-  * strategy = indicates the trading strategy the market maker should follow for this market. Currently not used.
+  * strategy = indicates the trading strategy the market maker should follow for this market. Can be 1 (for placing orders on top of the book) or 2 (for wall nestling).
   * maxBidPrice = the maximum price you’re willing to buy the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place buy orders above this price.
   * minSellPrice = the minimum price you’re willing to sell the token for, in SWAP.HIVE or STEEMP. The market maker bot will not place sell orders below this price.
   * maxBaseToSpend = the maximum amount of SWAP.HIVE or STEEMP you’re willing to buy with in a single order. The market maker bot will not place buy orders for larger than this amount.
