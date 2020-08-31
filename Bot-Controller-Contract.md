@@ -5,6 +5,8 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 * [Introduction](#introduction)
   * [Market Maker Bot](#market-maker-bot)
   * [Basic vs Premium Models](#basic-vs-premium-models)
+  * [Order Strategies](#order-strategies)
+    * [Wall Nestling](#wall-nestling)
   * [Purpose of the Bot Controller](#purpose-of-the-bot-controller)
 * [Account Management](#account-management)
   * actions:
@@ -47,13 +49,27 @@ Feature | Basic | Premium
 Cost | 100 ENG/BEE | another 100 ENG/BEE fee + 1000 ENG/BEE staked
 Duration* | can be used for a total time of 2 weeks, then requires a 2 week "cooldown" before being used again | no usage restrictions while premium is active
 Markets | can only trade on one market pair at a time, must have 200 ENG/BEE staked to configure a market | can trade on unlimited markets, must have an additional 200 ENG/BEE staked on top of the 1000 base amount, per market pair
-Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>additional strategies TBD
+Order Strategy | tries to keep orders on top of the book | tries to keep orders on top of the book<br><br>OR<br><br>wall nestling<br><br>OR<br><br>additional strategies TBD
 Change Settings | 1 ENG/BEE to adjust settings (turning off & on is free) | can adjust settings any time free of charge
 Tick Speed** | 10 minutes | 5 minutes 
 
 &ast; **Special note for duration:** when basic service is used, duration starts at 2 weeks and decreases whenever the smart contract updates state. This gradual usage of time stops if the user turns off bot service, and resumes when bot service is re-enabled. When the duration remaining hits 0, service will be suspended until the cooldown period elapses. At end of cooldown, duration is reset and the user is free to re-enable the service.
 
 &ast;&ast; **Tick speed definition:** the rate at which the market maker bot updates orders in response to changing market conditions. When the bot ticks, it attempts to update as many orders as it can, but in some periods of high activity it may delay ticking some accounts so that blockchain processing is not slowed down. Thus the tick speed should be regarded as a "best attempt", not a guarantee, and your account may tick slower depending on overall system conditions at the time. In such cases, premium service accounts will be prioritized for faster ticking.
+
+## Order Strategies
+
+Basic service allows only one simple strategy for placing orders: the bot will attempt to keep one order on the top of the buy book, and one order on the top of the sell book. This behavior can be tweaked to adapt to market conditions using several configuration settings [detailed below.](#addmarket)
+
+Premium service allows for the following additional order strategies to be used:
+
+### Wall Nestling
+
+This order strategy still places a single order on the buy book and a single order on the sell book, but it can be used to place the orders in front of walls (defined as very large orders set by so-called whale accounts). So orders will be placed some distance back from the top of the book, allowing you to capture profits from larger price movements. This technique is also less risky & more profitable in situations where a market has small spreads. To use this strategy, you configure separate wall sizes for the bide side & ask side. The bot will start at the top of the book and count order quantities, moving back down the book until the sum of quantities is equal to or greater than the configured wall size. At that point, the bot will stop and place an order above the order that hit your size threshold.
+
+Example: let's say the first 4 orders on the buy book have the following quantities: 100, 500, 1000, 50000. If you set the bid wall size to 30000, then an order will be placed directly above the 4th order. The bot adds up the quantities 100 + 500 + 1000 = 1600. That is less than 30000, so it adds in the 4th quantity: 1600 + 50000 = 51600. Now the quantity has exceeded your configured threshold of 30000, so the bot stops at the 4th order and places its order directly above that one.
+
+**Settings used by this strategy:** all settings for basic service apply, plus placeAtBidWall and placeAtSellWall - [see details below.](#addmarket)
 
 ## Purpose of the Bot Controller
 
