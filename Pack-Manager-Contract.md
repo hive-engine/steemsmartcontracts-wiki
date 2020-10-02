@@ -108,3 +108,13 @@ TODO: add content here
 ### updateSettings:
 
 TODO: add content here
+
+## Defining NFT Instance Types
+
+The third step, after placing an NFT under management and setting up packs, is to define all the different types of NFT instances that may be generated from the packs. Using Splinterlands as an example again, that game has hundreds of different cards you can mix & match to form teams for battle. There's Yodin Zaku, Xander Foxwood, Pirate Captain, and Naga Warrior, to name a few. This is what we mean when we talk about **types** in the context of the Pack Manager. All of these different cards are encompassed by the same NFT definition; they are differentiated internally by a number that represents the type of the card.
+
+To give another example, if you used the Pack Manager to create an NFT for a war game, your types might be the military units used by your game: soldier, general, destroyer, tank, cruise missile, marine, cannon, howitzer, etc.
+
+All types have the following properties:
+
+TODO:  add table of properties here
