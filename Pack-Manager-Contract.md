@@ -13,7 +13,8 @@ As a user, you feed fungible pack tokens to the Pack Manager, and it "opens" the
 
 As an app creator, you create your NFT and register pack -> NFT mappings with the Pack Manager. You set configuration that determines how many NFT instances are issued per pack, their edition, rarity, and various other properties.
 
-# Creating an NFT Collectable
+# Actions available:
+## Creating an NFT Collectable
 
 Not just any old NFT is compatible with the Pack Manager. In order for the Pack Manager to issue NFTs, an NFT symbol has to be **under management** with the Pack Manager. We may add a way later on for existing NFTs to be placed under management if they satisfy certain criteria, but currently the only way to have an NFT under management is to create it through the following action:
 
@@ -25,6 +26,8 @@ Name | Type | Read Only | Authorized Editing Accounts | Authorized Editing Contr
 edition | integer >= 0 | Yes | none | packmanager | A number that indicates which edition an NFT instance belongs to (analogous to Alpha, Beta, Untamed, etc in Splinterlands)
 foil | integer >= 0 | Optional, up to creator | Hive account that creates the NFT | packmanager | A number that indicates the foil of an NFT instance (analogous to Gold or Regular in Splinterlands)
 type | integer >= 0 | Optional, up to creator | Hive account that creates the NFT | packmanager | A number that indicates the specific type of an NFT instance (analogous to the type of card in Splinterlands, for example Goblin Shaman or Alric Stormbringer)
+
+Note that the max supply of the NFT will be technically unlimited. Instead of capping supply with a specific number, supply is determined indirectly based on the number of associated pack tokens in existence.
 
 In addition, the NFT's groupBy will be set to ['edition', 'foil', 'type']. For more information about the purpose of groupBy, see [NFT contract documentation](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md#setgroupby).
 * requires active key: yes
@@ -89,3 +92,19 @@ example:
     }
 }
 ```
+
+## Registering Packs
+
+Once you have an NFT under management, the next step is to register pack tokens & corresponding settings that will be associated with the NFT. This is a many-to-many mapping: you can have multiple pack tokens that map to multiple NFTs. For example, you could have small chest, medium chest, and large chest packs that all map to the same NFT and issue 5, 10, and 15 NFT instances per pack, respectively. You could also have a chest token that maps to 2 or more NFTs, so the player can choose which type of NFT it opens as.
+
+Any already existing fungible token can be used as a pack token; it doesn't have to be a new token that was created specifically for this purpose (although for most new projects making a new token is sensible). For example, you could give Splinterlands ALPHA tokens new utility by having them used to generate military units for your new War Game. Or have dCity SIM used as a pack token for your own city simulator.
+
+The following actions are available to manage pack registrations:
+
+### registerPack:
+
+TODO: add content here
+
+### updateSettings:
+
+TODO: add content here
