@@ -32,4 +32,60 @@ In addition, the NFT's groupBy will be set to ['edition', 'foil', 'type']. For m
 * can be called by: Hive account
 
 * parameters:
-  * symbol (string): symbol of the new NFT
+  * name (string): name of the token (letters, numbers, whitespace only, max length of 50)
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * **(optional)** orgName (string): name of the company/organization that created this NFT (letters, numbers, whitespace only, max length of 50)
+  * **(optional)** productName (string): product/brand that this NFT is associated with (letters, numbers, whitespace only, max length of 50)
+  * **(optional)** url (string): url of the project (max length of 255)
+  * **(optional)** isFoilReadOnly (boolean): if true, then the foil data property will be created as read-only. The default value is true if this parameter is not specified.
+  * **(optional)** isTypeReadOnly (boolean): if true, then the type data property will be created as read-only. The default value is true if this parameter is not specified.
+
+* examples:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "createNft",
+    "contractPayload": {
+        "symbol": "WAR",
+        "name": "War Game Military Units"
+    }
+}
+
+{
+    "contractName": "packmanager",
+    "contractAction": "createNft",
+    "contractPayload": {
+        "symbol": "WAR",
+        "name": "War Game Military Units",
+        "orgName": "Wars R Us Inc",
+        "productName": "War Game Name Here",
+        "url": "https://mywargame.com"
+    }
+}
+
+{
+    "contractName": "packmanager",
+    "contractAction": "createNft",
+    "contractPayload": {
+        "symbol": "WAR",
+        "name": "War Game Military Units",
+        "orgName": "Wars R Us Inc",
+        "productName": "War Game Name Here",
+        "url": "https://mywargame.com",
+        "isFoilReadOnly": false,
+        "isTypeReadOnly": false
+    }
+}
+```
+
+A successful action will emit a "createNft" event: ``symbol``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "createNft",
+    "data": {
+        "symbol": "WAR"
+    }
+}
+```
