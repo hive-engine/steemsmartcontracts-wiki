@@ -30,3 +30,5 @@
 
 [Bot Controller Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Bot-Controller-Contract.md)
 
+[Pack Manager Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Pack-Manager-Contract.md)
+
