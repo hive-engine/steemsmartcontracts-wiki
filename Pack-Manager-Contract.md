@@ -102,12 +102,32 @@ Any already existing fungible token can be used as a pack token; it doesn't have
 The following actions are available to manage pack registrations:
 
 ### registerPack:
+Register settings for a new pack token / NFT pair. New editions for existing NFTs under management can also be registered using this action. Note that you cannot register settings twice for the same pack token & NFT. After settings are registered, they can be edited using the updateSettings action. A 1000 BEE fee must be paid every time registerPack is used.
+* requires active key: yes
 
-TODO: add content here
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * packSymbol (string): symbol of the fungible pack token to be registered
+  * nftSymbol (string): symbol of the NFT that the pack token should be linked to
+  * edition (integer >= 0): what edition does this pack open (In Splinterlands there is Alpha, Beta, Untamed; other projects might have a 1st Edition, 2nd Edition, etc)? 
+  * cardsPerPack (integer >= 1 and <= 30): how many NFT instances should be generated for each pack opened?
+
+TODO: this action is still under development, need to add more parameters and example usage.
 
 ### updateSettings:
+Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if the NFT has 0 circulating supply. If there is non-zero circulating supply, then this action will result in an error.
+* requires active key: yes
 
-TODO: add content here
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * packSymbol (string): symbol of the fungible pack token for this registration
+  * nftSymbol (string): symbol of the NFT that the pack token is linked to
+  * **(optional)** edition (integer >= 0): updated edition value; note that the edition can only be changed to a value already registered through previous use of the registerPack action.
+  * **(optional)** cardsPerPack (integer >= 1 and <= 30): new value for how many NFT instances should be generated per pack opened
+
+TODO: this action is still under development, need to add more parameters and example usage.
 
 ## Defining NFT Instance Types
 
@@ -309,3 +329,8 @@ example:
     }
 }
 ```
+
+### open:
+Opens one or more packs.
+
+TODO: this action still a work in progress
