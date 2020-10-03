@@ -138,3 +138,36 @@ Adds a new type for an NFT currently under management. A 1 BEE fee is required e
   * rarity (integer >= 0): what is the rarity of the new type?
   * team (integer >= 0): what is the team of the new type?
   * name: what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+
+* example:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "addType",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "category": 1,
+        "rarity": 2,
+        "team": 0,
+        "name": "F22A Raptor"
+    }
+}
+```
+
+A successful action will emit an "addType" event: ``nft, edition, typeId (ID number of the newly added type), rowId (internal db ID number from the implicit _id field)``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "addType",
+    "data": {
+        "nft": "WAR",
+        "edition": 0,
+        "typeId": 0,
+        "rowId": 567
+    }
+}
+```
+
+Any given type can be uniquely identified by the combination of nft, edition, and typeId. For direct db queries, the rowId also uniquely identifies the type.
