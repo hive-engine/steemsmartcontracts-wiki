@@ -268,3 +268,44 @@ example:
     }
 }
 ```
+
+## Opening Packs
+
+Once all setup is complete, it's time to open some packs! Note that opening packs has a BEE cost; the contract needs to pay the NFT issuance fees (see [NFT documentation](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md#fees) for more details). The NFT creator is responsible for making sure the packmanager smart contract always has enough BEE on hand for this purpose, and must periodically add more BEE as needed. You can do this using the deposit action.
+
+The following actions are available:
+
+### deposit:
+Adds more BEE to the fee pool reserved for a particular NFT under management. This action should be used to fill up the fee pool prior to opening any packs; pools always start at 0 balance. You CANNOT add BEE simply by sending it to the contract; such transactions will result in permanently lost BEE. You MUST use this action instead.
+* requires active key: yes
+
+* can be called by: any Hive account
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT under management for which you want to reserve BEE for issuance fees
+  * amount (string): the quantity of BEE to deposit
+
+* example:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "deposit",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "amount": "300.123"
+    }
+}
+```
+
+A successful action will emit a "deposit" event: ``nft, newFeePool (new total balance stored in the contract)``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "deleteType",
+    "data": {
+        "nft": "WAR",
+        "newFeePool": "1800.5"
+    }
+}
+```
