@@ -220,13 +220,51 @@ example:
 ```
 {
     "contract": "packmanager",
-    "event": "addType",
+    "event": "updateType",
     "data": {
         "nft": "WAR",
         "edition": 0,
         "typeId": 23,
         "oldTeam": 4,
         "newTeam": 5
+    }
+}
+```
+
+### deleteType:
+Deletes a previously created type for an NFT under management. Only possible when an NFT's circulating supply is 0. Calling this action when there is a non-zero circulating supply will result in an error. The 1 BEE fee burned by the original addType action will not be refunded.
+* requires active key: yes
+
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
+  * edition (integer >= 0): what edition does this type belong to?
+  * typeId (integer >= 0): what is the ID number of the type to delete? The combination of nftSymbol, edition, and typeId uniquely identify the type to delete.
+
+* example:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "deleteType",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 3,
+        "typeId": 111
+    }
+}
+```
+
+A successful action will emit a "deleteType" event: ``nft, edition, typeId``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "deleteType",
+    "data": {
+        "nft": "WAR",
+        "edition": 3,
+        "typeId": 111,
     }
 }
 ```
