@@ -171,3 +171,62 @@ example:
 ```
 
 Any given type can be uniquely identified by the combination of nft, edition, and typeId. For direct db queries, the rowId also uniquely identifies the type.
+
+### updateType:
+Edits an existing type for an NFT under management.
+* requires active key: yes
+
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
+  * edition (integer >= 0): what edition does this type belong to?
+  * typeId (integer >= 0): what is the ID number of the type to update? The combination of nftSymbol, edition, and typeId uniquely identify the type to update. These 3 things cannot be changed.
+  * **(optional)** category (integer >= 0): what should be the type's new category?
+  * **(optional)** rarity (integer >= 0): what should be the type's new rarity?
+  * **(optional)** team (integer >= 0): what should be the type's new team?
+  * **(optional)** name: what should be the type's new name? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+
+* examples:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "updateType",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "typeId": 23,
+        "team": 5
+    }
+}
+
+{
+    "contractName": "packmanager",
+    "contractAction": "updateType",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "typeId": 23,
+        "category": 2,
+        "rarity": 0,
+        "team": 4,
+        "name": "Russian Su57"
+    }
+}
+```
+
+A successful action will emit an "updateType" event: ``nft, edition, typeId, old field value 1, new field value 1, old field value 2, new field value 2, ...``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "addType",
+    "data": {
+        "nft": "WAR",
+        "edition": 0,
+        "typeId": 23,
+        "oldTeam": 4,
+        "newTeam": 5
+    }
+}
+```
