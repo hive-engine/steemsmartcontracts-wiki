@@ -1,5 +1,6 @@
 Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
-Note: this smart contract is only available on Hive Engine, there is no Steem Engine equivalent.
+
+**Note:** this smart contract is only available on Hive Engine, there is no Steem Engine equivalent.
 
 # Table of Contents
 
