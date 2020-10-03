@@ -447,3 +447,26 @@ example query results:
     team: 3,
     name: 'Japanese Zero Fighter' } ]
 ```
+
+## packs
+contains pack settings linking fungible pack tokens to corresponding NFTs, which determine how NFTs are generated from the packs
+* fields
+  * account = Hive account that created these settings and has permission to edit them
+  * symbol = symbol of the pack token
+  * nft = symbol of the NFT to associate with the pack token
+  * edition = edition of the NFT instances to be generated from the pack token
+  * cardsPerPack = number of NFT instances generated from opening 1 pack
+
+**TODO:** more fields will be added as development work is ongoing
+
+There are database indexes on the account, symbol, and nft fields. The combination of symbol and nft fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1,
+    account: 'cryptomancer',
+    symbol: 'PACK',
+    nft: 'WAR',
+    edition: 0,
+    cardsPerPack: 7 } ]
+```
