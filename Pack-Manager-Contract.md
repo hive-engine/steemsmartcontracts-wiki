@@ -115,6 +115,26 @@ The third step, after placing an NFT under management and setting up packs, is t
 
 To give another example, if you used the Pack Manager to create an NFT for a war game, your types might be the military units used by your game: soldier, general, destroyer, tank, cruise missile, marine, cannon, howitzer, etc.
 
-All types have the following properties:
+All types have the following properties, which must be integers >= 0 (the text name of the property is stored elsewhere and linked to the numeric value):
 
-TODO:  add table of properties here
+* **category**: what category of thing is this type? ex: boat (types can be canoe, sailboat, yacht, tanker), plane (types can be Boeing 747, F-22A Raptor, Japanese Zero), land (types can be swamp, mountain, forest). Splinterlands cards can be Monsters or Summoners.
+* **rarity**: how rare is this type? ex: common, uncommon, epic, legendary
+* **team**: what grouping, if any, should this type be part of? ex: Splinterlands has cards grouped into Fire, Water, Earth, Life, Death, Dragon, and Neutrals. For sports cards, you might use the names of various sports teams.
+
+New types can be added at any time, even after NFTs have been issued (maybe you want to add a new type to be airdropped once a certain number of packs have been opened, for example). Existing types can also be edited. However, types can only be deleted if no NFT instances have been issued yet (i.e. if the NFT creator is still working on getting everything setup). Once NFTs have been issued, it wouldn't make sense to be able to delete types (you don't want that expensive Dragon you bought to suddenly be removed from the game and made worthless, right?).
+
+The following actions are available to manage types:
+
+### addType:
+Adds a new type for an NFT currently under management. A 1 BEE fee is required every time this contract action is used. When added, new types are assigned an ID number that starts at 0 and goes up by 1 for each new type added. So the first type for a given NFT and edition will have ID 0, the 2nd will have ID 1, the 3rd will have ID 2, and so on.
+* requires active key: yes
+
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
+  * edition (integer >= 0): what edition does this type belong to (In Splinterlands there is Alpha, Beta, Untamed; other projects might have a 1st Edition, 2nd Edition, etc)? Note that type values are distinct per NFT per edition, and the edition must have been previously registered with the registerPack action.
+  * category (integer >= 0): what is the category of the new type?
+  * rarity (integer >= 0): what is the rarity of the new type?
+  * team (integer >= 0): what is the team of the new type?
+  * name: what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
