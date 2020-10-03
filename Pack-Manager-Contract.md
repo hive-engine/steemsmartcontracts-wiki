@@ -22,6 +22,11 @@ Note: this smart contract is only available on Hive Engine, there is no Steem En
   * actions:
   * [deposit](#deposit)
   * [open](#open)
+* [Tables available](#tables-available)
+  * [params](#params)
+  * [managedNfts](#managednfts)
+  * [types](#types)
+  * [packs](#packs)
 
 # Introduction
 
@@ -379,7 +384,7 @@ contains information about NFTs under management of the packmanager smart contra
   * editionMapping = information about what editions exist for this NFT
 
 editionMapping is a dictionary that maps edition numbers to information about the edition as follows:
-  * nextTypeId = the next type ID that will be assigned for this NFT & edition when the addType action is called
+  * nextTypeId = the next type ID that will be assigned for this NFT & edition when the [addType action](#addtype) is called
 
 example query results:
 ```
@@ -400,7 +405,7 @@ example query results:
 There is a database index on the nft field, which serves as a unique primary key.
 
 ## types
-contains details about NFT instance types added through the addType action
+contains details about NFT instance types added through the [addType action](#addtype)
 * fields
   * nft = symbol of the NFT under management
   * edition = edition number that this type belongs to
