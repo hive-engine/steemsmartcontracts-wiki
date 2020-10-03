@@ -396,3 +396,54 @@ example query results:
         nextTypeId: 12
     } } } ]
 ```
+
+There is a database index on the nft field, which serves as a unique primary key.
+
+## types
+contains details about NFT instance types added through the addType action
+* fields
+  * nft = symbol of the NFT under management
+  * edition = edition number that this type belongs to
+  * typeId = the type's ID number
+  * category = the type's category ID number
+  * rarity = the type's rarity ID number
+  * team = the type's team ID number
+  * name = human friendly text label identifying this type
+  
+There are database indexes on the nft, edition, and typeId fields. The combination of these fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1,
+    nft: 'WAR',
+    edition: 0,
+    typeId: 0,
+    category: 1,
+    rarity: 1,
+    team: 3,
+    name: 'Tank' },
+  { _id: 2,
+    nft: 'WAR',
+    edition: 0,
+    typeId: 1,
+    category: 2,
+    rarity: 3,
+    team: 3,
+    name: 'Submarine' },
+  { _id: 3,
+    nft: 'WAR',
+    edition: 1,
+    typeId: 0,
+    category: 3,
+    rarity: 4,
+    team: 0,
+    name: 'B52 Bomber' },
+  { _id: 4,
+    nft: 'WAR',
+    edition: 1,
+    typeId: 1,
+    category: 3,
+    rarity: 5,
+    team: 3,
+    name: 'Japanese Zero Fighter' } ]
+```
