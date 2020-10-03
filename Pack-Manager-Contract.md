@@ -36,6 +36,18 @@ As a user, you feed fungible pack tokens to the Pack Manager, and it "opens" the
 
 As an app creator, you create your NFT and register pack -> NFT mappings with the Pack Manager. You set configuration that determines how many NFT instances are issued per pack, their edition, rarity, and various other properties.
 
+For app creators, the basic usage flow is:
+
+1. Create a new pack token (optional, can use any existing fungible token as a pack)
+2. Create a new NFT ([createNft action](#createnft))
+3. Register settings for a pack ([registerPack action](#registerpack))
+4. Set names for things like editions, foils, categories, rarities, and teams (**TODO: this has not been implemented yet so will remain vague for now**)
+5. Add NFT instance types (repeated use of the [addType action](#addtype))
+6. Deposit BEE to cover NFT issuance costs ([deposit action](#deposit))
+7. Now your users can open packs! ([open action](#open))
+
+For details of the above process, keep reading:
+
 # Actions available:
 ## Creating an NFT Collectable
 
