@@ -358,3 +358,41 @@ example:
 Opens one or more packs.
 
 **TODO:** this action still a work in progress
+
+# Tables available:
+Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
+## params:
+contains contract parameters such as the current fees
+* fields
+  * registerFee = the cost in BEE to register a pack token / NFT settings pair
+  * typeAddFee = the cost in BEE to add an NFT instance type
+
+## managedNfts:
+contains information about NFTs under management of the packmanager smart contract
+* fields
+  * nft = symbol of the NFT under management
+  * feePool = current BEE balance available to the contract for issuing NFT instances
+  * categoryRO = boolean flag indicating if categories of NFT instance types should be editable after NFTs have been issued
+  * rarityRO = boolean flag indicating if rarity of NFT instance types should be editable after NFTs have been issued
+  * teamRO = boolean flag indicating if team of NFT instance types should be editable after NFTs have been issued
+  * nameRO = boolean flag indicating if name of NFT instance types should be editable after NFTs have been issued
+  * editionMapping = information about what editions exist for this NFT
+
+editionMapping is a dictionary that maps edition numbers to information about the edition as follows:
+  * nextTypeId = the next type ID that will be assigned for this NFT & edition when the addType action is called
+
+example query results:
+```
+[ { _id: 1,
+    nft: 'WAR',
+    feePool: '1000',
+    categoryRO: false,
+    rarityRO: false,
+    teamRO: false,
+    nameRO: false,
+    editionMapping: { '0': {
+        nextTypeId: 33
+    }, '1': {
+        nextTypeId: 12
+    } } } ]
+```
