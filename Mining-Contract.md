@@ -68,6 +68,7 @@ assigned to the pool.
         ],
     }
 }
+```
 
 A successful action will emit a "createPool" event, e.g.:
 ```
