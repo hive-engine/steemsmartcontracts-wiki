@@ -8,6 +8,7 @@ Documentation written by [eonwarped](https://github.com/eonwarped)
 * Actions:
   * [createPool](#createpool)
   * [updatePool](#updatepool)
+  * [setActive](#setactive)
 * [Tables available](#tables-available)
   * [params](#params)
   * [pools](#pools)
@@ -81,8 +82,7 @@ A successful action will emit a "createPool" event, e.g.:
 }
 ```
 ### updatePool
-Update a mining pool. An update fee of 300 BEE is required. Can be used to activate or 
-deactivate the pool as well as update multipliers. The symbols themselves cannot be changed.
+Update a mining pool. An update fee of 300 BEE is required. The symbols themselves cannot be changed.
 * requires active key: yes
 * can be called by: token issuer
 * parameters:
@@ -93,26 +93,45 @@ deactivate the pool as well as update multipliers. The symbols themselves cannot
   * tokenMiners (list): List of token miners (only 1 or 2 allowed)
     * tokenMiners[].symbol (string): Symbol of token that is mining.
     * tokenMiners[].multiplier (integer >= 1 and <= 100): Multiplier for mining token.
-  * active (boolean): Whether pool is active. When inactive, no further lotteries will take place
-      until it is reactivated.
 
 * examples:
 ```
 {
     "contractName": "mining",
-    "contractAction": "createPool",
+    "contractAction": "updatePool",
     "contractPayload": {
         "id": "TKN:TKN",
         "lotteryWinners": 1,
         "lotteryIntervalHours": 1,
         "lotteryAmount": "1",
-        "active": false,
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1 }
         ],
     }
 }
 ```
+
+### setActive
+Disable or enable a mining pool. Lotteries will not occur if not active. No fee is required
+to change the status, but must be the issuer of the token.
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * id (string): ID of pool to modify.
+  * active (boolean): Whether the pool is active.
+
+* examples:
+```
+{
+    "contractName": "mining",
+    "contractAction": "setACtive",
+    "contractPayload": {
+        "id": "TKN:TKN",
+        "active": true,
+    }
+}
+```
+
 
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
