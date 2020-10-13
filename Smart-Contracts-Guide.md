@@ -8,6 +8,8 @@ For convenience, code links in this document are for Hive Engine, but path struc
 
 * [Quickstart](#quickstart)
 
+**TODO**: finish rest of ToC
+
 # Quickstart
 
 1. Make sure you have a Linux server to develop on. Low end specs are fine: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
@@ -36,7 +38,11 @@ For convenience, code links in this document are for Hive Engine, but path struc
 
 8. That's it, you're ready for smart contract dev work!
 
-# Creating skeleton files
+# Development pipeline
+
+The following sections describe the overall steps in the smart contract development process, from start to finish.
+
+## Creating skeleton files
 
 Each smart contract consists of two files: a .js file containing the contract code, and a .js file containing unit test code. Both the test file and contract file should have the same name. Also, the file name should be the same as the contract name itself which by convention should be all lowercase with no spaces or dashes between words.
 
@@ -63,4 +69,57 @@ Generally speaking, I write test cases and smart contract code in parallel as I 
 
 There is no need to run your own node to test against. Unit tests are sufficient to be confident your smart contract will work once deployed. The unit test environment closely simulates a real node environment. 100% test coverage is required for all smart contracts. 90% just won't cut it. Yes, writing test cases will often take longer than writing the contract itself. That is expected. You simply can't be too careful when dealing with this stuff; bugs in production can have far more disastrous consequences than for normal desktop programs.
 
-Test cases are expected to have both a negative and positive version for each publicly exposed smart contract action. For example, consider an NFT transfer operation. There is a [transfers tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1281) test to verify tokens can be transferred OK from one account to another (that's the positive test); there is also a [does not transfer tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1410) test that checks all the different ways a transfer action can fail (that's the negative test).
+Test cases are expected to have both a negative and positive version for each publicly exposed smart contract action. For example, consider an NFT transfer operation. There is a [transfers tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1281) test to verify tokens can be transferred OK from one account to another (that's the positive test); there is also a [does not transfer tokens](https://github.com/hive-engine/steemsmartcontracts/blob/c11ce22b93d6160967c00560a79e83b67bfcb3e1/test/nft.js#L1410) test that checks all the different ways a transfer action can fail (that's the negative test). It's OK to combine both positive and negative tests into one test case if that is more convenient for a particular testing scenario.
+
+To run a test, add a line for it in **package.json**:
+
+```
+"name": "steemsmartcontracts",
+  "version": "0.1.23",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node --max-old-space-size=8192 app.js",
+    "lint": "eslint .gitignore .",
+    "test": "./node_modules/mocha/bin/mocha  --recursive",
+    "test0": "./node_modules/mocha/bin/mocha ./test/hivesmartcontracts.js",
+    "test1": "./node_modules/mocha/bin/mocha ./test/nft.js",
+    "test2": "./node_modules/mocha/bin/mocha ./test/tokens.js",
+    "test3": "./node_modules/mocha/bin/mocha ./test/nftmarket.js",
+    "test4": "./node_modules/mocha/bin/mocha ./test/smarttokens.js",
+    "test5": "./node_modules/mocha/bin/mocha ./test/botcontroller.js",
+    "test6": "./node_modules/mocha/bin/mocha ./test/crittermanager.js",
+    "test7": "./node_modules/mocha/bin/mocha ./test/market.js",
+    "test8": "./node_modules/mocha/bin/mocha ./test/packmanager.js"
+  },
+```
+
+Above, test8 is the last test. So you could add yours as test9, putting the path to your new test file. Then you'd run the tests with `npm run test9`.
+
+## Running lint
+
+Once your contract and tests are finished, you should run lint to verify your contract code obeys established coding style standards. Do ```npm run lint > lint_output.log```
+This will take a few minutes as it will run lint checks for ALL contracts, not just your new one. Check the output file and fix any indicated problems with your contract. All lint checks must pass in order for your code to be accepted. It is OK to disable lint tests for certain lines of code if you have a good reason for doing so. There are plenty of examples of this scattered around the contracts, for example this snippet in the nft contract:
+
+```
+if (Object.keys(properties).length === 0) {
+  // eslint-disable-next-line no-continue
+  continue; // don't bother processing empty properties
+}
+```
+
+However, try not to do that too much.
+
+## Submitting your code for review
+
+When you are finished, check in all code & tests to your branch and raise a PR (to merge into the **hive-engine** branch if you are developing for Hive Engine). Then notify @cryptomancer on Discord that you have submitted your PR. A code review will be done, to ensure you are following smart contract best practices & all test cases are passing. Note that github itself will automatically run unit tests & lint checks to verify there are no issues with your code.
+
+@cryptomancer will give feedback during the code review process; you may be required to make changes if there are any potential areas of concern.
+
+Once the code review is passed, @cryptomancer will merge your PR into the main repository and schedule your smart contract for production deployment.
+
+## Post-release checks
+
+Once your smart contract is deployed, you can perform post-release checks to verify it's working as intended. The best way to do this is using Python with Beem to broadcast custom json transactions, then verify contract data state using Postman.
+
+TODO: add details of how to do this
