@@ -1,5 +1,7 @@
 # Steem & Hive Smart Contracts Wiki
 
+## General System Design & Usage
+
 [Requirements](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Requirements.md)
 
 [Write a Smart Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Write-a-Smart-Contract.md)
@@ -19,6 +21,8 @@
 [Interact with the sidechain](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Interact-with-the-sidechain.md)
 
 [How to setup a Steem or Hive Smart Contracts node](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/How-to-setup-a-Steem-Smart-Contracts-node.md)
+
+## Contract Documentation
 
 [Tokens Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Tokens-Contract.md)
 
