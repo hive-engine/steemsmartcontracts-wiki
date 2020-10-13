@@ -38,13 +38,31 @@ For convenience, code links in this document are for Hive Engine, but path struc
 
 8. That's it, you're ready for smart contract dev work!
 
+# Parts of a smart contract
+
+Engine smart contracts are bits of Javascript code that run in a sandbox VM (Virtual Machine) environment. You can think of them as living on the Engine sidechain. They can only access on-chain data storage and have no access to outside data sources (so you can't query external web sites, REST APIs, etc). Everything you do on the Engine web site is powered by smart contracts behind the scenes: token transfers, market orders, staking, delegating, and more.
+
+## Actions
+
+A smart contract provides a public interface in the form of actions, which can be called by users (which will be either a Hive account or another smart contract). This concept should be familiar to anyone who knows object oriented programming; it's analogous to a class in most major programming languages.
+
+Actions are called by broadcasting custom json transactions to the Hive blockchain (they can also be triggered through posts, but this is less conventional and typically only used to deploy or update smart contracts). The smart contracts node software detects the custom json transaction and executes the appropriate smart contract action, passing in any parameters contained within the custom json. Results of the action are recorded in the transaction logs for the next sidechain block.
+
+It's important to keep in mind that all smart contract actions are treated as atomic in nature (they are single threaded and cannot be interrupted by other actions), and must finish executing within one sidechain block. Thus they must execute quickly enough not to cause delays in block production.
+
+Here is an example of a typical smart contract action:
+
+<img src="https://i.imgur.com/J0Ee6XC.png">
+
+This is a **marketBuy** action for the **market** smart contract. The **ssc-mainnet-hive** id indicates this custom json should be processed by the Hive Engine mainnet sidechain.
+
 # Development pipeline
 
 The following sections describe the overall steps in the smart contract development process, from start to finish.
 
 ## Creating skeleton files
 
-Each smart contract consists of two files: a .js file containing the contract code, and a .js file containing unit test code. Both the test file and contract file should have the same name. Also, the file name should be the same as the contract name itself which by convention should be all lowercase with no spaces or dashes between words.
+Each smart contract consists of two files: a .js file containing the contract code, and a .js file containing unit test code. Both the test file and contract file should have the same name. Also, the file name should be the same as the contract name itself which by convention should be all lowercase with no spaces or dashes between words. Keep names short and to-the-point.
 
 Smart contract code goes here: **steemsmartcontracts/contracts**
 
@@ -55,13 +73,18 @@ Do NOT mix test code up with contract code, or vice versa! They must be strictly
 To get started, you can copy one of the existing test & contract files and then modify it as needed. These files are small ones so good to copy for this purpose:
 
 https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/test/crittermanager.js
+<br>
 https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/crittermanager.js
 
 The mining test cases are also good to take a look at, as they use a shortcut style for assertions which you may prefer when writing large test cases:
 
 https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/test/mining.js
 
+## Write contract code
+
 When writing your smart contract & test cases, use the existing contracts as a model. Similar code structure and style should be maintained for all contracts, and if you violate existing style guidelines your code may be rejected during the review process.
+
+Refer to the [dev best practices section](#dev-best-practices) below for details you should be aware of.
 
 ## Testing your contract
 
@@ -122,4 +145,8 @@ Once the code review is passed, @cryptomancer will merge your PR into the main r
 
 Once your smart contract is deployed, you can perform post-release checks to verify it's working as intended. The best way to do this is using Python with Beem to broadcast custom json transactions, then verify contract data state using Postman.
 
-TODO: add details of how to do this
+**TODO:** add details of how to do this
+
+# Dev Best Practices
+
+Here are some things to be aware of when writing smart contracts:
