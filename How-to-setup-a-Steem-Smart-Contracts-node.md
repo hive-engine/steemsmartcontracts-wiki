@@ -3,7 +3,7 @@
 
 ## 1. Requirements
 - have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
-- have a MongoDB server installed on your server, see https://docs.mongodb.com/v3.2/administration/install-community/
+- have a MongoDB server installed on your server, see https://docs.mongodb.com/v4.2/administration/install-community/  (we are using version 4.2 in production)
 
 ## 2. Install the Steem Smart Contracts node
 To "install" the app, simply follow these steps:
