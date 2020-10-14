@@ -56,6 +56,10 @@ Here is an example of a typical smart contract action:
 
 This is a **marketBuy** action for the **market** smart contract. The **ssc-mainnet-hive** id indicates this custom json should be processed by the Hive Engine mainnet sidechain.
 
+## Storage
+
+Smart contracts have their own on-chain database storage in the form of what we call tables (these are really MongoDB collections). Tables can be created as part of a contract's initialization action, and then are permanently associated with the contract that created them. Only the owner contract can update data in its tables, but any contract can read them. Contract tables can also be queried externally through the node's API.
+
 # Development pipeline
 
 The following sections describe the overall steps in the smart contract development process, from start to finish.
@@ -137,9 +141,9 @@ However, try not to do that too much.
 
 When you are finished, check in all code & tests to your branch and raise a PR (to merge into the **hive-engine** branch if you are developing for Hive Engine). Then notify @cryptomancer on Discord that you have submitted your PR. A code review will be done, to ensure you are following smart contract best practices & all test cases are passing. Note that github itself will automatically run unit tests & lint checks to verify there are no issues with your code.
 
-@cryptomancer will give feedback during the code review process; you may be required to make changes if there are any potential areas of concern.
+Feedback will be given during the code review process; you may be required to make changes if there are any potential areas of concern.
 
-Once the code review is passed, @cryptomancer will merge your PR into the main repository and schedule your smart contract for production deployment.
+Once the code review is passed, your PR will be merged into the main repository and your smart contract scheduled for production deployment.
 
 ## Post-release checks
 
@@ -150,3 +154,33 @@ Once your smart contract is deployed, you can perform post-release checks to ver
 # Dev Best Practices
 
 Here are some things to be aware of when writing smart contracts:
+
+## Contract storage initialization
+
+When your contract is deployed or upgraded, the special **createSSC** action will be called by the core node software. This is the ONLY place where you can setup database storage for your contract! The createSSC action should always have code similar to the following example:
+
+```
+actions.createSSC = async () => {
+  const tableExists = await api.db.tableExists('users');
+  if (tableExists === false) {
+    await api.db.createTable('users', ['account', 'lastTickBlock']);
+    await api.db.createTable('markets', ['account', 'symbol']);
+    await api.db.createTable('params');
+
+    const params = {};
+    params.basicFee = '100';
+    params.basicSettingsFee = '1';
+    await api.db.insert('params', params);
+  } else {
+    // do something else here if necessary, such as
+    // any data modifications for new features
+  }
+};
+```
+
+As in the above example, you should:
+
+1. Check to see if tables have already been created (the ```if (tableExists === false)``` part).
+2. Create your tables. Indexes are the only way DB query results can be sorted, so typically you want indexes on fields that will be important to sort by, such as primary keys. Try to keep indexes to a minimum, as having too many can negatively impact performance. Note that there will always be an implicit _id index for the _id column that MongoDB adds to every collection object as a unique identifier. In this example, ```await api.db.createTable('users', ['account', 'lastTickBlock']);``` means create a table called users, with indexes on the account and lastTickBlock fields.
+3. Set initial contract params. More on this below.
+4. If tables have already been created (meaning this action is being called for an upgrade rather than first deployment), then perform any necessary data updates. That's the ```// do something else here if necessary``` part of the example.
