@@ -264,6 +264,12 @@ if (api.assert(isSignedWithActiveKey === true, 'you must use a custom_json signe
 
 callingContractInfo is another special input parameter, similar to isSignedWithActiveKey. If this smart contract action is being called from another contract, instead of a Hive account, then callingContractInfo will have information about the calling contract. This allows you to design actions that can only be called from another contract, or have different behaviors depending on if they are called from a contract or an account. For usage examples, see the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js).
 
+### Verify user authorization
+
+Always check that the account calling this action is actually authorized to do so! For example, when transferring tokens, the account doing the transfer should own the tokens to be transferred. If a market order is being canceled, the account doing the cancellation should own the order. If your action is updating the properties of some object, such as changing an NFT data property, then the calling account should own the object being updated. Many contracts have examples of this that you can model your own code on.
+
+This sort of check is just commonsense, but can be easy to forget about if you're not careful.
+
 ### Checking account balance & paying fees
 
 You may wish to require a fee for executing smart contract operations. In general, this is a good idea any time your action could add new stuff to the database. On-chain storage is limited and thus paying fees to use it will prevent spammy data from bloating the sidechain. Fees are typically burned by sending to the null account. Usually BEE is used as a fee currency, but you may use other tokens if desired.
@@ -394,3 +400,7 @@ Some things to keep in mind:
 * avoid any loops that could have potentially unbounded execution times
 * define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) is once again a good example of this
 * if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js]) is an example of a multi-block action.
+
+## Emitting events
+
+**TODO**: fill this in
