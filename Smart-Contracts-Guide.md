@@ -60,6 +60,8 @@ This is a **marketBuy** action for the **market** smart contract. The **ssc-main
 
 Smart contracts have their own on-chain database storage in the form of what we call tables (these are really MongoDB collections). Tables can be created as part of a contract's initialization action, and then are permanently associated with the contract that created them. Only the owner contract can update data in its tables, but any contract can read them. Contract tables can also be queried externally through the node's API.
 
+Refer to the [database API section](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Database-API.md) for more details.
+
 # Development pipeline
 
 The following sections describe the overall steps in the smart contract development process, from start to finish.
@@ -184,3 +186,42 @@ As in the above example, you should:
 2. Create your tables. Indexes are the only way DB query results can be sorted, so typically you want indexes on fields that will be important to sort by, such as primary keys. Try to keep indexes to a minimum, as having too many can negatively impact performance. Note that there will always be an implicit _id index for the _id column that MongoDB adds to every collection object as a unique identifier. In this example, ```await api.db.createTable('users', ['account', 'lastTickBlock']);``` means create a table called users, with indexes on the account and lastTickBlock fields.
 3. Set initial contract params. More on this below.
 4. If tables have already been created (meaning this action is being called for an upgrade rather than first deployment), then perform any necessary data updates. That's the ```// do something else here if necessary``` part of the example.
+
+## Contract configuration
+
+By convention, global contract configuration settings should be stored in the **params** table, with initial settings inserted in the table in the createSSC action as demonstrated above. You should provide an **updateParams** action that can be used ONLY by the contract owner (account that deployed the contract) to update settings. Here's an example of such an action:
+
+```
+actions.updateParams = async (payload) => {
+  if (api.sender !== api.owner) return;
+
+  const {
+    registerFee,
+    typeAddFee,
+  } = payload;
+
+  const params = await api.db.findOne('params', {});
+
+  if (registerFee && typeof registerFee === 'string' && !api.BigNumber(registerFee).isNaN() && api.BigNumber(registerFee).gte(0)) {
+    params.registerFee = registerFee;
+  }
+  if (typeAddFee && typeof typeAddFee === 'string' && !api.BigNumber(typeAddFee).isNaN() && api.BigNumber(typeAddFee).gte(0)) {
+    params.typeAddFee = typeAddFee;
+  }
+
+  await api.db.update('params', params);
+};
+```
+
+This does the following:
+
+1. Verify that the action's caller is the contract owner, and reject the transaction if not: ```if (api.sender !== api.owner) return;```
+2. Retrieve current params from the database: ```const params = await api.db.findOne('params', {});```
+3. Perform input validation and update fields on the params object. Note that all fields should be optional, don't require that a field value be passed into the action if the contract owner doesn't want to update it.
+4. Save the updated object back to the database: ```await api.db.update('params', params);```
+
+## Contract libraries & module usage
+
+Smart contract code executes in a constrained sandbox environment. As such, you are not allowed to use arbitrary third party libraries. Some constants and built-in library functions are available for you to use via the ```api``` object (things such as ```api.sender``` and ```api.BigNumber```). As a general rule, If it's not part of the api object, and not a built-in part of the Javascript language, then you may NOT use it! You are NOT allowed to import any modules with the Node.js require function. All smart contracts must be self-contained in a single source file.
+
+Refer to the [smart contracts API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
