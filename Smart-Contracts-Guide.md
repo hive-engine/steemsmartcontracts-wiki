@@ -260,6 +260,10 @@ if (api.assert(isSignedWithActiveKey === true, 'you must use a custom_json signe
 }
 ```
 
+### callingContractInfo
+
+callingContractInfo is another special input parameter, similar to isSignedWithActiveKey. If this smart contract action is being called from another contract, instead of a Hive account, then callingContractInfo will have information about the calling contract. This allows you to design actions that can only be called from another contract, or have different behaviors depending on if they are called from a contract or an account. For usage examples, see the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js).
+
 ### Checking account balance & paying fees
 
 You may wish to require a fee for executing smart contract operations. In general, this is a good idea any time your action could add new stuff to the database. On-chain storage is limited and thus paying fees to use it will prevent spammy data from bloating the sidechain. Fees are typically burned by sending to the null account. Usually BEE is used as a fee currency, but you may use other tokens if desired.
@@ -318,9 +322,75 @@ actions.myaction = async (payload) => {
     if (!(await transferFee(params.typeAddFee, UTILITY_TOKEN_SYMBOL, 'null', isSignedWithActiveKey))) {
       return false;
     }
-
+    // success, now we can do some stuff
+    ..
+    ..
   }
   ..
   ..
 }
 ```
+
+## Avoiding non-determinism
+
+It's crucially important to avoid writing contract actions that can have non-deterministic outcomes. In other words, if all the custom json transactions are replayed from the Hive blockchain, and the sidechain database is empty, it should result in exactly the same contract actions being executed in exactly the same order, with exactly the same results. This is very important for maintaining consensus between multiple sidechain nodes, as each node will have its own copy of the MongoDB database, and all the copies should contain the same data. Non-deterministic outcomes could result in chain forks and other bad behavior.
+
+One way in which non-determinism can accidentally creep in is through database queries. MongoDB query results are not deterministic unless you use an index to sort the results. Hence when order of query results is important, you should ALWAYS use indexes, or else sort the results yourself. The [botcontroller contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/botcontroller.js) has good examples of using indexes to ensure deterministic query results:
+
+```
+// get some basic accounts that are ready to be ticked
+const pendingBasicTicks = await api.db.find(
+  'users',
+  {
+    isEnabled: true,
+    isPremium: false,
+    lastTickTimestamp: {
+      $lte: cutoffBasic,
+    },
+  },
+  params.basicMaxTicksPerBlock,
+  0,
+  [{ index: 'lastTickBlock', descending: false }, { index: '_id', descending: false }],
+);
+await tickUsers(params, pendingBasicTicks, currentTimestamp, 'MM-B');
+```
+
+## Data size limits
+
+On-chain database storage is extremely limited, and relatively expensive. Thus you should ensure your contract does not provide any way for a user to fill the database with unlimited amounts of information at no cost. Fees should be charged for operations that add data to the database, and usage should be kept sensible and limited. As an example of this, user inputs for data that will be stored in the database, such as text strings, should have maximum allowed lengths. Limits should be clearly expressed within the contract code, and defined using constants that can be easily edited later if necessary. The [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) has some good examples:
+
+```
+const MAX_NUM_AUTHORIZED_ISSUERS = 10;
+const MAX_NUM_LOCKED_TOKEN_TYPES = 10;
+const MAX_SYMBOL_LENGTH = 10;
+const MAX_DATA_PROPERTY_LENGTH = 100;
+
+// cannot issue more than this number of NFT instances in one action
+const MAX_NUM_NFTS_ISSUABLE = 10;
+
+// cannot set properties on more than this number of NFT instances in one action
+const MAX_NUM_NFTS_EDITABLE = 50;
+
+// cannot burn, transfer, delegate, or undelegate more than
+// this number of NFT instances in one action
+const MAX_NUM_NFTS_OPERABLE = 50;
+
+// cannot issue or burn more than this number of NFT
+// instances in one action, when the list of NFT instances
+// to act on includes a token with locked NFT instances
+// contained within it
+const MAX_NUM_CONTAINER_NFTS_OPERABLE = 1;
+```
+
+Also, take care to design your database tables in an efficient manner. Don't use long text strings when numbers will do. Avoid duplicating data unless necessary. Just be aware that the sidechain operates under resource constraints and take care to ensure your smart contract is a good blockchain citizen and doesn't use more resources than it really needs.
+
+## Performance considerations
+
+In addition to being careful about data storage, you should also be careful about writing contract actions that take too long to execute. The sidechain is relatively slow when it comes to executing smart contracts (it's not a complete turtle, but neither is it a blazing fast lambo), and all contract actions need to be performed quickly enough not to slow down block production. The system itself will kill any smart contracts that take too long to execute (I think the cutoff time is around 10 seconds per action). To check performance, you can time your contract actions in unit test cases.
+
+Some things to keep in mind:
+
+* keep database queries to a minimum, and fetch objects in batches instead of one-at-a-time when possible
+* avoid any loops that could have potentially unbounded execution times
+* define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) is once again a good example of this
+* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js]) is an example of a multi-block action.
