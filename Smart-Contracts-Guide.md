@@ -225,3 +225,17 @@ This does the following:
 Smart contract code executes in a constrained sandbox environment. As such, you are not allowed to use arbitrary third party libraries. Some constants and built-in library functions are available for you to use via the ```api``` object (things such as ```api.sender``` and ```api.BigNumber```). As a general rule, If it's not part of the api object, and not a built-in part of the Javascript language, then you may NOT use it! You are NOT allowed to import any modules with the Node.js require function. All smart contracts must be self-contained in a single source file.
 
 Refer to the [smart contracts API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
+
+## Working with numbers
+
+Floating point arithmetic within a smart contract is a big no-no, as that can lead to non-deterministic results and unexpected rounding. For such math, you are required to use ```api.BigNumber```. For typical usage examples, refer to other smart contracts. The tokens & nft contracts have some good examples of working with BigNumbers, such as this utility function for performing addition and subtraction of token balances:
+
+```
+const calculateBalance = (balance, quantity, precision, add) => (add
+  ? api.BigNumber(balance).plus(quantity).toFixed(precision)
+  : api.BigNumber(balance).minus(quantity).toFixed(precision));
+```
+
+For contract action input parameters, floating point numbers should be represented as strings, which are then turned into BigNumber objects internally.
+
+Full documentation on the BigNumber library is [available here](https://mikemcl.github.io/bignumber.js/#).
