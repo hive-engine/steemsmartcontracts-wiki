@@ -239,3 +239,88 @@ const calculateBalance = (balance, quantity, precision, add) => (add
 For contract action input parameters, floating point numbers should be represented as strings, which are then turned into BigNumber objects internally.
 
 Full documentation on the BigNumber library is [available here](https://mikemcl.github.io/bignumber.js/#).
+
+## Input validation
+
+All user input to contract actions should be carefully validated using ```api.assert```. Never trust ANYTHING users send to the contract! You'll find that a very large amount of your coding time is spent fine tuning validations and making sure input is properly formatted. Refer to existing smart contracts for examples of how to do this; your validations should be written in a similar style. The [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) has many good examples of a wide variety of input validations, particularly for the create and issue actions.
+
+Some types of validation are notable and deserve further mention:
+
+### isSignedWithActiveKey
+
+isSignedWithActiveKey is a special input parameter that is supplied by the smart contract system and will always be available to every contract action. Users cannot use this parameter, it's reserved for system use. If true, then the contract action was called through a custom json operation signed by the user's Hive active key. If false, then the transaction was signed with the user's posting key. Usually contract actions should require active key signature, but the choice is up to you. There may be some situations where posting key is appropriate. Contract actions that require active key signature should always have this as one of their first validations:
+
+```
+const {
+  isSignedWithActiveKey,
+} = payload;
+
+if (api.assert(isSignedWithActiveKey === true, 'you must use a custom_json signed with your active key')) {
+  // validation passed, safe to do some stuff here
+}
+```
+
+### Checking account balance & paying fees
+
+You may wish to require a fee for executing smart contract operations. In general, this is a good idea any time your action could add new stuff to the database. On-chain storage is limited and thus paying fees to use it will prevent spammy data from bloating the sidechain. Fees are typically burned by sending to the null account. Usually BEE is used as a fee currency, but you may use other tokens if desired.
+
+As part of an action's validation checks, you should make sure the calling account has enough balance to pay your fee. Once all validation checks have passed, you then transfer the fee from the user's account (contracts implicitly have permission to perform token transfers on behalf of the calling account, so long as the active key is used). After the fee is sent, you should do a sanity check to make sure the transfer actually succeeded. A typical code pattern for doing this is:
+
+```
+// utility function to verify balance requirement is met
+const verifyTokenBalance = async (amount, symbol, account) => {
+  if (api.BigNumber(amount).lte(0)) {
+    return true;
+  }
+  const tokenBalance = await api.db.findOneInTable('tokens', 'balances', { account, symbol });
+  if (tokenBalance && api.BigNumber(tokenBalance.balance).gte(amount)) {
+    return true;
+  }
+  return false;
+};
+
+// utility function to confirm token transfers from action logs
+const isTokenTransferVerified = (result, from, to, symbol, quantity, eventStr) => {
+  if (result.errors === undefined
+    && result.events && result.events.find(el => el.contract === 'tokens' && el.event === eventStr
+    && el.data.from === from && el.data.to === to && el.data.quantity === quantity && el.data.symbol === symbol) !== undefined) {
+    return true;
+  }
+  return false;
+};
+
+// utility function to do fee transfer to either a regular account or this contract itself
+const transferFee = async (amount, feeSymbol, dest, isSignedWithActiveKey) => {
+  const actionStr = (dest === CONTRACT_NAME) ? 'transferToContract' : 'transfer';
+  if (api.BigNumber(amount).gt(0)) {
+    const res = await api.executeSmartContract('tokens', actionStr, {
+      to: dest, symbol: feeSymbol, quantity: amount, isSignedWithActiveKey,
+    });
+    // check if the tokens were sent
+    if (!isTokenTransferVerified(res, api.sender, dest, feeSymbol, amount, actionStr)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+actions.myaction = async (payload) => {
+  const {
+    isSignedWithActiveKey,
+  } = payload;
+  ..
+  ..
+  // inside contract action do something like this
+  const params = await api.db.findOne('params', {});
+  const hasEnoughBalance = await verifyTokenBalance(params.typeAddFee, UTILITY_TOKEN_SYMBOL, api.sender);
+  if (api.assert(hasEnoughBalance, 'you must have enough tokens to cover the registration fee')) {
+    // burn the fee
+    if (!(await transferFee(params.typeAddFee, UTILITY_TOKEN_SYMBOL, 'null', isSignedWithActiveKey))) {
+      return false;
+    }
+
+  }
+  ..
+  ..
+}
+```
