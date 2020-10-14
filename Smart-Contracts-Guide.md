@@ -2,7 +2,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
 If you haven't already, skim through everything in [General System Design & Usage](https://github.com/hive-engine/steemsmartcontracts-wiki#general-system-design--usage) before proceeding any further.
 
-For convenience, code links in this document are for Hive Engine, but path structure will be similar for Steem Engine versions.
+For convenience, code links in this document are for Hive Engine, but path structure will be similar for Steem Engine versions. In order to pass code review, you will be expected to strictly follow ALL [dev best practices](#dev-best-practices) given below.
 
 # Table of Contents
 
