@@ -16,7 +16,7 @@ For convenience, code links in this document are for Hive Engine, but path struc
 
 2. Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
 
-3. Install MongoDB. Version 4.2 is recommended (that's what production nodes are running): https://docs.mongodb.com/v4.2/administration/install-community/
+3. Install MongoDB. Version 4.2.3 is recommended (that's what production nodes are running): https://docs.mongodb.com/v4.2/administration/install-community/
 
 4. Fork this repository: https://github.com/hive-engine/steemsmartcontracts
 
