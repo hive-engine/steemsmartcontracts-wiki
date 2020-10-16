@@ -403,4 +403,23 @@ Some things to keep in mind:
 
 ## Emitting events
 
-**TODO**: fill this in
+If an action completes successfully, consider emitting an event:
+
+```
+api.emit('disableMarket', {
+  account: api.sender,
+  symbol,
+});
+```
+
+This is not required, but is a good way to log state changes which will show up on block explorers for people who want to track event history. Emitted events get recorded in the transaction logs for the block that included the action containing the emit call. Apps that trigger contract actions can read these logs to determine if the action succeeded or failed. If an ```api.assert``` fails, there will be an error recorded in the logs with the assertion failure message. Refer to unit test cases for numerous examples of how transaction logs are formatted.
+
+For example, if you want to look at disableMarket events for the botcontroller contract, as in the above example, you can search on the hive-engine.rocks block explorer like this:
+
+https://hive-engine.rocks/transactions?contract=botcontroller&contract_action=disableMarket
+
+<img src="https://i.imgur.com/Rlz2jqY.png">
+
+The block logs for this transaction look like this: https://hive-engine.rocks/tx/3c6dca629ce04ce2781c6cd376f660bac19f04d0
+
+<img src="https://i.imgur.com/zYysZK2.png">
