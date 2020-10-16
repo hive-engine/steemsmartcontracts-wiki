@@ -36,6 +36,7 @@ For convenience, code links in this document are for Hive Engine, but path struc
   * [Emitting events](#emitting-events)
   * [Ticking actions in every block](#ticking-actions-in-every-block)
   * [Calling smart contracts from other smart contracts](#calling-smart-contracts-from-other-smart-contracts)
+  * [Keep file size small](#keep-file-size-small)
 
 # Introduction
 
@@ -619,3 +620,9 @@ Often you will need to have your smart contract trigger an action in another sma
 * The ```callingContractInfo``` object will be available to the other smart contract action, containing data on your calling smart contract.
 * You will need to explicitly pass the ```isSignedWithActiveKey``` parameter to the other smart contract.
 * Be aware of performance considerations; calling another smart contract action is a relatively expensive operation, especially if you need to do it in a loop.
+
+## Keep file size small
+
+Smart contracts are deployed by minifying the code and encoding it into a specially formatted Hive post. The node software detects these posts and deploys the contract contained therein. Consequently, the maximum size of a smart contract is limited to the maximum post size allowed in a single Hive block, which is around 64 KB. At the time of writing, the nft & tokens contracts are some of the largest smart contracts we have, and they are pushing at the upper bounds of that size limit. You should aim to keep your own contracts shorter.
+
+One strategy for dealing with this size limit is to break large contracts up into 2 or more smaller contracts. A great example of this is the botcontroller / marketmaker contracts, which together form Hive Engine's Automated Marker Maker Bot. The botcontroller stores user configuration and provides a way to manage it, while the actual order placing logic is separated out into the marketmaker contract. If you find your contracts are growing too big, consider taking a similar modular approach, splitting the contract into pieces that interact with each other.
