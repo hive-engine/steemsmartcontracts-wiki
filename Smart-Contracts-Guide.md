@@ -511,3 +511,44 @@ https://hive-engine.rocks/transactions?contract=botcontroller&contract_action=di
 The block logs for this transaction look like this: https://hive-engine.rocks/tx/3c6dca629ce04ce2781c6cd376f660bac19f04d0
 
 <img src="https://i.imgur.com/zYysZK2.png">
+
+## Ticking actions in every block
+
+When a smart contract action is required to execute automatically every sidechain block, we say the action "ticks every block". Examples of such actions include the tick action in the [botcontroller contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/botcontroller.js) and checkPendingLotteries in the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js). These actions begin like this:
+
+```
+actions.tick = async () => {
+  if (api.assert(api.sender === 'null', 'not authorized')) {
+    // do some stuff
+    ...
+    ...
+```
+
+The action first makes sure that only the null account can call it (effectively this means no normal Hive account can ever use this action; it's a priviledged system action). When ```api.sender === 'null'```, that indicates the caller is the smart contract core node software itself.
+
+In the future we might introduce a general mechanism that can be used to register such priviledged system actions, but for now the only way to get the node software to call such an action is by adding some code to this file: https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/libs/Block.js
+
+Specifically:
+
+```
+if (this.refHiveBlockNumber >= 47746850) {
+  virtualTransactions.push(new Transaction(0, '', 'null', 'mining', 'checkPendingLotteries', ''));
+}
+...
+...
+} else if (transaction.contract === 'mining'
+  && transaction.action === 'checkPendingLotteries'
+  && transaction.logs === '{"errors":["contract doesn\'t exist"]}') {
+  // don't save logs
+} else {
+...
+...
+```
+
+A few important points about the above code:
+
+* These special actions are executed as virtual transactions (i.e. actions built into the sidechain, not triggered by custom json) and will show up as such in block logs.
+* ```refHiveBlockNumber >= 47746850``` indicates not to start ticking this action until Hive block 47746850. In general, you should pick a starting block about 1 week in the future from when you expect this code to be deployed in production. That gives node operators some advance notice to upgrade, and ensures block replayability if the sidechain database ever needs to be rebuilt.
+* The ```else if``` block ensures that if the virtual transaction is executed before the smart contract in question is deployed, then block logs won't fill up with useless error messages.
+
+Keep in mind that adding ticking in this manner requires a version increment and release of the core node software, which entails administrative overhead and will require witness consensus later on, once node operation is decentralized. So don't do this sort of thing for trivial reasons; new ticking actions should only be added if absolutely necessary. In general, such actions should remain extremely limited as adding too many of them could slow down block processing and negatively impact sidechain performance.
