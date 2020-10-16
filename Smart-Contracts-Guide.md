@@ -149,9 +149,97 @@ Once the code review is passed, your PR will be merged into the main repository 
 
 ## Post-release checks
 
-Once your smart contract is deployed, you can perform post-release checks to verify it's working as intended. The best way to do this is using Python with Beem to broadcast custom json transactions, then verify contract data state using Postman.
+Once your smart contract is deployed, you can perform post-release checks to verify it's working as intended. There are numerous ways to do this; I prefer using Python with Beem to broadcast custom json transactions, then verify contract data state using Postman.
 
-**TODO:** add details of how to do this
+### Broadcasting custom json with Beem
+
+Follow the directions here to install Beem: https://github.com/holgern/beem
+
+Here's a snippet of Python code for broadcasting an example custom json:
+
+```
+#!/usr/bin/python3
+
+from beem import Hive
+from beem.transactionbuilder import TransactionBuilder
+from beembase import operations
+from beem.instance import set_shared_hive_instance
+
+hiveNode = 'https://api.hive.blog'
+chainId = 'ssc-mainnet-hive'
+
+if __name__ == '__main__':
+    stm = Hive(hiveNode)
+    set_shared_hive_instance(stm)
+
+    # uncomment this to initialize Beem wallet
+    #stm.wallet.wipe(True)
+    #stm.wallet.create("my password")
+    #stm.wallet.addPrivateKey("put private key here")
+
+    stm.wallet.unlock("my password")
+
+    src = "myaccountname"
+    tx = TransactionBuilder()
+    op = operations.Custom_json(**{"required_auths": [ src ],
+                        "required_posting_auths": [],
+                        "id": chainId,
+                        "json": {
+                           "contractName": "botcontroller",
+                           "contractAction": "enableMarket",
+                           "contractPayload": {
+                               "symbol": "LEO"
+                           }
+                        } })
+    tx.appendOps(op)
+    #tx.appendSigner(src, 'posting')
+    tx.appendSigner(src, 'active')
+
+    print("broadcasting custom json transaction for", src, ":", tx)
+    try:
+        tx.sign()
+        tx.broadcast()
+        print("SUCCESS")
+    except Exception as e:
+        print("FAILED:", e)
+```
+
+### Querying the Engine API
+
+For quick testing, I recommend using Postman: https://www.postman.com/downloads/
+
+Postman allows you to easily broadcast POST queries to the Engine web API so you can examine the state of the sidechain and check smart contract activity. For details of all the various API calls available, refer to the [JSON RPC server section](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/JSON-RPC-server.md).
+
+Let's look at an example of how to query for DEC market orders, by fetching data from the market contract's sellBook table. First, in Postman make sure the query type is POST. The API endpoint is:
+
+* Hive Engine: **https://api.hive-engine.com/rpc/contracts/**
+* Steem Engine: **https://api.steem-engine.com/rpc/contracts/**
+
+Body to send:
+
+```
+{
+    "jsonrpc": "2.0",
+    "method": "find",
+    "params": {
+       "contract": "market",
+       "table": "sellBook",
+       "query": {"symbol": "DEC"},
+       "limit": 100,
+	    "offset": 0,
+	    "indexes": [{ "index": "priceDec", "descending": false }, { "index": "_id", "descending": false }]
+    },
+    "id": 1
+}
+```
+
+Hit Send and if all goes well, you should get back some JSON results:
+
+<img src="https://i.imgur.com/cOPlJs9.png">
+
+You can find a detailed description of all the data tables you can query for each smart contract in the individual contract documentation here:
+
+https://github.com/hive-engine/steemsmartcontracts-wiki#contract-documentation
 
 # Dev Best Practices
 
