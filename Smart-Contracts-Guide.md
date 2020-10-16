@@ -34,6 +34,7 @@ For convenience, code links in this document are for Hive Engine, but path struc
   * [Performance-considerations](#performance-considerations)
   * [Emitting events](#emitting-events)
   * [Ticking actions in every block](#ticking-actions-in-every-block)
+  * [Calling smart contracts from other smart contracts](#calling-smart-contracts-from-other-smart-contracts)
 
 # Quickstart
 
@@ -577,3 +578,12 @@ A few important points about the above code:
 * The ```else if``` block ensures that if the virtual transaction is executed before the smart contract in question is deployed, then block logs won't fill up with useless error messages.
 
 Keep in mind that adding ticking in this manner requires a version increment and release of the core node software, which entails administrative overhead and will require witness consensus later on, once node operation is decentralized. So don't do this sort of thing for trivial reasons; new ticking actions should only be added if absolutely necessary. In general, such actions should remain extremely limited as adding too many of them could slow down block processing and negatively impact sidechain performance.
+
+## Calling smart contracts from other smart contracts
+
+Often you will need to have your smart contract trigger an action in another smart contract. The [checking account balance & paying fees](#checking-account-balance--paying-fees) code snippet above has an example of doing this, using the ```api.executeSmartContract``` function to call a transfer action in the tokens contract. Keep in mind the following points:
+
+* The smart contract action being called will have ```api.sender``` set to the same account that originally called your smart contract's action. In this way a chain of contract actions can be nested together and traced all the way back to a single custom json transaction that touches off the whole sequence of subsequent events.
+* The ```callingContractInfo``` object will be available to the other smart contract action, containing data on your calling smart contract.
+* You will need to explicitly pass the ```isSignedWithActiveKey``` parameter to the other smart contract.
+* Be aware of performance considerations; calling another smart contract action is a relatively expensive operation, especially if you need to do it in a loop.
