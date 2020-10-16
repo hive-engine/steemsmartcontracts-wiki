@@ -6,6 +6,7 @@ For convenience, code links in this document are for Hive Engine, but path struc
 
 # Table of Contents
 
+* [Introduction](#introduction)
 * [Quickstart](#quickstart)
 * [Parts of a smart contract](#parts-of-a-smart-contract)
   * [Actions](#actions)
@@ -35,6 +36,24 @@ For convenience, code links in this document are for Hive Engine, but path struc
   * [Emitting events](#emitting-events)
   * [Ticking actions in every block](#ticking-actions-in-every-block)
   * [Calling smart contracts from other smart contracts](#calling-smart-contracts-from-other-smart-contracts)
+
+# Introduction
+
+Our approach to smart contracts follows a slightly different philosophy from other smart contract systems, such as Ethereum and EOS. On those blockchains, anyone is free to develop whatever smart contract they want, in any manner they want, which offers a great degree of flexibility. However there are a number of problems with such an approach, not least of which is technical sustainability of the blockchain environment.
+
+When the number of smart contracts you can run is effectively infinite, but the processing power of a node server is finite, then systems are doomed to eventually fail. Hive Engine will not incorporate every single smart contract in the world onto the platform.  Instead it will run a battle tested set of modular contracts that can interact with each other.  These contracts cover the majority of broad use cases across most applications in the ecosystem.  If you need special conditions not met by the current set of smart contracts the options are twofold:
+
+1. Write a generalized smart contract for the Hive Engine ecosystem that everyone will be able to use.
+2. Write a specialized program within your app to cover it.  To see if it makes sense to write it as a generalized smart contract ask "are 80% or more of the applications built here likely to need something like this?"  If the answer is no then keep it in your app.
+
+When writing modular smart contracts we're aiming for a no-code experience for end users of the contracts.  Users that employ your smart contract will pay a fee and enter their configuration.  Apps will likely be using multiple smart contracts like fungible tokens, non-fungible tokens (NFTs), mining, DAOs and others.  A specific application might not just rely on one single smart contract, but instead will likely use many off-the-shelf contracts.  As you design your smart contracts, keep in mind these key points:
+
+* They have to be deterministic.
+* They have to be rigorously tested.
+* They have to be generalizable through configuration.
+* They need to be kept short (contract code must fit within the maximum character limit of a Hive post).
+
+Those design principles and other best practices are explained in detail in the guide that follows:
 
 # Quickstart
 
