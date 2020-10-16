@@ -151,6 +151,19 @@ To run a test, add a line for it in **package.json**:
 
 Above, test8 is the last test. So you could add yours as test9, putting the path to your new test file. Then you'd run the tests with `npm run test9`.
 
+You can add debugging console output that will show up when unit tests execute with code like this inside your smart contract:
+
+```
+const DEBUG_MODE = true;
+...
+...
+if (DEBUG_MODE) {
+  api.debug(`ticking market for user: ${market.account}, symbol: ${market.symbol}`);
+}
+```
+
+For production deployment, all such output should be removed, or if you use a DEBUG_MODE flag as above, make sure the flag is set to ```false```. The above example is taken from the [marketmaker contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/marketmaker.js).
+
 ## Running lint
 
 Once your contract and tests are finished, you should run lint to verify your contract code obeys established coding style standards. Do ```npm run lint > lint_output.log```
