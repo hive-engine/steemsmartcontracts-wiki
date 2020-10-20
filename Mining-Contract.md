@@ -124,7 +124,7 @@ to change the status, but must be the issuer of the token.
 ```
 {
     "contractName": "mining",
-    "contractAction": "setACtive",
+    "contractAction": "setActive",
     "contractPayload": {
         "id": "TKN:TKN",
         "active": true,
