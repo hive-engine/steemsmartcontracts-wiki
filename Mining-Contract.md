@@ -66,7 +66,7 @@ assigned to the pool.
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1},
             { "symbol": "MTKN", "multiplier": 4},
-        ],
+        ]
     }
 }
 ```
@@ -77,7 +77,7 @@ A successful action will emit a "createPool" event, e.g.:
     "contract": "mining",
     "event": "createPool",
     "data": {
-        "id": "TKN-TKN",
+        "id": "TKN-TKN"
     }
 }
 ```
@@ -106,7 +106,7 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
         "lotteryAmount": "1",
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1 }
-        ],
+        ]
     }
 }
 ```
@@ -127,7 +127,7 @@ to change the status, but must be the issuer of the token.
     "contractAction": "setActive",
     "contractPayload": {
         "id": "TKN:TKN",
-        "active": true,
+        "active": true
     }
 }
 ```
