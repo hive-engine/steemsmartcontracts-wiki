@@ -6,7 +6,7 @@ Documentation written by [ali-h](https://github.com/ali-h)
 
 * [Introduction](#introduction)
 * [Actions available](#actions-available)
-  * [initAirdrop](#initairdrop)
+  * [newAirdrop](#newairdrop)
 * [Tables available](#tables-available)
   * [params](#params)
   * [pendingAirdrops](#pendingairdrops)
@@ -17,7 +17,7 @@ The airdrops contract allows any user to airdrop hive-engine tokens. User can se
 
 # Actions available:
 
-## initAirdrop:
+## newAirdrop:
 Initiate a new airdrop. A fee of 0.1 BEE for each account in the airdrop list is required (i.e 100 BEE/1000 accounts). Note that there must be enough tokens in the sender's accounts to initiate the airdrop. If distribution type is stake, Token must have enabled staking.
 
 * requires active key: yes
@@ -31,7 +31,7 @@ Initiate a new airdrop. A fee of 0.1 BEE for each account in the airdrop list is
 ```
 {
     "contractName": "airdrops",
-    "contractAction": "initAirdrop",
+    "contractAction": "newAirdrop",
     "contractPayload": {
         "symbol": "TKN",
         "type": "stake",
@@ -44,16 +44,18 @@ Initiate a new airdrop. A fee of 0.1 BEE for each account in the airdrop list is
 }
 ```
 
-A successful action will emit a "initAirdrop" event, e.g.:
+A successful action will emit a "newAirdrop" event, e.g.
 ```
 {
     "contract": "airdrops",
-    "event": "initAirdrop",
+    "event": "newAirdrop",
     "data": {
-        "airdropId": "9a21888421bb6520fc6e5e33ceb966af72212a11"
+        "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11"
     }
 }
 ```
+
+After being initialized, distribution will automatically start from the next block.
 
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
