@@ -77,13 +77,13 @@ assigned to the pool.
             { "symbol": "MTKN", "multiplier": 4},
         ],
         "nftTokenMiner": {
-            symbol: "TSTNFT",
-            typeField: "name",
-            properties: [
+            "symbol": "TSTNFT",
+            "typeField": "name",
+            "properties": [
                 {"op": "ADD", "name": "power"},
                 {"op": "MULTIPLY", "name": "boost"}
             ],
-            typeMap: {
+            "typeMap": {
                 "bear": ["-1.0", "0.8"],
                 "bull": ["1.0", "2.0"],
             }
@@ -139,13 +139,13 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
             { "symbol": "TKN", "multiplier": 1 }
         ],
         "nftTokenMiner": {
-            symbol: "TSTNFT",
-            typeField: "name",
-            properties: [
+            "symbol": "TSTNFT",
+            "typeField": "name",
+            "properties": [
                 {"op": "ADD", "name": "power"},
                 {"op": "MULTIPLY", "name": "boost"}
             ],
-            typeMap: {
+            "typeMap": {
                 "bear": ["-1.0", "0.8"],
                 "bull": ["1.0", "2.0"],
             }
