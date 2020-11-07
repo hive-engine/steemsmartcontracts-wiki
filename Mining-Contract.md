@@ -49,9 +49,18 @@ assigned to the pool.
   * lotteryIntervalHours (integer >= 1 and <= 720): How often in hours to run a lottery.
   * lotteryAmount (string): Amount to pay out per round. Split among `lotteryWinners` winners.
   * minedToken (string): Which token to mine.
-  * tokenMiners (list): List of token miners (only 1 or 2 allowed)
+  * tokenMiners (list): List of token miners (at most 2 allowed)
     * tokenMiners[].symbol (string): Symbol of token that is mining.
     * tokenMiners[].multiplier (integer >= 1 and <= 100): Multiplier for mining token.
+  * nftTokenMiner: NFT Token miner (optional)
+    * nftTokenMiner.symbol (string):  Symbol of token that is mining.
+    * nftTokenMiner.typeField (string): Property of nft to use to distinguish nft types.
+    * nftTokenMiner.properties (list): List of properties for pwoer computation.
+      * nftTokenMiner.properties.op: ADD or MULTIPLY whether to add or multiply the
+         power values for this property.
+      * nftTokenMiner.properties.name: Name of property.
+    * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
+         order of the properties list, and they should be BigNumber-compatible strings.
 
 * examples:
 ```
@@ -67,6 +76,18 @@ assigned to the pool.
             { "symbol": "TKN", "multiplier": 1},
             { "symbol": "MTKN", "multiplier": 4},
         ],
+        "nftTokenMiner": {
+            symbol: "TSTNFT",
+            typeField: "name",
+            properties: [
+                {"op": "ADD", "name": "power"},
+                {"op": "MULTIPLY", "name": "boost"}
+            ],
+            typeMap: {
+                "bear": ["-1.0", "0.8"],
+                "bull": ["1.0", "2.0"],
+            }
+        }
     }
 }
 ```
@@ -77,7 +98,7 @@ A successful action will emit a "createPool" event, e.g.:
     "contract": "mining",
     "event": "createPool",
     "data": {
-        "id": "TKN-TKN",
+        "id": "TKN:TKN,MTKN:TSTNFT",
     }
 }
 ```
@@ -93,6 +114,16 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
   * tokenMiners (list): List of token miners (only 1 or 2 allowed)
     * tokenMiners[].symbol (string): Symbol of token that is mining.
     * tokenMiners[].multiplier (integer >= 1 and <= 100): Multiplier for mining token.
+* nftTokenMiner: NFT Token miner (optional)
+    * nftTokenMiner.symbol (string):  Symbol of token that is mining.
+    * nftTokenMiner.typeField (string): Property of nft to use to distinguish nft types.
+    * nftTokenMiner.properties (list): List of properties for pwoer computation.
+      * nftTokenMiner.properties.op: ADD or MULTIPLY whether to add or multiply the
+         power values for this property.
+      * nftTokenMiner.properties.name: Name of property.
+    * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
+         order of the properties list, and they should be BigNumber-compatible strings.
+
 
 * examples:
 ```
@@ -100,13 +131,25 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
     "contractName": "mining",
     "contractAction": "updatePool",
     "contractPayload": {
-        "id": "TKN:TKN",
+        "id": "TKN:TKN:TSTNFT",
         "lotteryWinners": 1,
         "lotteryIntervalHours": 1,
         "lotteryAmount": "1",
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1 }
         ],
+        "nftTokenMiner": {
+            symbol: "TSTNFT",
+            typeField: "name",
+            properties: [
+                {"op": "ADD", "name": "power"},
+                {"op": "MULTIPLY", "name": "boost"}
+            ],
+            typeMap: {
+                "bear": ["-1.0", "0.8"],
+                "bull": ["1.0", "2.0"],
+            }
+        }
     }
 }
 ```
