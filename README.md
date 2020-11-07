@@ -1,5 +1,9 @@
 # Steem & Hive Smart Contracts Wiki
 
+**Getting started with Engine smart contract development**: first, read all the links below in the **General System Design & Usage** section. Steem is mentioned in some areas, but everything is equally applicable to Hive Engine. After that, read the [Smart Contract Developer's Guide](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md), which contains quickstart instructions and teaches you best practices for working with & testing smart contract code. Use the **Contract Documentation** section as a reference for individual smart contract interfaces.
+
+## General System Design & Usage
+
 [Requirements](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Requirements.md)
 
 [Write a Smart Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Write-a-Smart-Contract.md)
@@ -19,6 +23,8 @@
 [Interact with the sidechain](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Interact-with-the-sidechain.md)
 
 [How to setup a Steem or Hive Smart Contracts node](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/How-to-setup-a-Steem-Smart-Contracts-node.md)
+
+## Contract Documentation
 
 [Tokens Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Tokens-Contract.md)
 
