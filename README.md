@@ -39,3 +39,5 @@
 [Pack Manager Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Pack-Manager-Contract.md)
 
 [Mining Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Mining-Contract.md)
+
+[Airdrops Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Airdrops-Contract.md)
