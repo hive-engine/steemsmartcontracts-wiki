@@ -186,7 +186,7 @@ to change the status, but must be the issuer of the token.
 
 ### changeNftProperty
 Change an nft mining property. The property must be configured with a `burnChange`, see `createPool`
-or `updatePool`.i
+or `updatePool` above.
 * requires active key: yes
 * parameters:
   * id (string): ID of pool to modify.
