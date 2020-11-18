@@ -11,7 +11,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 * [Registering Packs](#registering-packs)
   * actions:
   * [registerPack](#registerpack)
-  * [updateSettings](#updatesettings)
+  * [updatePack](#updatepack)
 * [Defining NFT Instance Types](#defining-nft-instance-types)
   * actions:
   * [addType](#addtype)
@@ -138,7 +138,7 @@ Any already existing fungible token can be used as a pack token; it doesn't have
 The following actions are available to manage pack registrations:
 
 ### registerPack:
-Register settings for a new pack token / NFT pair. New editions for existing NFTs under management can also be registered using this action. Note that you cannot register settings twice for the same pack token & NFT. After settings are registered, they can be edited using the updateSettings action. A 1000 BEE fee must be paid every time registerPack is used.
+Register settings for a new pack token / NFT pair. New editions for existing NFTs under management can also be registered using this action. Note that you cannot register settings twice for the same pack token & NFT. After settings are registered, they can be edited using the updatePack action. A 1000 BEE fee must be paid every time registerPack is used.
 * requires active key: yes
 
 * can be called by: Hive account that created/owns the NFT in question
@@ -146,12 +146,25 @@ Register settings for a new pack token / NFT pair. New editions for existing NFT
 * parameters:
   * packSymbol (string): symbol of the fungible pack token to be registered
   * nftSymbol (string): symbol of the NFT that the pack token should be linked to
-  * edition (integer >= 0): what edition does this pack open (In Splinterlands there is Alpha, Beta, Untamed; other projects might have a 1st Edition, 2nd Edition, etc)? 
+  * edition (integer >= 0): what edition does this pack open (In Splinterlands there is Alpha, Beta, Untamed; other projects might have a 1st Edition, 2nd Edition, etc)?
+  * **(optional)** editionName (string): name for the new edition that this pack opens (letters, numbers, whitespace only, max length of 100)
   * cardsPerPack (integer >= 1 and <= 30): how many NFT instances should be generated for each pack opened?
+  * foilChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
+  * categoryChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
+  * rarityChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
+  * teamChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
+  * numRolls (integer >= 1 and <= 10): maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below)
 
-**TODO:** this action is still under development, need to add more parameters and example usage.
+The following procedure is followed when a pack is opened, to generate each NFT instance contained within the pack:
 
-### updateSettings:
+1. Pick a random foil, category, team, and rarity, according to the configured percent chances.
+2. Randomly select an instance type that has the chosen category, team, and rarity.
+3. If there are no instance types available that match the chosen category, team, and rarity, repeat steps 1-2 up to the maximum number of times defined by the numRolls parameter. If no valid instance type is selected after the maximum number of re-rolls, then select type 0, which must exist.
+4. Issue an NFT of the selected instance type.
+
+Foil is analogous to Gold or Regular cards in Splinterlands, and is independent of the other NFT instance type characteristics. Meaning that if your app has 3 foils (say Regular, Gold, and Platinum), and 10 defined NFT instance types, then you've actually got 30 types total (10 Regular, 10 Gold, and 10 Platinum). For more info on NFT instance types, and the meaning of category, team, and rarity, refer to the section on [defining NFT instance types](#defining-nft-instance-types).
+
+### updatePack:
 Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if the NFT has 0 circulating supply. If there is non-zero circulating supply, then this action will result in an error.
 * requires active key: yes
 
