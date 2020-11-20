@@ -192,6 +192,40 @@ Partition arrays must consist only of positive integers, and they must form an a
 
 Each partition array can have a maximum of 100 numbers (thus there is a maximum limit of 100 types of foils, categories, rarities, and teams for any given NFT & edition).
 
+**Example action call:**
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "registerPack",
+    "contractPayload": {
+        "packSymbol": "PACK",
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "editionName": "Ultimate War Edition",
+        "cardsPerPack": 3,
+        "numRolls": 5,
+        "foilChance": [50, 100],
+        "categoryChance": [33, 66, 100],
+        "rarityChance": [300, 1000],
+        "teamChance": [1, 3]
+    }
+}
+```
+
+A successful action will emit a "registerPack" event: ``account, symbol, nft``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "registerPack",
+    "data": {
+        "account": "cryptomancer",
+        "symbol": "PACK",
+        "nft": "WAR"
+    }
+}
+```
+
 ### updatePack:
 Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if the NFT has 0 circulating supply. If there is non-zero circulating supply, then this action will result in an error.
 * requires active key: yes
