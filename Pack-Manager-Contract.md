@@ -227,7 +227,7 @@ example:
 ```
 
 ### updatePack:
-Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if the NFT has 0 circulating supply. If there is non-zero circulating supply, then this action will result in an error.
+Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if not yet finalized (isFinalized parameter has not been set). If the pack settings have already been finalized (turned to read-only), then this action will result in an error.
 * requires active key: yes
 
 * can be called by: Hive account that created/owns the NFT in question
@@ -237,6 +237,16 @@ Edit settings for a previously registered pack token / NFT pair. Note that setti
   * nftSymbol (string): symbol of the NFT that the pack token is linked to
   * **(optional)** edition (integer >= 0): updated edition value; note that the edition can only be changed to a value already registered through previous use of the registerPack action.
   * **(optional)** cardsPerPack (integer >= 1 and <= 30): new value for how many NFT instances should be generated per pack opened
+  * **(optional)** foilChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
+  * **(optional)** categoryChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
+  * **(optional)** rarityChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
+  * **(optional)** teamChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
+  * **(optional)** numRolls (integer >= 1 and <= 10): new maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from
+  * **(optional)** isFinalized (boolean): if present must be set to true, indicates these settings are final and can never be updated again
+
+The isFinalized parameter is intended to reassure your users that NFT instance generation settings for a particular pack can never be changed once your application is live. Although it's not required to ever call updatePack with this parameter set, it is good form to always do so once you have finished setting up your pack and consider it ready for production release.
+
+For details on the meaning of other parameters, see [registerPack](#registerpack) above.
 
 **TODO:** this action is still under development, need to add more parameters and example usage.
 
