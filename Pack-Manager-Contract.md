@@ -155,6 +155,8 @@ Register settings for a new pack token / NFT pair. New editions for existing NFT
   * teamChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
   * numRolls (integer >= 1 and <= 10): maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below)
 
+**Notes on editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the updateEdition action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
+
 The following procedure is followed when a pack is opened, to generate each NFT instance contained within the pack:
 
 1. Pick a random foil, category, team, and rarity, according to the configured percent chances.
@@ -163,6 +165,32 @@ The following procedure is followed when a pack is opened, to generate each NFT 
 4. Issue an NFT of the selected instance type.
 
 Foil is analogous to Gold or Regular cards in Splinterlands, and is independent of the other NFT instance type characteristics. Meaning that if your app has 3 foils (say Regular, Gold, and Platinum), and 10 defined NFT instance types, then you've actually got 30 types total (10 Regular, 10 Gold, and 10 Platinum). For more info on NFT instance types, and the meaning of category, team, and rarity, refer to the section on [defining NFT instance types](#defining-nft-instance-types).
+
+**Notes on percent chances:** foilChance, categoryChance, rarityChance, and teamChance are all defined in terms of a partition array. For example, if you want 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you might use this partition:
+
+```[700, 900, 980, 995, 1000]```
+
+This means that when a random roll is done to determine rarity, a random number from 1 to 1000 (inclusive) is picked, and where that number falls in the partition indicates the rarity. A roll of 700 or below maps to rarity 0 (Common), 701 to 900 maps to rarity 1 (Uncommon), 901 to 980 maps to rarity 2 (Rare), 981 to 995 maps to rarity 3 (Epic), and 996 to 1000 maps to rarity 4 (Legendary). So the length of the array, 5, indicates how many rarities we have. This partition means there is a 70% chance to roll a Common, 20% chance for an Uncommon, 8% chance for a Rare, 1.5% chance for an Epic, and 0.5% chance for a Legendary.
+
+As another example, let's say you want an NFT with 2 teams (Black and White), with an equal chance (50/50) of getting one team or the other. You could define a teamChance partition like this:
+
+```[50, 100]``` or ```[5, 10]``` or ```[1, 2]```
+
+So we see there are multiple ways to define the same percent chances. The exact numbers don't matter so much as how the numbers divide the partition to determine the percentages.
+
+As a final example, let's say you only have 1 foil type. Maybe you don't care at all about foil and don't want to use that concept in your game. Then you would define foilChance as a partition with just a single number:
+
+```[1]```
+
+Partition arrays must consist only of positive integers, and they must form an ascending sequence. The following are examples of invalid partitions that would cause your registerPack call to fail:
+
+```[0, 5, 10]   <--- all numbers must be positive```
+```[50.1, 60.5, 100]   <--- all numbers must be integers```
+```[100, 150, 150, 200]   <--- numbers cannot repeat```
+```[50, 60, 20, 10, 80, 100]    <--- numbers must form an ascending sequence (i.e. next number in the array must always be greater than the previous)```
+```[]   <--- must have at least 1 number, can't be empty```
+
+Each partition array can have a maximum of 100 numbers (thus there is a maximum limit of 100 types of foils, categories, rarities, and teams for any given NFT & edition).
 
 ### updatePack:
 Edit settings for a previously registered pack token / NFT pair. Note that settings can only be changed if the NFT has 0 circulating supply. If there is non-zero circulating supply, then this action will result in an error.
