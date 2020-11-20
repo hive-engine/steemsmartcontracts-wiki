@@ -155,9 +155,9 @@ Register settings for a new pack token / NFT pair. New editions for existing NFT
   * teamChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
   * numRolls (integer >= 1 and <= 10): maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below)
 
-**Notes on editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the updateEdition action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
+**Editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the updateEdition action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
 
-The following procedure is followed when a pack is opened, to generate each NFT instance contained within the pack:
+**Pack opening:** the following procedure is followed when a pack is opened, to generate each NFT instance contained within the pack:
 
 1. Pick a random foil, category, team, and rarity, according to the configured percent chances.
 2. Randomly select an instance type that has the chosen category, team, and rarity.
@@ -166,7 +166,7 @@ The following procedure is followed when a pack is opened, to generate each NFT 
 
 Foil is analogous to Gold or Regular cards in Splinterlands, and is independent of the other NFT instance type characteristics. Meaning that if your app has 3 foils (say Regular, Gold, and Platinum), and 10 defined NFT instance types, then you've actually got 30 types total (10 Regular, 10 Gold, and 10 Platinum). For more info on NFT instance types, and the meaning of category, team, and rarity, refer to the section on [defining NFT instance types](#defining-nft-instance-types).
 
-**Notes on percent chances:** foilChance, categoryChance, rarityChance, and teamChance are all defined in terms of a partition array. For example, if you want 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you might use this partition:
+**Percent chances:** foilChance, categoryChance, rarityChance, and teamChance are all defined in terms of a partition array. For example, if you want 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you might use this partition:
 
 ```[700, 900, 980, 995, 1000]```
 
@@ -184,11 +184,11 @@ As a final example, let's say you only have 1 foil type. Maybe you don't care at
 
 Partition arrays must consist only of positive integers, and they must form an ascending sequence. The following are examples of invalid partitions that would cause your registerPack call to fail:
 
-```[0, 5, 10]   <--- all numbers must be positive```
-```[50.1, 60.5, 100]   <--- all numbers must be integers```
-```[100, 150, 150, 200]   <--- numbers cannot repeat```
-```[50, 60, 20, 10, 80, 100]    <--- numbers must form an ascending sequence (i.e. next number in the array must always be greater than the previous)```
-```[]   <--- must have at least 1 number, can't be empty```
+* ```[0, 5, 10]``` <--- all numbers must be positive
+* ```[50.1, 60.5, 100]``` <--- all numbers must be integers
+* ```[100, 150, 150, 200]``` <--- numbers cannot repeat
+* ```[50, 60, 20, 10, 80, 100]``` <--- numbers must form an ascending sequence (i.e. next number in the array must always be greater than the previous)
+* ```[]``` <--- must have at least 1 number, can't be empty
 
 Each partition array can have a maximum of 100 numbers (thus there is a maximum limit of 100 types of foils, categories, rarities, and teams for any given NFT & edition).
 
