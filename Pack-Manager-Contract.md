@@ -153,7 +153,7 @@ Register settings for a new pack token / NFT pair. New editions for existing NFT
   * categoryChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
   * rarityChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
   * teamChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
-  * numRolls (integer >= 1 and <= 10): maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below)
+  * numRolls (integer >= 1 and <= 10): maximum possible number of rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below). numRolls = 1 means there will only ever be a single roll (never any re-rolls).
 
 **Editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the updateEdition action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
 
@@ -241,14 +241,62 @@ Edit settings for a previously registered pack token / NFT pair. Note that setti
   * **(optional)** categoryChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
   * **(optional)** rarityChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
   * **(optional)** teamChance (array of integer): new percentage chances for determining the foil of an opened NFT instance
-  * **(optional)** numRolls (integer >= 1 and <= 10): new maximum possible number of re-rolls if a random category / rarity / team throw results in no NFT instance types to choose from
+  * **(optional)** numRolls (integer >= 1 and <= 10): new maximum possible number of rolls if a random category / rarity / team throw results in no NFT instance types to choose from. numRolls = 1 means there will only ever be a single roll (never any re-rolls).
   * **(optional)** isFinalized (boolean): if present must be set to true, indicates these settings are final and can never be updated again
 
 The isFinalized parameter is intended to reassure your users that NFT instance generation settings for a particular pack can never be changed once your application is live. Although it's not required to ever call updatePack with this parameter set, it is good form to always do so once you have finished setting up your pack and consider it ready for production release.
 
 For details on the meaning of other parameters, see [registerPack](#registerpack) above.
 
-**TODO:** this action is still under development, need to add more parameters and example usage.
+* examples:
+```
+// If you make a mistake with registerPack, use updatePack to fix it:
+{
+    "contractName": "packmanager",
+    "contractAction": "updatePack",
+    "contractPayload": {
+        "packSymbol": "PACK",
+        "nftSymbol": "WAR",
+        "cardsPerPack": 10,
+        "numRolls": 1,
+        "foilChance": [99, 100],
+        "categoryChance": [6000, 9000, 9750, 9995, 10000]
+    }
+}
+
+// Finalizing your pack settings before production launch is good etiquette:
+{
+    "contractName": "packmanager",
+    "contractAction": "updatePack",
+    "contractPayload": {
+        "packSymbol": "PACK",
+        "nftSymbol": "WAR",
+        "isFinalized": true
+    }
+}
+```
+
+A successful action will emit an "updatePack" event: ``symbol, nft, old<SettingName1>, new<SettingName1>, ..., isFinalized (only if set)``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "updatePack",
+    "data": {
+        "symbol": "PACK",
+        "nft": "WAR",
+        "oldCardsPerPack": 3,
+        "newCardsPerPack": 10,
+        "oldNumRolls": 5,
+        "newNumRolls": 1,
+        "oldFoilChance": [50, 100],
+        "newFoilChance": [99, 100],
+        "oldCategoryChance": [33, 66, 100],
+        "newCategoryChance": [6000, 9000, 9750, 9995, 10000],
+        "isFinalized": true
+    }
+}
+```
 
 ## Defining NFT Instance Types
 
