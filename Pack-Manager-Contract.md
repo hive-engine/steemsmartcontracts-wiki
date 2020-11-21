@@ -46,8 +46,9 @@ For app creators, the basic usage flow is:
 3. Register settings for a pack ([registerPack action](#registerpack))
 4. Set names for things like foils, categories, rarities, and teams ([setTraitName](#settraitname))
 5. Add NFT instance types (repeated use of the [addType action](#addtype))
-6. Deposit BEE to cover NFT issuance costs ([deposit action](#deposit))
-7. Now your users can open packs! ([open action](#open))
+6. (optional) Finalize settings, effectively making configuration read only ([updatePack](#updatepack) and [updateEdition](#updateedition))
+7. Deposit BEE to cover NFT issuance costs ([deposit action](#deposit))
+8. Now your users can open packs! ([open action](#open))
 
 For details of the above process, keep reading:
 
@@ -389,14 +390,16 @@ Adds a new type for an NFT currently under management. A 1 BEE fee is required e
 * parameters:
   * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
   * edition (integer >= 0): what edition does this type belong to (In Splinterlands there is Alpha, Beta, Untamed; other projects might have a 1st Edition, 2nd Edition, etc)? Note that type values are distinct per NFT per edition, and the edition must have been previously registered with the registerPack action.
-  * category (integer >= 0): what is the category of the new type?
-  * rarity (integer >= 0): what is the rarity of the new type?
-  * team (integer >= 0): what is the team of the new type?
+  * category (integer >= 0 and <= 99): what is the category of the new type?
+  * rarity (integer >= 0 and <= 99): what is the rarity of the new type?
+  * team (integer >= 0 and <= 99): what is the team of the new type?
   * name (string): what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
 
 **Important Note:** although this action will allow you to set any positive integer for the above parameters, by convention you MUST start at 0 for the first category, rarity, and team, or you may get unexpected behavior when packs are opened. Subsequent categories, rarities, and teams should be incremented by 1. Thus if you have 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you should represent them here as 0 (Common), 1 (Uncommon), 2 (Rare), 3 (Epic), and 4 (Legendary). This is so that random NFT generation via percent partition arrays works properly (see "percent chances" sub-section of the [registerPack](#registerpack) action).
 
 Also, it's best to ensure that you define at least one NFT instance type for EVERY POSSIBLE combination of category, team, and rarity. This allows you to safely set numRolls = 1 when calling the [registerPack](#registerpack) action).
+
+Note that the number of types may be unlimited, as long as you have enough BEE to pay the addType fees. However, you are limited to a maximum of 100 different categories, rarities, teams, and names.
 
 * example:
 ```
@@ -441,9 +444,9 @@ Edits an existing type for an NFT under management.
   * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
   * edition (integer >= 0): what edition does this type belong to?
   * typeId (integer >= 0): what is the ID number of the type to update? The combination of nftSymbol, edition, and typeId uniquely identify the type to update. These 3 things cannot be changed.
-  * **(optional)** category (integer >= 0): what should be the type's new category?
-  * **(optional)** rarity (integer >= 0): what should be the type's new rarity?
-  * **(optional)** team (integer >= 0): what should be the type's new team?
+  * **(optional)** category (integer >= 0 and <= 99): what should be the type's new category?
+  * **(optional)** rarity (integer >= 0 and <= 99): what should be the type's new rarity?
+  * **(optional)** team (integer >= 0 and <= 99): what should be the type's new team?
   * **(optional)** name: what should be the type's new name? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
 
 Note that this action will result in an error if you try to edit a read-only property (i.e. if categoryRO, rarityRO, teamRO, or nameRO has been set for the property in question through the [updateEdition](#updateedition) action).
@@ -550,7 +553,7 @@ Sets or updates a human readable name for a foil, category, rarity, or team ID n
   * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
   * edition (integer >= 0): what edition does this trait belong to?
   * trait (string): which trait are we setting a name for? Must be one of "foil", "category", "rarity", or "team".
-  * index (integer >= 0 and <= 100): ID number of the trait we are setting a name for, should have been previously used in a call to the [addType](#addtype) action
+  * index (integer >= 0 and <= 99): ID number of the trait we are setting a name for, should have been previously used in a call to the [addType](#addtype) action
   * name (string): what is the (new) name of the trait? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
 
 * example:
