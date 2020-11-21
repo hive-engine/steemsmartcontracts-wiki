@@ -20,6 +20,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [deleteType](#deletetype)
 * [Setting Names](#setting-names)
   * actions:
+  * [setTraitName](#setTraitName)
 * [Opening Packs](#opening-packs)
   * actions:
   * [deposit](#deposit)
@@ -43,7 +44,7 @@ For app creators, the basic usage flow is:
 1. Create a new pack token (optional, can use any existing fungible token as a pack)
 2. Create a new NFT ([createNft action](#createnft))
 3. Register settings for a pack ([registerPack action](#registerpack))
-4. Set names for things like editions, foils, categories, rarities, and teams (**TODO: this has not been implemented yet so will remain vague for now**)
+4. Set names for things like foils, categories, rarities, and teams (**TODO: this has not been implemented yet so will remain vague for now**)
 5. Add NFT instance types (repeated use of the [addType action](#addtype))
 6. Deposit BEE to cover NFT issuance costs ([deposit action](#deposit))
 7. Now your users can open packs! ([open action](#open))
@@ -391,7 +392,7 @@ Adds a new type for an NFT currently under management. A 1 BEE fee is required e
   * category (integer >= 0): what is the category of the new type?
   * rarity (integer >= 0): what is the rarity of the new type?
   * team (integer >= 0): what is the team of the new type?
-  * name: what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+  * name (string): what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
 
 **Important Note:** although this action will allow you to set any positive integer for the above parameters, by convention you MUST start at 0 for the first category, rarity, and team, or you may get unexpected behavior when packs are opened. Subsequent categories, rarities, and teams should be incremented by 1. Thus if you have 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you should represent them here as 0 (Common), 1 (Uncommon), 2 (Rare), 3 (Epic), and 4 (Legendary). This is so that random NFT generation via percent partition arrays works properly (see "percent chances" sub-section of the [registerPack](#registerpack) action).
 
@@ -533,7 +534,68 @@ example:
 
 These actions allow you to setup mappings from edition, foil, category, rarity, and team ID numbers to corresponding text names/labels. 
 
-**TODO:** development not started yet; this will be added later
+**Edition name:** use [registerPack](#registerpack) to set an edition name, and [updateEdition](#updateedition) to change an edition name.
+**NFT instance type name:** use [addType](#addtype) to set a type name, and [updateType](#updatetype) to change a type name.
+**Foil, category, rarity, and team names:** use [setTraitName](#setTraitName) to both set and update these things.
+
+Note that setting edition & NFT instance type names is mandatory, but using [setTraitName](#setTraitName) is entirely optional. However it's strongly encouraged if you want your names to be on-chain and easily available for third party tools to reference.
+
+### setTraitName:
+Sets or updates a human readable name for a foil, category, rarity, or team ID number. Essentially these numbers act as look ups into a big on-chain name table.
+* requires active key: yes
+
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT (uppercase letters only, max length of 10)
+  * edition (integer >= 0): what edition does this trait belong to?
+  * trait (string): which trait are we setting a name for? Must be one of "foil", "category", "rarity", or "team".
+  * index (integer >= 0 and <= 100): ID number of the trait we are setting a name for, should have been previously used in a call to the [addType](#addtype) action
+  * name (string): what is the (new) name of the trait? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+
+* example:
+```
+{
+    "contractName": "packmanager",
+    "contractAction": "setTraitName",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 3,
+        "trait": "category",
+        "index": 4,
+        "name": "Amphibious Assault Ship"
+    }
+}
+```
+
+A successful insert (setting a name for the first time) will emit a "setTraitName" event: ``nft, edition, trait, index, name``. A successful update (changing a previously set name) will emit an "updateTraitName" event: ``nft, edition, trait, index, oldName, newName``.
+examples:
+```
+{
+    "contract": "packmanager",
+    "event": "setTraitName",
+    "data": {
+        "nft": "WAR",
+        "edition": 3,
+        "trait": "category",
+        "index": 4,
+        "name": "Amphibious Assault Ship"
+    }
+}
+
+{
+    "contract": "packmanager",
+    "event": "updateTraitName",
+    "data": {
+        "nft": "WAR",
+        "edition": 3,
+        "trait": "category",
+        "index": 4,
+        "oldName": "Aphimbious Assault Ships",    // correcting a spelling & pluralization error
+        "newName": "Amphibious Assault Ship"
+    }
+}
+```
 
 ## Opening Packs
 
