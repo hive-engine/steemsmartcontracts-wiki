@@ -12,6 +12,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * actions:
   * [registerPack](#registerpack)
   * [updatePack](#updatepack)
+  * [updateEdition](#updateedition)
 * [Defining NFT Instance Types](#defining-nft-instance-types)
   * actions:
   * [addType](#addtype)
@@ -155,7 +156,7 @@ Register settings for a new pack token / NFT pair. New editions for existing NFT
   * teamChance (array of integer): percentage chances for determining the foil of an opened NFT instance (see notes below)
   * numRolls (integer >= 1 and <= 10): maximum possible number of rolls if a random category / rarity / team throw results in no NFT instance types to choose from (see notes below). numRolls = 1 means there will only ever be a single roll (never any re-rolls).
 
-**Editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the updateEdition action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
+**Editions:** when you call registerPack for the first time with a particular edition number, the editionName parameter is required. If you then call registerPack again for the same edition (it's perfectly OK to have many different packs that all open the same edition), the editionName parameter will be ignored (you don't have to provide it, and if you do it won't have any effect). To change an edition name later on, use the [updateEdition](#updateedition) action. Edition numbers, by convention, should start at 0 and be incremented by 1 for each new edition (although you are not forced to follow this convention).
 
 **Pack opening:** the following procedure is followed when a pack is opened, to generate each NFT instance contained within the pack:
 
@@ -298,6 +299,70 @@ example:
 }
 ```
 
+### updateEdition:
+Update properties of an edition previously defined through calling the [registerPack](#registerpack) action.
+* requires active key: yes
+
+* can be called by: Hive account that created/owns the NFT in question
+
+* parameters:
+  * nftSymbol (string): symbol of the NFT under management that the edition number is linked to
+  * edition (integer >= 0): identifying number of the edition to update, which must have been previously used in a call to the registerPack action
+  * **(optional)** editionName (string): new name for the edition (letters, numbers, whitespace only, max length of 100)
+  * **(optional)** categoryRO (boolean): if present must be set to true, indicates categories for NFT instance types of this edition may no longer be edited
+  * **(optional)** rarityRO (boolean): if present must be set to true, indicates rarities for NFT instance types of this edition may no longer be edited
+  * **(optional)** teamRO (boolean): if present must be set to true, indicates teams for NFT instance types of this edition may no longer be edited
+  * **(optional)** nameRO (boolean): if present must be set to true, indicates names for NFT instance types of this edition may no longer be edited
+
+The categoryRO, rarityRO, teamRO, and nameRO settings determine whether or not those characteristics can be updated using the [updateType](#updatetype) action. Although not required, it is considered good form to set these Read Only flags once you are certain you will not need to make any edits to instance type definitions (after all, players will be very unhappy if you suddenly change their Mighty Dragons to Worthless Fleas). See below section on [defining NFT instance types](#defining-nft-instance-types) for more information.
+
+Note that once you set a Read Only flag, it cannot be unset (because something wouldn't be read-only if you could make it editable again)!
+
+* examples:
+```
+// Changing an edition name:
+{
+    "contractName": "packmanager",
+    "contractAction": "updateEdition",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "editionName": "Mega Uber War Edition"
+    }
+}
+
+// It's good etiquette to make NFT instance type definitions read-only like this (here we leave the name editable):
+{
+    "contractName": "packmanager",
+    "contractAction": "updateEdition",
+    "contractPayload": {
+        "nftSymbol": "WAR",
+        "edition": 0,
+        "categoryRO": true,
+        "rarityRO": true,
+        "teamRO": true
+    }
+}
+```
+
+A successful action will emit an "updateEdition" event: ``nft, edition, oldEditionName, newEditionName, categoryRO (only if set), rarityRO (only if set), teamRO (only if set), nameRO (only if set) ``
+example:
+```
+{
+    "contract": "packmanager",
+    "event": "updateEdition",
+    "data": {
+        "nft": "WAR",
+        "edition": 0,
+        "oldEditionName": "Ultimate War Edition",
+        "newEditionName": "Mega Uber War Edition",
+        "categoryRO": true,
+        "rarityRO": true,
+        "teamRO": true
+    }
+}
+```
+
 ## Defining NFT Instance Types
 
 The third step, after placing an NFT under management and setting up packs, is to define all the different types of NFT instances that may be generated from the packs. Using Splinterlands as an example again, that game has hundreds of different cards you can mix & match to form teams for battle. There's Yodin Zaku, Xander Foxwood, Pirate Captain, and Naga Warrior, to name a few. This is what we mean when we talk about **types** in the context of the Pack Manager. All of these different cards are encompassed by the same NFT definition; they are differentiated internally by a number that represents the type of the card.
@@ -327,6 +392,10 @@ Adds a new type for an NFT currently under management. A 1 BEE fee is required e
   * rarity (integer >= 0): what is the rarity of the new type?
   * team (integer >= 0): what is the team of the new type?
   * name: what is the name of the type? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+
+**Important Note:** although this action will allow you to set any positive integer for the above parameters, by convention you MUST start at 0 for the first category, rarity, and team, or you may get unexpected behavior when packs are opened. Subsequent categories, rarities, and teams should be incremented by 1. Thus if you have 5 rarities (say Common, Uncommon, Rare, Epic, and Legendary), you should represent them here as 0 (Common), 1 (Uncommon), 2 (Rare), 3 (Epic), and 4 (Legendary). This is so that random NFT generation via percent partition arrays works properly (see "percent chances" sub-section of the [registerPack](#registerpack) action).
+
+Also, it's best to ensure that you define at least one NFT instance type for EVERY POSSIBLE combination of category, team, and rarity. This allows you to safely set numRolls = 1 when calling the [registerPack](#registerpack) action).
 
 * example:
 ```
@@ -375,6 +444,8 @@ Edits an existing type for an NFT under management.
   * **(optional)** rarity (integer >= 0): what should be the type's new rarity?
   * **(optional)** team (integer >= 0): what should be the type's new team?
   * **(optional)** name: what should be the type's new name? Names must consist of letters, numbers, and whitespaces only, with a maximum length of 100 characters.
+
+Note that this action will result in an error if you try to edit a read-only property (i.e. if categoryRO, rarityRO, teamRO, or nameRO has been set for the property in question through the [updateEdition](#updateedition) action).
 
 * examples:
 ```
