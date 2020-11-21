@@ -805,9 +805,70 @@ example query results:
 ```
 
 ## foils
+contains a mapping of foil ID numbers to text labels, essentially a big string look-up table
+* fields
+  * nft = symbol of the NFT under management
+  * edition = edition number that this foil belongs to
+  * index = ID number of the foil
+  * name = human friendly text label identifying this foil
+
+There are database indexes on the nft, edition, and index fields. The combination of these fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1, nft: 'WAR', edition: 0, index: 0, name: 'Standard' },
+  { _id: 2, nft: 'WAR', edition: 0, index: 1, name: 'Gold' } ]
+```
 
 ## categories
+contains a mapping of category ID numbers to text labels, essentially a big string look-up table
+* fields
+  * nft = symbol of the NFT under management
+  * edition = edition number that this category belongs to
+  * index = ID number of the category
+  * name = human friendly text label identifying this category
+
+There are database indexes on the nft, edition, and index fields. The combination of these fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1, nft: 'WAR', edition: 0, index: 0, name: 'Air' },
+  { _id: 2, nft: 'WAR', edition: 0, index: 1, name: 'Ground' },
+  { _id: 3, nft: 'WAR', edition: 0, index: 2, name: 'Naval' } ]
+```
 
 ## rarities
+contains a mapping of rarity ID numbers to text labels, essentially a big string look-up table
+* fields
+  * nft = symbol of the NFT under management
+  * edition = edition number that this rarity belongs to
+  * index = ID number of the rarity
+  * name = human friendly text label identifying this rarity
+
+There are database indexes on the nft, edition, and index fields. The combination of these fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1, nft: 'WAR', edition: 0, index: 0, name: 'Common' },
+  { _id: 2, nft: 'WAR', edition: 0, index: 1, name: 'Uncommon' },
+  { _id: 3, nft: 'WAR', edition: 0, index: 2, name: 'Rare' },
+  { _id: 4, nft: 'WAR', edition: 0, index: 3, name: 'Legendary' } ]
+```
 
 ## teams
+contains a mapping of team ID numbers to text labels, essentially a big string look-up table
+* fields
+  * nft = symbol of the NFT under management
+  * edition = edition number that this team belongs to
+  * index = ID number of the team
+  * name = human friendly text label identifying this team
+
+There are database indexes on the nft, edition, and index fields. The combination of these fields can be used as a unique primary key.
+
+example query results:
+```
+[ { _id: 1, nft: 'WAR', edition: 0, index: 0, name: 'Marines' },
+  { _id: 2, nft: 'WAR', edition: 0, index: 1, name: 'Rogue Squadron' },
+  { _id: 3, nft: 'WAR', edition: 0, index: 2, name: 'Naval Strike Group' },
+  { _id: 4, nft: 'WAR', edition: 0, index: 3, name: 'Light Brigade' } ]
+```
