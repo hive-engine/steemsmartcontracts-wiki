@@ -371,7 +371,7 @@ The third step, after placing an NFT under management and setting up packs, is t
 
 To give another example, if you used the Pack Manager to create an NFT for a war game, your types might be the military units used by your game: soldier, general, destroyer, tank, cruise missile, marine, cannon, howitzer, etc.
 
-All types have the following properties, which must be integers >= 0 (the text name of the property is stored elsewhere and linked to the numeric value):
+All types have the following properties, which must be integers >= 0 and <= 99 (the text name of the property is stored elsewhere and linked to the numeric value):
 
 * **category**: what category of thing is this type? ex: boat (types can be canoe, sailboat, yacht, tanker), plane (types can be Boeing 747, F-22A Raptor, Japanese Zero), land (types can be swamp, mountain, forest). Splinterlands cards can be Monsters or Summoners.
 * **rarity**: how rare is this type? ex: common, uncommon, epic, legendary
@@ -399,7 +399,7 @@ Adds a new type for an NFT currently under management. A 1 BEE fee is required e
 
 Also, it's best to ensure that you define at least one NFT instance type for EVERY POSSIBLE combination of category, team, and rarity. This allows you to safely set numRolls = 1 when calling the [registerPack](#registerpack) action).
 
-Note that the number of types may be unlimited, as long as you have enough BEE to pay the addType fees. However, you are limited to a maximum of 100 different categories, rarities, teams, and names.
+Note that the number of types may be unlimited, as long as you have enough BEE to pay the addType fees. However, you are limited to a maximum of 100 different categories, rarities, and teams (this limitation applies to foils as well).
 
 * example:
 ```
