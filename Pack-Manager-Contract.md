@@ -30,6 +30,10 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [managedNfts](#managednfts)
   * [types](#types)
   * [packs](#packs)
+  * [foils](#foils)
+  * [categories](#categories)
+  * [rarities](#rarities)
+  * [teams](#teams)
 
 # Introduction
 
@@ -684,28 +688,35 @@ contains information about NFTs under management of the packmanager smart contra
 * fields
   * nft = symbol of the NFT under management
   * feePool = current BEE balance available to the contract for issuing NFT instances
-  * categoryRO = boolean flag indicating if categories of NFT instance types should be editable after NFTs have been issued
-  * rarityRO = boolean flag indicating if rarity of NFT instance types should be editable after NFTs have been issued
-  * teamRO = boolean flag indicating if team of NFT instance types should be editable after NFTs have been issued
-  * nameRO = boolean flag indicating if name of NFT instance types should be editable after NFTs have been issued
   * editionMapping = information about what editions exist for this NFT
 
 editionMapping is a dictionary that maps edition numbers to information about the edition as follows:
   * nextTypeId = the next type ID that will be assigned for this NFT & edition when the [addType action](#addtype) is called
+  * editionName = name of this edition
+  * categoryRO = boolean flag indicating if categories of NFT instance types should be editable
+  * rarityRO = boolean flag indicating if rarity of NFT instance types should be editable
+  * teamRO = boolean flag indicating if team of NFT instance types should be editable
+  * nameRO = boolean flag indicating if name of NFT instance types should be editable
 
 example query results:
 ```
 [ { _id: 1,
     nft: 'WAR',
     feePool: '1000',
-    categoryRO: false,
-    rarityRO: false,
-    teamRO: false,
-    nameRO: false,
     editionMapping: { '0': {
-        nextTypeId: 33
+        nextTypeId: 33,
+        editionName: 'Ultimate War Edition',
+        categoryRO: false,
+        rarityRO: false,
+        teamRO: false,
+        nameRO: false
     }, '1': {
-        nextTypeId: 12
+        nextTypeId: 12,
+        editionName: 'War Modern Expansion',
+        categoryRO: false,
+        rarityRO: false,
+        teamRO: true,
+        nameRO: true
     } } } ]
 ```
 
@@ -766,10 +777,14 @@ contains pack settings linking fungible pack tokens to corresponding NFTs, which
   * account = Hive account that created these settings and has permission to edit them
   * symbol = symbol of the pack token
   * nft = symbol of the NFT to associate with the pack token
-  * edition = edition of the NFT instances to be generated from the pack token
+  * edition = edition number of the NFT instances to be generated from the pack token
   * cardsPerPack = number of NFT instances generated from opening 1 pack
-
-**TODO:** more fields will be added as development work is ongoing
+  * foilChance = partition array defining percent chances for determining foil when opening packs
+  * categoryChance = partition array defining percent chances for determining category when opening packs
+  * rarityChance = partition array defining percent chances for determining rarity when opening packs
+  * teamChance = partition array defining percent chances for determining team when opening packs
+  * numRolls = maximum number of random rolls to be used when generating NFT instances (re-rolls happen when there is not at least one defined NFT instance type for a given combination of category / rarity / team)
+  * isFinalized = boolean flag indicating if these pack settings are read only or not (defaults to false)
 
 There are database indexes on the account, symbol, and nft fields. The combination of symbol and nft fields can be used as a unique primary key.
 
@@ -780,5 +795,19 @@ example query results:
     symbol: 'PACK',
     nft: 'WAR',
     edition: 0,
-    cardsPerPack: 7 } ]
+    cardsPerPack: 5,
+    foilChance: [ 50, 100 ],
+    categoryChance: [ 70, 90, 100 ],
+    rarityChance: [ 600, 800, 900, 975, 1000 ],
+    teamChance: [ 1000, 2800, 3000 ],
+    numRolls: 10,
+    isFinalized: false } ]
 ```
+
+## foils
+
+## categories
+
+## rarities
+
+## teams
