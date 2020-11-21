@@ -20,7 +20,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * [deleteType](#deletetype)
 * [Setting Names](#setting-names)
   * actions:
-  * [setTraitName](#setTraitName)
+  * [setTraitName](#settraitname)
 * [Opening Packs](#opening-packs)
   * actions:
   * [deposit](#deposit)
@@ -44,7 +44,7 @@ For app creators, the basic usage flow is:
 1. Create a new pack token (optional, can use any existing fungible token as a pack)
 2. Create a new NFT ([createNft action](#createnft))
 3. Register settings for a pack ([registerPack action](#registerpack))
-4. Set names for things like foils, categories, rarities, and teams (**TODO: this has not been implemented yet so will remain vague for now**)
+4. Set names for things like foils, categories, rarities, and teams ([setTraitName](#settraitname))
 5. Add NFT instance types (repeated use of the [addType action](#addtype))
 6. Deposit BEE to cover NFT issuance costs ([deposit action](#deposit))
 7. Now your users can open packs! ([open action](#open))
@@ -534,9 +534,9 @@ example:
 
 These actions allow you to setup mappings from edition, foil, category, rarity, and team ID numbers to corresponding text names/labels. 
 
-**Edition name:** use [registerPack](#registerpack) to set an edition name, and [updateEdition](#updateedition) to change an edition name.
-**NFT instance type name:** use [addType](#addtype) to set a type name, and [updateType](#updatetype) to change a type name.
-**Foil, category, rarity, and team names:** use [setTraitName](#setTraitName) to both set and update these things.
+* **Edition name:** use [registerPack](#registerpack) to set an edition name, and [updateEdition](#updateedition) to change an edition name.
+* **NFT instance type name:** use [addType](#addtype) to set a type name, and [updateType](#updatetype) to change a type name.
+* **Foil, category, rarity, and team names:** use [setTraitName](#setTraitName) to both set and update these things.
 
 Note that setting edition & NFT instance type names is mandatory, but using [setTraitName](#setTraitName) is entirely optional. However it's strongly encouraged if you want your names to be on-chain and easily available for third party tools to reference.
 
