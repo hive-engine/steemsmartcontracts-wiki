@@ -27,9 +27,9 @@ by the creator at any time. The distribution can be deactivated (suspended), dur
 new deposits are rejected and payouts are not made. There is also a means for the creator to
 manually release (_flush_) any outstanding balance in the distribution.
 
-# Actions available:
+# Actions available
 
-### create:
+### create
 Create a distribution batch for each unique set of tokens and recipient shares that is required.
 A fee of 500 BEE is required.
 
@@ -157,13 +157,33 @@ No fee required.
 }
 ```
 
-# Tables available:
+### deposit
+The contract will perform a transfer of any configured token using this action. A payment distribution will be attempted immediately following a valid deposit.
+No fee required.
+
+* requires active key: yes
+* can be called by: anyone
+* parameters:
+  * id (int): ID of distribution instance
+  * symbol (string): Symbol of token being deposited
+  * quantity (string): string decimal up to staked token max precision
+
+* example request data:
+```
+{
+  "id": 1, 
+  "symbol": "TKN", 
+  "quantity": "1000"
+}
+```
+
+# Tables available
 
 ## params:
 contains internal contract parameters
 * fields
-  * distCreationFee = the cost in BEE to create a pool
-  * distUpdateFee = the cost in BEE to update a pool
+  * distCreationFee = the cost in BEE to create a distribution
+  * distUpdateFee = the cost in BEE to update a distribution
 
 ## batches:
 contains the instance configurations
