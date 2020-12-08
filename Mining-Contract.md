@@ -9,6 +9,7 @@ Documentation written by [eonwarped](https://github.com/eonwarped)
   * [createPool](#createpool)
   * [updatePool](#updatepool)
   * [setActive](#setactive)
+  * [changeNftProperty](#changenftproperty)
 * [Tables available](#tables-available)
   * [params](#params)
   * [pools](#pools)
@@ -49,9 +50,22 @@ assigned to the pool.
   * lotteryIntervalHours (integer >= 1 and <= 720): How often in hours to run a lottery.
   * lotteryAmount (string): Amount to pay out per round. Split among `lotteryWinners` winners.
   * minedToken (string): Which token to mine.
-  * tokenMiners (list): List of token miners (only 1 or 2 allowed)
+  * tokenMiners (list): List of token miners (at most 2 allowed)
     * tokenMiners[].symbol (string): Symbol of token that is mining.
     * tokenMiners[].multiplier (integer >= 1 and <= 100): Multiplier for mining token.
+  * nftTokenMiner: NFT Token miner (optional)
+    * nftTokenMiner.symbol (string):  Symbol of token that is mining.
+    * nftTokenMiner.typeField (string): Property of nft to use to distinguish nft types.
+    * nftTokenMiner.properties (list): List of properties for pwoer computation.
+      * nftTokenMiner.properties.op: ADD or MULTIPLY whether to add or multiply the
+         power values for this property.
+      * nftTokenMiner.properties.name: Name of property.
+      * nftTokenMiner.properties.burnChange: Configuration for authorized burn adjustments.
+        * nftTokenMiner.properties.burnChange.symbol: Symbol of burned token.
+        * nftTokenMiner.properties.burnChange.quantity: Quantity of burned token for fee. The fee
+            to change this property is the amount desired multiplied by this quantity.
+    * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
+         order of the properties list, and they should be BigNumber-compatible strings.
 
 * examples:
 ```
@@ -65,8 +79,20 @@ assigned to the pool.
         "minedToken": "TKN",
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1},
-            { "symbol": "MTKN", "multiplier": 4},
-        ]
+            { "symbol": "MTKN", "multiplier": 4}
+        ],
+        "nftTokenMiner": {
+            "symbol": "TSTNFT",
+            "typeField": "name",
+            "properties": [
+                {"op": "ADD", "name": "power", "burnChange": {"symbol": "NOTKN", "quantity": "1"}},
+                {"op": "MULTIPLY", "name": "boost"}
+            ],
+            "typeMap": {
+                "bear": ["-1.0", "0.8"],
+                "bull": ["1.0", "2.0"]
+            }
+        }
     }
 }
 ```
@@ -77,7 +103,7 @@ A successful action will emit a "createPool" event, e.g.:
     "contract": "mining",
     "event": "createPool",
     "data": {
-        "id": "TKN-TKN"
+        "id": "TKN:TKN,MTKN:TSTNFT",
     }
 }
 ```
@@ -93,6 +119,20 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
   * tokenMiners (list): List of token miners (only 1 or 2 allowed)
     * tokenMiners[].symbol (string): Symbol of token that is mining.
     * tokenMiners[].multiplier (integer >= 1 and <= 100): Multiplier for mining token.
+* nftTokenMiner: NFT Token miner (optional)
+    * nftTokenMiner.symbol (string):  Symbol of token that is mining.
+    * nftTokenMiner.typeField (string): Property of nft to use to distinguish nft types.
+    * nftTokenMiner.properties (list): List of properties for pwoer computation.
+      * nftTokenMiner.properties.op: ADD or MULTIPLY whether to add or multiply the
+         power values for this property.
+      * nftTokenMiner.properties.name: Name of property.
+      * nftTokenMiner.properties.burnChange: Configuration for authorized burn adjustments.
+        * nftTokenMiner.properties.burnChange.symbol: Symbol of burned token.
+        * nftTokenMiner.properties.burnChange.quantity: Quantity of burned token for fee. The fee
+            to change this property is the amount desired multiplied by this quantity.
+    * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
+         order of the properties list, and they should be BigNumber-compatible strings.
+
 
 * examples:
 ```
@@ -100,13 +140,25 @@ Update a mining pool. An update fee of 300 BEE is required. The symbols themselv
     "contractName": "mining",
     "contractAction": "updatePool",
     "contractPayload": {
-        "id": "TKN:TKN",
+        "id": "TKN:TKN:TSTNFT",
         "lotteryWinners": 1,
         "lotteryIntervalHours": 1,
         "lotteryAmount": "1",
         "tokenMiners": [
             { "symbol": "TKN", "multiplier": 1 }
-        ]
+        ],
+        "nftTokenMiner": {
+            "symbol": "TSTNFT",
+            "typeField": "name",
+            "properties": [
+                {"op": "ADD", "name": "power", "burnChange": {"symbol": "NOTKN", "quantity": "1"}},
+                {"op": "MULTIPLY", "name": "boost"}
+            ],
+            "typeMap": {
+                "bear": ["-1.0", "0.8"],
+                "bull": ["1.0", "2.0"]
+            }
+        }
     }
 }
 ```
@@ -132,6 +184,30 @@ to change the status, but must be the issuer of the token.
 }
 ```
 
+### changeNftProperty
+Change an nft mining property. The property must be configured with a `burnChange`, see `createPool`
+or `updatePool` above.
+* requires active key: yes
+* parameters:
+  * id (string): ID of pool to modify.
+  * type (string): Type of NFT to modify.
+  * propertyName (string): Name of property to modify.
+  * changeAmount (BigInteger): Amount to change property by. Note that for MULTIPLY properties the
+      resulting property amount cannot be outside the range (0.01, 100)
+
+* examples:
+```
+{
+    "contractName": "mining",
+    "contractAction": "changeNftProperty",
+    "contractPayload": {
+         "id": "TKN::TSTNFT",
+         "type": "bear",
+         "propertyName": "power",
+         "changeAmount": "10"
+    }
+}
+```
 
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
@@ -149,6 +225,7 @@ contains information about the pool
   * lotteryIntervalHours = number of hours between each round
   * lotteryAmount = amount to distribute per round
   * tokenMiners = list of mining tokens and their multipliers
+  * nftTokenMiner = nft token miner config
   * active = whether the pool is active
   * updating.inProgress = whether mining power calculation is in process
 
@@ -159,4 +236,5 @@ contains information about mining power for each account in pool
   * account = name of account
   * power.$numberDecimal = amount of mining power for the account in the pool.
   * balances = list of balances used to calculate mining power, in same order as the tokenMiners in the pool.
+  * nftBalances = list of NFT property balances used to calculate mining power, in same order as the nftTokenMiner properties.
 
