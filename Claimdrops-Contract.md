@@ -87,7 +87,7 @@ A successful action will emit a "create" event, e.g.
 }
 ```
 
-## create:
+## claim:
 Claim tokens. Price in HIVE.SWAP is calculated by the quantity. Price is deducted and sent to the claimdrop owner while claimant receives requested tokens.
 
 * requires active key: yes
@@ -100,7 +100,7 @@ Claim tokens. Price in HIVE.SWAP is calculated by the quantity. Price is deducte
 ```
 {
     "contractName": "claimdrops",
-    "contractAction": "create",
+    "contractAction": "claim",
     "contractPayload": {
         "claimdropId": "9a21888421bb6520fc6e5e33bec966af72212a11",
         "quantity": "520"
