@@ -1,16 +1,14 @@
-
-
-
-## 1. Requirements
-- have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
-- have a MongoDB server installed on your server, see https://docs.mongodb.com/v4.2/administration/install-community/  (we are using version 4.2 in production)
+## 1. Environment setup
+- Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
+- Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
+- Install MongoDB. Version 4.2.3 is recommended (that's what production nodes are running): https://docs.mongodb.com/v4.2/administration/install-community/
 
 ## 2. Install the Smart Contracts node
-To "install" the app, simply follow these steps:
+To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
 
-- for Hive Engine, make sure you are on the ```hive-engine``` branch (skip this step for Steem Engine, which uses the master branch)
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch)
 	- ```git checkout hive-engine```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
@@ -83,3 +81,9 @@ When using this snapshot, set ```startHiveBlock``` to **49669398** in your confi
 	- mongorestore --gzip --archive=hsc_12-19-2020.archive
 - Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
 - Start the node
+
+## 6. Checking that your node works
+
+To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
+
+So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you would use ```http://<YOUR SERVER IP>:5000/blockchain```
