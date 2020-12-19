@@ -59,7 +59,7 @@ The blocks.log file is actually the table called "chain" that you can find in yo
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
-**Note: right now we don't recommended replaying this way as there is a replay bug with virtual transactions, you should restore from a MongoDB dump instead**
+**Note: right now you should avoid replaying this way as there is a replay bug with virtual transactions, please restore from a MongoDB dump instead**
 
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
