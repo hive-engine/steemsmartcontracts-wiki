@@ -245,6 +245,8 @@ Buys one or more NFT instances that are currently listed for sale. The buyer mus
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * nfts (array of string): list of NFT instance IDs (NOT order IDs) that you want to buy
   * marketAccount (string): Steem or Hive account to receive the market fee percentage of the total sale price
+  * **(optional)** expPrice (string): The expected total price of all NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the total price of the corresponding sell orders. If there is a price mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
+  * **(optional)** expPriceSymbol (string): The expected price symbol of the NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the price symbol of the corresponding sell orders. If there is a symbol mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
   
 A maximum of 50 NFT instances can be bought in a single call of this action. You cannot fill your own orders, and all orders must have the same price symbol.
 
@@ -256,7 +258,9 @@ A maximum of 50 NFT instances can be bought in a single call of this action. You
     "contractPayload": {
         "symbol": "TESTNFT",
         "nfts": [ "1","2","3","4" ],
-        "marketAccount": "peakmonsters"
+        "marketAccount": "peakmonsters",
+        "expPrice": "17.42477",
+        "expPriceSymbol": "ENG"
     }
 }
 ```
