@@ -1,5 +1,7 @@
 Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
+**Note**: although this smart contract is available on both Steem Engine and Hive Engine, not all features are supported on Steem Engine.
+
 # Table of Contents
 
 * [Enabling the market](#enabling-the-market)
@@ -25,12 +27,12 @@ Before token holders can trade an NFT, the market must be enabled for a particul
 1. Call the enableMarket action on the nftmarket contract.
 2. Call the setGroupBy action on the nft contract.
 
-These actions require active key authority, and can only be called by the Steem account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
+These actions require active key authority, and can only be called by the Steem or Hive account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
 ### enableMarket:
 Enables a market by creating necessary database tables for the given symbol.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Steem or Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -73,7 +75,7 @@ Consider the following points carefully before calling this action:
 
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Steem or Hive account that owns the NFT
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -99,7 +101,7 @@ Sellers have the ability to put NFT instances up for sale, change the price of e
 Puts one or more NFT instances up for sale. Separate market orders will be created for each individual token listed for sale. As with the regular token market, tokens up for sale are "locked" by transferring them to the NFT market contract for safekeeping. Tokens held by the market will be returned to their owners if the corresponding market order gets canceled. Unlike the regular token market, NFT market orders do not expire. Once listed for sale, a market order will persist until it is either canceled or bought.
 * requires active key: yes
 
-* can be called by: Steem account that holds the token(s) to be sold
+* can be called by: Steem or Hive account that holds the token(s) to be sold
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -149,7 +151,7 @@ example:
 Changes the price of one or more existing sell orders. Note that the price symbol cannot be changed (to do that you should cancel the sell order and place a new one).
 * requires active key: yes
 
-* can be called by: Steem account that originally placed the order(s) to be modified
+* can be called by: Steem or Hive account that originally placed the order(s) to be modified
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -192,7 +194,7 @@ example:
 Cancels one or more existing sell orders. Upon an order's successful cancelation, the corresponding NFT instance held by the NFT market contract will be transferred back to the owning account.
 * requires active key: yes
 
-* can be called by: Steem account that originally placed the order(s) to be canceled
+* can be called by: Steem or Hive account that originally placed the order(s) to be canceled
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -237,12 +239,12 @@ example:
 Buys one or more NFT instances that are currently listed for sale. The buyer must have enough tokens in his account to pay for all NFT instances; there is no concept of a partial fill, either you buy everything requested or nothing.
 * requires active key: yes
 
-* can be called by: Steem account
+* can be called by: Steem or Hive account
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * nfts (array of string): list of NFT instance IDs (NOT order IDs) that you want to buy
-  * marketAccount (string): Steem account to receive the market fee percentage of the total sale price
+  * marketAccount (string): Steem or Hive account to receive the market fee percentage of the total sale price
   
 A maximum of 50 NFT instances can be bought in a single call of this action. You cannot fill your own orders, and all orders must have the same price symbol.
 
@@ -297,8 +299,8 @@ Note: all tables below have an implicit _id field that provides a unique numeric
 
 Every NFT symbol has its own separate table to store the sell side order book. The table name for a particular symbol is formed by taking the symbol and adding "sellBook" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTsellBook table will store all active sell orders. Note that this table will not exist if the enableMarket action has not been called yet.
 * fields
-  * account = the Steem account that created this particular order
-  * ownedBy = indicates if this order was created by a Steem account or smart contract. As smart contracts are not supported for now, the value will always be "u".
+  * account = the Steem or Hive account that created this particular order
+  * ownedBy = indicates if this order was created by a user account or smart contract. As smart contracts are not supported for now, the value will always be "u".
   * nftId (string) = NFT instance ID for this particular order
   * grouping = holds a copy of the data property values which together uniquely identify how this market order should be grouped, according to the list set by the NFT contract setGroupBy action
   * timestamp (integer) = creation time of this order in milliseconds
@@ -385,12 +387,12 @@ Only the last 24 hours worth of trade history is kept. Every time a trade is mad
 
 * fields
   * type = will be buy or sell. Currently, the market only supports sell side orders. Thus all trades will have this field set to 'buy' (a trade is done when a buyer hits a sell order using the buy action).
-  * account = the buyer's Steem account name
+  * account = the buyer's Steem or Hive account name
   * ownedBy = will always be u (smart contracts are not currently allowed to participate in the market)
   * counterparties = contains detailed information about the counterparties from which NFT instances are bought or sold (these will always be the sellers for now)
   * priceSymbol = the token symbol of the trade's payment method
   * price = the total price for all NFT instances purchased in this trade (inclusive of market fees)
-  * marketAccount = the Steem account that received the market fee for this trade
+  * marketAccount = the Steem or Hive account that received the market fee for this trade
   * fee = the total fee paid to the market account by the purchaser for this trade
   * timestamp (integer) = time of this trade in seconds
   * volume (integer) = number of NFT instances exchanged in this trade
