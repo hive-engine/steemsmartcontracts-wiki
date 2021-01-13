@@ -104,7 +104,7 @@ After you have enabled the market, there are some optional settings that can be 
 Only available on Hive Engine. Sets market-wide configuration, or updates existing configuration. Once set, a piece of configuration can never be deleted, it can only be updated to a new value.
 * requires active key: yes
 
-* can be called by: Steem or Hive account that owns/created the NFT definition
+* can be called by: Hive account that owns/created the NFT definition
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -115,6 +115,48 @@ Only available on Hive Engine. Sets market-wide configuration, or updates existi
 Note that all of these settings are optional. You can have minFee set without using the agent parameters, or vice versa. However, in order for the agent cut to be applied to fees, both officialMarket and agentCut must be defined. Furthermore, it is perfectly valid and may even be desirable in some circumstances to have agentCut be set to 0 or 10000 (100%).
 
 Keep in mind that agentCut is a percentage of the sale fee, **NOT** the total sale price. So if the fee set by a sell action is 500 (5%), and the agentCut is 2000 (20%), then agents will get 20% of that 5% fee, and the other 80% will go to the account specified by the officialMarket setting.
+
+* example:
+```
+{
+    "contractName": "nftmarket",
+    "contractAction": "setMarketParams",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "officialMarket": "niftymart",
+        "agentCut": 2000,
+        "minFee": 500
+    }
+}
+```
+A successful setMarketParams action will emit a "setMarketParams" event with the updated info (not all fields may be set, depending on what settings are in use):
+``symbol, oldOfficialMarket, officialMarket, oldAgentCut, agentCut, oldMinFee, minFee``
+examples:
+```
+// example of setting minFee for the first time
+{
+    "contract": "nftmarket",
+    "event": "setMarketParams",
+    "data": {
+        "minFee": 50
+    }
+}
+
+// example of changing all settings at once
+{
+    "contract": "nftmarket",
+    "event": "setMarketParams",
+    "data": {
+        "symbol": "TESTNFT",
+        "oldOfficialMarket": "splinterlands",    // will only be here if officialMarket was previously set and is being changed to a new value
+        "officialMarket": "peakmonsters",        // will only be here if officialMarket is being changed to a new value or set for the first time
+        "oldAgentCut": 1200,                     // will only be here if agentCut was previously set and is being changed to a new value
+        "agentCut": 1100,                        // will only be here if agentCut is being changed to a new value or set for the first time
+        "oldMinFee": 50,                         // will only be here if minFee was previously set and is being changed to a new value
+        "minFee": 250                            // will only be here if minFee is being changed to a new value or set for the first time
+    }
+}
+```
 
 ## Managing Sell Orders
 For now, the market only supports sell side orders. The ability to place bids will be added later. Also, only Steem accounts can place market orders. Smart contracts that hold tokens cannot currently use the market.
