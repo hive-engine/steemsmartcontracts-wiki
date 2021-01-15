@@ -3,7 +3,14 @@
 
 ## 1. Requirements
 - have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
-- have a MongoDB server installed on your server, see https://docs.mongodb.com/v4.2/administration/install-community/  (we are using version 4.2 in production)
+- have a MongoDB server installed on your server, see https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/   We are using version 4.4 in production, which is required.
+  - To enable replication, you just need to add to the replication config in the mongo config:
+    ```
+    replication:
+      replSetName: "rs0"
+    ```
+    and then after restarting mongo with this config, initiating replication in the `mongo` shell:
+    `> rs.initiate()`
 
 ## 2. Install the Steem Smart Contracts node
 To "install" the app, simply follow these steps:

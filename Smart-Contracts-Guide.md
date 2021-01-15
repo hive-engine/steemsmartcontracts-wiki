@@ -62,7 +62,16 @@ Those design principles and other best practices are explained in detail in the 
 
 2. Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
 
-3. Install MongoDB. Version 4.2.3 is recommended (that's what production nodes are running): https://docs.mongodb.com/v4.2/administration/install-community/
+3. Install MongoDB. Version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, and it needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/.
+  - To enable replication, you just need to add to the replication config in the mongo config:
+    ```
+    replication:
+      replSetName: "rs0"
+    ```
+    and then after restarting mongo with this config, initiating replication in the `mongo` shell:
+    `> rs.initiate()`
+
+
 
 4. Fork this repository: https://github.com/hive-engine/steemsmartcontracts
 
