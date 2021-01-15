@@ -1,9 +1,7 @@
-
-
-
-## 1. Requirements
-- have NodeJS and NPM installed on your server, see https://nodejs.org/en/download/
-- have a MongoDB server installed on your server, see https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/   We are using version 4.4 in production, which is required.
+## 1. Environment setup
+- Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
+- Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
+- Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
   - To enable replication, you just need to add to the replication config in the mongo config:
     ```
     replication:
@@ -12,38 +10,42 @@
     and then after restarting mongo with this config, initiating replication in the `mongo` shell:
     `> rs.initiate()`
 
-## 2. Install the Steem Smart Contracts node
-To "install" the app, simply follow these steps:
+## 2. Install the Smart Contracts node
+To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
-	- by downloading the zip file: https://github.com/hive-engine/steemsmartcontracts/archive/master.zip
+
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch)
+	- ```git checkout hive-engine```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
 	- ```npm install```
 
 ## 3. Configure the node
-You'll have to configure your node in order to make it listen to the Steem blockchain, simply edit the ```config.json``` file: 
+The ```config.json``` file has all the settings to make sure your node listens to the Hive blockchain and generates the proper genesis block. You shouldn't need to change any of the default config, it can just be used as is.
 
-(the following file is a pre-configuration that will listen to the sidechain id "mainnet1" and will start up a HTTP JSON RPC server listening on port 5000)
+(the following file is a pre-configuration that will listen to the sidechain id "mainnet-hive" and will start up a HTTP JSON RPC server listening on port 5000)
 
 ```js
 {
-    "chainId": "mainnet1", // the id of the sidechain that the node will listen to
-    "rpcNodePort": 5000, // port of the JSON RPC server that people will use to retrieve data from your node
-    "databaseURL": "mongodb://localhost:27017", // url to your MongoDB server
-    "databaseName": "ssc", // name of the MongoDB database
-    "blocksLogFilePath": "./blocks.log", // path to a blocks log file (used with the replay function)
-    "autosaveInterval": 1800000, // interval for which the database will be saved, in milliseconds, if 0, the autosave will be deactivated
-    "javascriptVMTimeout": 10000, // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
-    // array of Steem full nodes url for the failover
+    "chainId": "mainnet-hive",   // the id of the sidechain that the node will listen to
+    "rpcNodePort": 5000,   // port of the JSON RPC server that people will use to retrieve data from your node
+    "p2pPort": 5001,
+    "databaseURL": "mongodb://localhost:27017",   // url to your MongoDB server
+    "databaseName": "hsc",   // name of the MongoDB database
+    "blocksLogFilePath": "./blocks.log",   // path to a blocks log file (used with the replay function)
+    "javascriptVMTimeout": 10000,   // the timeout that will be applied to the JavaScript virtual machine, needs to be the same on all the nodes of the sidechain
+    // array of Hive full nodes used for failover
     "streamNodes": [
-        "https://api.steemit.com",
-        "https://rpc.buildteam.io",
-        "https://rpc.steemviz.com",
-        "https://steemd.minnowsupportproject.org"
+        "https://api.openhive.network",
+        "https://api.hive.blog",
+        "https://anyx.io",
+        "https://api.hivekings.com"
     ],
-    "startSteemBlock": 29862600, // last Steem block parsed by the node
-    "genesisSteemBlock": 29862600, // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
+    "startHiveBlock": 41967000,   // last Hive block parsed by the node
+    "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
+    "witnessEnabled": false
+}
 ```
 
 ## 4. Start the node
@@ -51,8 +53,12 @@ You can easily start the node by typing the following command in the folder wher
 
 ```npm run start```
 
-## 5a. Replay from a blocks.log file
-When starting a node for the first time you can either replay the whole sidechain from the Steem blockchain (which can last very long) or replay from a blocks.log file.
+To have it run as a daemon background process, allowing you to close your terminal window without stopping the node, you can use this command instead:
+
+```nohup npm start &```
+
+## 5a. ~~Replay from a blocks.log file~~ (NOT RECOMMENDED)
+When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
 - Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table)
@@ -60,10 +66,31 @@ The blocks.log file is actually the table called "chain" that you can find in yo
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
-## 5b. Restore a MongoDB dump
+**Note: right now you should avoid replaying this way as there is a replay bug with virtual transactions, please restore from a MongoDB dump instead**
+
+## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-- Find a dump of the MongoDB database (ie: https://api.steem-engine.com/ssc.archive)
-- Restore it (mongorestore --gzip --archive=ssc.archive)
-- Update the "config.json" file with the "startSteemBlock" that matches the dump you just restored (ie: https://api.steem-engine.com/ssc.archive.txt)
-- Start the tool via ```npm run start```
+The latest public DB snapshot is available here, file size is about 2.4 GB:
+https://api.hive-engine.com/hsc_12-19-2020.archive
+
+When using this snapshot, set ```startHiveBlock``` to **49669398** in your config file.
+
+- Make sure node is stopped
+- Download a dump of the MongoDB database
+- Restore it
+	- open mongodb shell by running mongo command
+	- show dbs
+	- use hsc
+	- db.dropDatabase()
+	- show dbs    // to confirm db has been dropped
+	- quit()
+	- mongorestore --gzip --archive=hsc_12-19-2020.archive
+- Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
+- Start the node
+
+## 6. Checking that your node works
+
+To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
+
+So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you would use ```http://<YOUR SERVER IP>:5000/blockchain```

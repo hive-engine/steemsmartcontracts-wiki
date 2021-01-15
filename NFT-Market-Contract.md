@@ -1,11 +1,16 @@
 Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
 
+**Note**: although this smart contract is available on both Steem Engine and Hive Engine, not all features are supported on Steem Engine.
+
 # Table of Contents
 
 * [Enabling the market](#enabling-the-market)
   * actions:
   * [enableMarket](#enablemarket)
   * [setGroupBy](#setgroupby)
+* [Configuring the market](#configuring-the-market)
+  * actions:
+  * [setMarketParams](#setmarketparams)
 * [Managing Sell Orders](#managing-sell-orders)
   * actions:
   * [sell](#sell)
@@ -25,12 +30,12 @@ Before token holders can trade an NFT, the market must be enabled for a particul
 1. Call the enableMarket action on the nftmarket contract.
 2. Call the setGroupBy action on the nft contract.
 
-These actions require active key authority, and can only be called by the Steem account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
+These actions require active key authority, and can only be called by the Steem or Hive account that owns/created the NFT. The order in which you perform the actions is not important, but both of them must be done before any market orders can be placed. Market enablement is permanent, you CANNOT disable a market once it has been enabled.
 ### enableMarket:
 Enables a market by creating necessary database tables for the given symbol.
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Steem or Hive account that owns/created the NFT definition
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -73,7 +78,7 @@ Consider the following points carefully before calling this action:
 
 * requires active key: yes
 
-* can be called by: Steem account that owns the NFT
+* can be called by: Steem or Hive account that owns/created the NFT definition
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -91,6 +96,68 @@ Consider the following points carefully before calling this action:
 }
 ```
 
+## Configuring the market
+**Note**: this section only applies to Hive Engine. These features are not available on Steem Engine.
+
+After you have enabled the market, there are some optional settings that can be configured which will affect the behavior of the entire market. You can skip this step if desired; otherwise this configuration can be set & updated at any time by using the following action:
+### setMarketParams:
+Only available on Hive Engine. Sets market-wide configuration, or updates existing configuration. Once set, a piece of configuration can never be deleted, it can only be updated to a new value.
+* requires active key: yes
+
+* can be called by: Hive account that owns/created the NFT definition
+
+* parameters:
+  * symbol (string): symbol of the token (uppercase letters only, max length of 10)
+  * **(optional)** officialMarket (string): Steem or Hive account to receive the market fee percentage of the total sale price whenever NFT instances are bought or sold on the market. If set, will always override the [marketAccount parameter of the buy action](#buy), which will instead be considered the agent account.
+  * **(optional)** agentCut (integer): a whole number ranging from 0 to 10000 inclusive. Represents a percentage of the sale/purchase fee that will be sent to a designated agent account specified by buyers. These agent fees provide an incentive for construction of third-party marketplace apps by giving such apps a way to monetize themselves, while also protecting the interests of the NFT creator who may also wish to profit from the market. To calculate the agent cut percentage, divide this number by 10000. For example, a value of 500 is 5% (0.05). A value of 1234 is 12.34% (0.1234).
+  * **(optional)** minFee (integer): a whole number ranging from 0 to 10000 inclusive. If set, will be enforced as the minimum allowed value to be set as the [fee parameter of the sell action](#sell).
+
+Note that all of these settings are optional. You can have minFee set without using the agent parameters, or vice versa. However, in order for the agent cut to be applied to fees, both officialMarket and agentCut must be defined. Furthermore, it is perfectly valid and may even be desirable in some circumstances to have agentCut be set to 0 or 10000 (100%).
+
+Keep in mind that agentCut is a percentage of the sale fee, **NOT** the total sale price. So if the fee set by a sell action is 500 (5%), and the agentCut is 2000 (20%), then agents will get 20% of that 5% fee, and the other 80% will go to the account specified by the officialMarket setting.
+
+* example:
+```
+{
+    "contractName": "nftmarket",
+    "contractAction": "setMarketParams",
+    "contractPayload": {
+        "symbol": "TESTNFT",
+        "officialMarket": "niftymart",
+        "agentCut": 2000,
+        "minFee": 500
+    }
+}
+```
+A successful setMarketParams action will emit a "setMarketParams" event with the updated info (not all fields may be set, depending on what settings are in use):
+``symbol, oldOfficialMarket, officialMarket, oldAgentCut, agentCut, oldMinFee, minFee``
+examples:
+```
+// example of setting minFee for the first time
+{
+    "contract": "nftmarket",
+    "event": "setMarketParams",
+    "data": {
+        "minFee": 50
+    }
+}
+
+// example of changing all settings at once
+{
+    "contract": "nftmarket",
+    "event": "setMarketParams",
+    "data": {
+        "symbol": "TESTNFT",
+        "oldOfficialMarket": "splinterlands",    // will only be here if officialMarket was previously set and is being changed to a new value
+        "officialMarket": "peakmonsters",        // will only be here if officialMarket is being changed to a new value or set for the first time
+        "oldAgentCut": 1200,                     // will only be here if agentCut was previously set and is being changed to a new value
+        "agentCut": 1100,                        // will only be here if agentCut is being changed to a new value or set for the first time
+        "oldMinFee": 50,                         // will only be here if minFee was previously set and is being changed to a new value
+        "minFee": 250                            // will only be here if minFee is being changed to a new value or set for the first time
+    }
+}
+```
+
 ## Managing Sell Orders
 For now, the market only supports sell side orders. The ability to place bids will be added later. Also, only Steem accounts can place market orders. Smart contracts that hold tokens cannot currently use the market.
 
@@ -99,7 +166,7 @@ Sellers have the ability to put NFT instances up for sale, change the price of e
 Puts one or more NFT instances up for sale. Separate market orders will be created for each individual token listed for sale. As with the regular token market, tokens up for sale are "locked" by transferring them to the NFT market contract for safekeeping. Tokens held by the market will be returned to their owners if the corresponding market order gets canceled. Unlike the regular token market, NFT market orders do not expire. Once listed for sale, a market order will persist until it is either canceled or bought.
 * requires active key: yes
 
-* can be called by: Steem account that holds the token(s) to be sold
+* can be called by: Steem or Hive account that holds the token(s) to be sold
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -149,7 +216,7 @@ example:
 Changes the price of one or more existing sell orders. Note that the price symbol cannot be changed (to do that you should cancel the sell order and place a new one).
 * requires active key: yes
 
-* can be called by: Steem account that originally placed the order(s) to be modified
+* can be called by: Steem or Hive account that originally placed the order(s) to be modified
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -192,7 +259,7 @@ example:
 Cancels one or more existing sell orders. Upon an order's successful cancelation, the corresponding NFT instance held by the NFT market contract will be transferred back to the owning account.
 * requires active key: yes
 
-* can be called by: Steem account that originally placed the order(s) to be canceled
+* can be called by: Steem or Hive account that originally placed the order(s) to be canceled
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
@@ -237,12 +304,14 @@ example:
 Buys one or more NFT instances that are currently listed for sale. The buyer must have enough tokens in his account to pay for all NFT instances; there is no concept of a partial fill, either you buy everything requested or nothing.
 * requires active key: yes
 
-* can be called by: Steem account
+* can be called by: Steem or Hive account
 
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * nfts (array of string): list of NFT instance IDs (NOT order IDs) that you want to buy
-  * marketAccount (string): Steem account to receive the market fee percentage of the total sale price
+  * marketAccount (string): Steem or Hive account to receive the market fee percentage of the total sale price
+  * **(optional, only available on Hive Engine)** expPrice (string): The expected total price of all NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the total price of the corresponding sell orders. If there is a price mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
+  * **(optional, only available on Hive Engine)** expPriceSymbol (string): The expected price symbol of the NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the price symbol of the corresponding sell orders. If there is a symbol mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
   
 A maximum of 50 NFT instances can be bought in a single call of this action. You cannot fill your own orders, and all orders must have the same price symbol.
 
@@ -254,7 +323,9 @@ A maximum of 50 NFT instances can be bought in a single call of this action. You
     "contractPayload": {
         "symbol": "TESTNFT",
         "nfts": [ "1","2","3","4" ],
-        "marketAccount": "peakmonsters"
+        "marketAccount": "peakmonsters",
+        "expPrice": "17.42477",
+        "expPriceSymbol": "ENG"
     }
 }
 ```
@@ -297,8 +368,8 @@ Note: all tables below have an implicit _id field that provides a unique numeric
 
 Every NFT symbol has its own separate table to store the sell side order book. The table name for a particular symbol is formed by taking the symbol and adding "sellBook" to the end of it. Thus, if you have an NFT called MYNFT, the MYNFTsellBook table will store all active sell orders. Note that this table will not exist if the enableMarket action has not been called yet.
 * fields
-  * account = the Steem account that created this particular order
-  * ownedBy = indicates if this order was created by a Steem account or smart contract. As smart contracts are not supported for now, the value will always be "u".
+  * account = the Steem or Hive account that created this particular order
+  * ownedBy = indicates if this order was created by a user account or smart contract. As smart contracts are not supported for now, the value will always be "u".
   * nftId (string) = NFT instance ID for this particular order
   * grouping = holds a copy of the data property values which together uniquely identify how this market order should be grouped, according to the list set by the NFT contract setGroupBy action
   * timestamp (integer) = creation time of this order in milliseconds
@@ -385,12 +456,12 @@ Only the last 24 hours worth of trade history is kept. Every time a trade is mad
 
 * fields
   * type = will be buy or sell. Currently, the market only supports sell side orders. Thus all trades will have this field set to 'buy' (a trade is done when a buyer hits a sell order using the buy action).
-  * account = the buyer's Steem account name
+  * account = the buyer's Steem or Hive account name
   * ownedBy = will always be u (smart contracts are not currently allowed to participate in the market)
   * counterparties = contains detailed information about the counterparties from which NFT instances are bought or sold (these will always be the sellers for now)
   * priceSymbol = the token symbol of the trade's payment method
   * price = the total price for all NFT instances purchased in this trade (inclusive of market fees)
-  * marketAccount = the Steem account that received the market fee for this trade
+  * marketAccount = the Steem or Hive account that received the market fee for this trade
   * fee = the total fee paid to the market account by the purchaser for this trade
   * timestamp (integer) = time of this trade in seconds
   * volume (integer) = number of NFT instances exchanged in this trade

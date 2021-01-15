@@ -41,3 +41,7 @@
 [Mining Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Mining-Contract.md)
 
 [Airdrops Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Airdrops-Contract.md)
+
+[Claimdrops Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Claimdrops-Contract.md)
+
+[Distribution Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Distribution-Contract.md)
