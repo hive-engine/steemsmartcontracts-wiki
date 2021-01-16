@@ -174,7 +174,7 @@ Puts one or more NFT instances up for sale. Separate market orders will be creat
   * nfts (array of string): list of NFT instance IDs to sell
   * price (string): price that each individual token should be sold at
   * priceSymbol (string): the regular token symbol that the seller wants to be paid in. Does not necessarily have to be STEEMP. Note that you cannot create multiple sell orders for the same NFT instance ID with different price symbols.
-  * fee (integer): a whole number ranging from 0 to 10000 inclusive. Represents a percentage of the price that will be taken as a fee and sent to a designated market account specified by buyers. These fees provide an incentive for construction of third-party marketplace apps by giving such apps a way to monetize themselves. To calculate the fee percentage, divide this number by 10000. For example, a fee value of 500 is 5% (0.05). A value of 1234 is 12.34% (0.1234).
+  * fee (integer): a whole number ranging from 0 to 10000 inclusive. Represents a percentage of the price that will be taken as a fee and sent to a designated market account specified by buyers. These fees provide an incentive for construction of third-party marketplace apps by giving such apps a way to monetize themselves. To calculate the fee percentage, divide this number by 10000. For example, a fee value of 500 is 5% (0.05). A value of 1234 is 12.34% (0.1234). Must be >= minFee, if minFee has been set using the [setMarketParams action](#setmarketparams). 
   
 A maximum of 50 tokens can be put up for sale in a single call of this action. Note that tokens cannot be put on the market if they are currently being delegated to another account.
 
@@ -310,7 +310,7 @@ Buys one or more NFT instances that are currently listed for sale. The buyer mus
 * parameters:
   * symbol (string): symbol of the token (uppercase letters only, max length of 10)
   * nfts (array of string): list of NFT instance IDs (NOT order IDs) that you want to buy
-  * marketAccount (string): Steem or Hive account to receive the market fee percentage of the total sale price
+  * marketAccount (string): Steem or Hive account to receive the market fee percentage of the total sale price. Will be overridden by the officialMarket setting, if such has been set using the [setMarketParams action](#setmarketparams). This account will receive an agent fee instead, if agentCut has been set using the [setMarketParams action](#setmarketparams). So this field can be either the market account or agent account depending on how settings for a particular market are configured, or ignored altogether if officialMarket is set but agentCut is not set.
   * **(optional, only available on Hive Engine)** expPrice (string): The expected total price of all NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the total price of the corresponding sell orders. If there is a price mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
   * **(optional, only available on Hive Engine)** expPriceSymbol (string): The expected price symbol of the NFT instances to be bought in this transaction. If set, a check will be done to make sure this value matches the price symbol of the corresponding sell orders. If there is a symbol mismatch, then the purchase will fail. It is recommended that you always use this parameter in order to protect against last minute order changes.
   
@@ -326,12 +326,12 @@ A maximum of 50 NFT instances can be bought in a single call of this action. You
         "nfts": [ "1","2","3","4" ],
         "marketAccount": "peakmonsters",
         "expPrice": "17.42477",
-        "expPriceSymbol": "ENG"
+        "expPriceSymbol": "BEE"
     }
 }
 ```
 A successful purchase will emit a single "hitSellOrder" event with data on all NFT instances sold:
-``symbol, priceSymbol, account: the buyer, ownedBy: u, sellers: data structure giving info on all sellers, paymentTotal: total sale price of all orders sold (after subtracting the market fee), feeTotal: total market fee of all orders sold``
+``symbol, priceSymbol, account: the buyer, ownedBy: u, sellers: data structure giving info on all sellers, paymentTotal: total sale price of all orders sold (after subtracting any market & agent fee), marketAccount: account that market fee goes to, feeTotal: total market fee of all orders sold, agentAccount: account that agent fee goes to, agentFeeTotal: total agent fee of all orders sold``
 example:
 ```
 {
@@ -339,7 +339,7 @@ example:
     "event": "hitSellOrder",
     "data": {
         "symbol": "TESTNFT",
-        "priceSymbol": "ENG",
+        "priceSymbol": "BEE",
         "account": "cryptomancer",
         "ownedBy": "u",
         "sellers": [
@@ -355,20 +355,24 @@ example:
             }
         ],
         "paymentTotal": "16.55353150",
-        "feeTotal": "0.87123850"
+        "marketAccount": "splintermart",
+        "feeTotal": "0.78411465",
+        "agentAccount": "samtheman",
+        "agentFeeTotal": "0.08712385"
     }
 }
 ```
-In the above example, 4 NFT instances are bought at once by @cryptomancer, from separate sellers. Three of those tokens were sold by @aggroed, who received a payment of 8.95353150 ENG, and one token was sold by @marc who received a payment of 7.60000000 ENG. The total payment amount distributed to the sellers for all 4 tokens was 16.55353150 ENG (8.95353150 + 7.60000000), and the market fee was 0.87123850 ENG. To get the total sale price of 17.42477000 ENG, add together paymentTotal and feeTotal. In this case, the fee for each order was 5%.
+In the above example, 4 NFT instances are bought at once by @cryptomancer, from separate sellers. Three of those tokens were sold by @aggroed, who received a payment of 8.95353150 BEE, and one token was sold by @marc who received a payment of 7.60000000 BEE. The total payment amount distributed to the sellers for all 4 tokens was 16.55353150 BEE (8.95353150 + 7.60000000), with a market fee of 0.78411465 BEE and agent fee of 0.08712385 BEE. To get the total sale price of 17.42477000 BEE, add together paymentTotal, feeTotal, and agentFeeTotal. In this case, the fee for each order was 5%, and the agent cut was 10% of that fee (so splitting the 5% total fee into two parts, 90% of the fee for the market account, and 10% of the fee for the agent account).
+
+Note that marketAccount, feeTotal, agentAccount, and agentFeeTotal are all optional fields, which will be included only if the respective fees exist (it is possible to have no fees at all, or for only a market fee or only an agent fee to be set).
 
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
 ## params
 **indexes:** symbol
-This table only exists on Hive Engine.
 
-Market parameters set by the [setMarketParams action](#setmarketparams) will be stored in this table.
+This table only exists on Hive Engine.  Market parameters set by the [setMarketParams action](#setmarketparams) will be stored in this table.
 * fields
   * symbol = NFT symbol identifying which market these settings are for
   * officialMarket = official market account to receive purchase fees when NFT instances are sold
