@@ -357,7 +357,7 @@ example:
         "paymentTotal": "16.55353150",
         "marketAccount": "splintermart",
         "feeTotal": "0.78411465",
-        "agentAccount": "samtheman",
+        "agentAccount": "peakmonsters",
         "agentFeeTotal": "0.08712385"
     }
 }
