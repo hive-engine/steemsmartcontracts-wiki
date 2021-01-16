@@ -366,6 +366,7 @@ Note: all tables below have an implicit _id field that provides a unique numeric
 
 ## params
 **indexes:** symbol
+This table only exists on Hive Engine.
 
 Market parameters set by the [setMarketParams action](#setmarketparams) will be stored in this table.
 * fields
@@ -474,8 +475,10 @@ Only the last 24 hours worth of trade history is kept. Every time a trade is mad
   * counterparties = contains detailed information about the counterparties from which NFT instances are bought or sold (these will always be the sellers for now)
   * priceSymbol = the token symbol of the trade's payment method
   * price = the total price for all NFT instances purchased in this trade (inclusive of market fees)
-  * marketAccount = the Steem or Hive account that received the market fee for this trade
-  * fee = the total fee paid to the market account by the purchaser for this trade
+  * **(optional)** marketAccount = the Steem or Hive account that received the market fee for this trade, if there is such a fee
+  * **(optional)** fee = the total fee paid to the market account by the purchaser for this trade, if there is such a fee
+  * **(optional)** agentAccount = the Hive account that received the agent fee for this trade, if there is such a fee
+  * **(optional)** agentFee = the total agent fee paid to the agent account by the purchaser for this trade, if there is such a fee
   * timestamp (integer) = time of this trade in seconds
   * volume (integer) = number of NFT instances exchanged in this trade
 
@@ -500,7 +503,7 @@ an example of a trade involving multiple NFT instances bought from different sel
             paymentTotal: '7.60000000'
         }
     ],
-    priceSymbol: 'ENG',
+    priceSymbol: 'BEE',
     price: '11.14159000',
     marketAccount: 'peakmonsters',
     fee: '0.55707950',
@@ -508,6 +511,34 @@ an example of a trade involving multiple NFT instances bought from different sel
     volume: 2
 }
 ```
-In the above example, 2 NFT instances were bought by @cryptomancer from @aggroed and @marc. The total price for both NFT instances, inclusive of the market fee, was 11.14159000 ENG. From that amount, a fee of 0.55707950 ENG was subtracted and sent to the @peakmonsters account. The remaining amount was distributed as payment to the two sellers, with @aggroed receiving 2.98451050 ENG and @marc receiving 7.60000000 ENG. The market fee was 5% for each order hit.
+In the above example, 2 NFT instances were bought by @cryptomancer from @aggroed and @marc. The total price for both NFT instances, inclusive of all fees, was 11.14159000 BEE. From that amount, a fee of 0.55707950 BEE was subtracted and sent to the @peakmonsters account. The remaining amount was distributed as payment to the two sellers, with @aggroed receiving 2.98451050 BEE and @marc receiving 7.60000000 BEE. The market fee was 5% for each order hit, and there was no agent fee.
+
+Here's another example involving an agent fee:
+
+```
+{
+    _id: 45678,
+    type: 'buy',
+    account: 'cryptomancer',
+    ownedBy: 'u',
+    counterparties: [
+        {
+            account: 'aggroed',
+            ownedBy: 'u',
+            nftIds: [ '8320' ],
+            paymentTotal: '2.98451050'
+        }
+    ],
+    priceSymbol: 'BEE',
+    price: '3.14159000',
+    marketAccount: 'splintermart',
+    fee: '0.12566360',
+    agentAccount: 'samtheman',
+    agentFee: '0.03141590',
+    timestamp: 1527811200,
+    volume: 1
+}
+```
+In this example, just a single NFT instance was bought by @cryptomancer from @aggroed. The price of the NFT instance was 3.14159000 BEE (including all fees). From that amount, a market fee of 0.12566360 BEE was subtracted and sent to the official market account @splintermart. A separate agent fee of 0.03141590 BEE was also subtracted and sent to the agent account @samtheman. The fee set on the sell order was 5%, for a total fee of ```fee + agentFee``` = 0.15707950 BEE. That fee was split into the market & agent fees, with 80% (0.12566360 BEE) going to the market account and 20% (0.03141590 BEE) going to the agent account. So the agent cut was 20% of the total fee.
 
 **Calculating daily volume metrics:** simply sum together the volume field for all trade history entries in the table, querying by priceSymbol if desired, to get the total number of NFT instances traded. Similarly, sum together the price field to get total value exchanged. Note that price is stored as a string, so you must convert to a floating point number in order to calculate the sum.
