@@ -20,6 +20,7 @@ Documentation written by [bt-cryptomancer](https://github.com/bt-cryptomancer)
   * actions:
   * [buy](#buy)
 * [Tables available](#tables-available)
+  * [params](#params)
   * [SYMBOLsellBook](#symbolsellbook)
   * [SYMBOLopenInterest](#symbolopeninterest)
   * [SYMBOLtradesHistory](#symboltradeshistory)
@@ -362,6 +363,18 @@ In the above example, 4 NFT instances are bought at once by @cryptomancer, from 
 
 # Tables available:
 Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
+
+## params
+**indexes:** symbol
+
+Market parameters set by the [setMarketParams action](#setmarketparams) will be stored in this table.
+* fields
+  * symbol = NFT symbol identifying which market these settings are for
+  * officialMarket = official market account to receive purchase fees when NFT instances are sold
+  * agentCut (integer) = a whole number between 0 and 10000, inclusive, which represents the percentage of purchase fees that should go to the agent account
+  * minFee (integer) = a whole number between 0 and 10000, inclusive, which represents the minimum allowed fee for a sell order
+
+See [setMarketParams action](#setmarketparams) for more details on how these settings are used.
 
 ## SYMBOLsellBook
 **indexes:** ownedBy, account, nftId, grouping, priceSymbol
