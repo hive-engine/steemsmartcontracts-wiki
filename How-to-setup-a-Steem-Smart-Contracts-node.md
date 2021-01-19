@@ -57,24 +57,25 @@ To have it run as a daemon background process, allowing you to close your termin
 
 ```nohup npm start &```
 
-## 5a. ~~Replay from a blocks.log file~~ (NOT RECOMMENDED)
+## 5a. Replay from a blocks.log file
 When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
-- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table)
+- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table) or download our official one
 - Start the tool via ```node app.js --replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
 
-**Note: right now you should avoid replaying this way as there is a replay bug with virtual transactions, please restore from a MongoDB dump instead**
+The latest public blocks.log file is available here in zipped format, file size is about 2.8 GB:
+https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
 
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-The latest public DB snapshot is available here, file size is about 2.4 GB:
-https://api.hive-engine.com/hsc_12-19-2020.archive
+The latest public DB snapshot is available here, file size is about 3 GB:
+https://api.hive-engine.com/hsc_01-19-2021.archive
 
-When using this snapshot, set ```startHiveBlock``` to **49669398** in your config file.
+When using this snapshot, set ```startHiveBlock``` to **50562493** in your config file.
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
