@@ -1,5 +1,5 @@
 ## 1. Environment setup
-- Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
+- Make sure you have a Linux server to run the node on. Low end specs are fine for now: 2 GB RAM, a dual core CPU, and at least 50 GB free disk space should work great. (For 2G RAM, you will need to add swap space, so recommend 4G RAM) Ubuntu is recommended, though other flavors of Linux will probably also work.
 - Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
 - Install MongoDB. At least version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, which needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/
   - To enable replication, you just need to add to the replication config in the mongo config:
