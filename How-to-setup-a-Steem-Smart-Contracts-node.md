@@ -57,7 +57,13 @@ To have it run as a daemon background process, allowing you to close your termin
 
 ```nohup npm start &```
 
-## 5a. Replay from a blocks.log file
+You may also use `pm2` as well, in which case you should run with the command
+
+```pm2 start app.js --no-treekill --kill-timeout 10000 --no-autorestart```
+
+Or else `pm2 stop` will kill all sub processes prematurely and not allow for a clean exit.
+
+## 5a. Replay from a blocks.log file (DO NOT USE, WILL NOT WORK)
 When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
