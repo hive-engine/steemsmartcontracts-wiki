@@ -15,14 +15,14 @@ To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
 
-- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch)
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch). You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he-v1.1.0`
 	- ```git checkout hive-engine```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
 	- ```npm install```
 
 ## 3. Configure the node
-The ```config.json``` file has all the settings to make sure your node listens to the Hive blockchain and generates the proper genesis block. You shouldn't need to change any of the default config, it can just be used as is.
+The ```config.json``` file has all the settings to make sure your node listens to the Hive blockchain and generates the proper genesis block. You shouldn't need to change any of the default config, it can just be used as is. If you are configuring a witness, then additionally set `witnessEnabled` to true, and copy `.env.example` to `.env` to set up your witness settings. Be careful as configuring asks for a witness private signing key in plain text.
 
 (the following file is a pre-configuration that will listen to the sidechain id "mainnet-hive" and will start up a HTTP JSON RPC server listening on port 5000)
 
@@ -101,3 +101,7 @@ When using this snapshot, set ```startHiveBlock``` to **50562493** in your confi
 To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
 
 So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you would use ```http://<YOUR SERVER IP>:5000/blockchain```
+
+## 7. Enabling and Approving Witness
+
+There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env file to perform the custom json broadcasts.
