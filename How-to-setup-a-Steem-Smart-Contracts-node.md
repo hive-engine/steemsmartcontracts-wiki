@@ -96,6 +96,11 @@ When using this snapshot, set ```startHiveBlock``` to **50562493** in your confi
 - Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
 - Start the node
 
+## 5c. Restore from hive genesis block.
+
+No extra work needed, the default setting will start syncing
+from the hive genesis block.
+
 ## 6. Checking that your node works
 
 To verify your node is running properly, you can query data from its API. A getStatus query will show you info on the running software version and latest block processed. Refer to [Querying the Engine API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-Guide.md#querying-the-engine-api) for details. In the API URL you should replace ```https://api.hive-engine.com/rpc``` with ```http://<YOUR SERVER IP>:5000```
