@@ -555,7 +555,7 @@ Some things to keep in mind:
 * keep database queries to a minimum, and fetch objects in batches instead of one-at-a-time when possible
 * avoid any loops that could have potentially unbounded execution times
 * define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) is once again a good example of this
-* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js]) is an example of a multi-block action.
+* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js) is an example of a multi-block action.
 
 ## Emitting events
 
