@@ -110,3 +110,5 @@ So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you 
 ## 7. Enabling and Approving Witness
 
 There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env file to perform the custom json broadcasts.
+
+Witnesses dashboard where you can also approve witnesses is on tribaldex: https://tribaldex.com/witnesses 
