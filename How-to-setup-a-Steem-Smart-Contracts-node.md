@@ -15,7 +15,7 @@ To install the app, simply follow these steps:
 - get the files from the repository: 
 	- via the git cli: ```git clone https://github.com/hive-engine/steemsmartcontracts.git```
 
-- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch). You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he-v1.1.0`
+- cd into the newly created project folder; for Hive Engine, make sure you are on the ```hive-engine``` branch (for Steem Engine use the witnesses branch). You may consider using a tagged release as well instead to match the primary nodes, in which case you should checkout a release tag e.g. `he_v1.2.0`
 	- ```git checkout hive-engine```
 
 - in your console type the following command in the folder that contains the files downloaded from the previous step:
@@ -78,10 +78,10 @@ https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-The latest public DB snapshot is available here, file size is about 3 GB:
-https://api.hive-engine.com/hsc_01-19-2021.archive
+The latest public DB snapshot is available here, file size is about 10 GB:
+http://api2.hive-engine.com/hsc_20210203_b50993579.archive
 
-When using this snapshot, set ```startHiveBlock``` to **50562493** in your config file.
+When using this snapshot, set ```startHiveBlock``` to **50993579** in your config file.
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
@@ -92,9 +92,14 @@ When using this snapshot, set ```startHiveBlock``` to **50562493** in your confi
 	- db.dropDatabase()
 	- show dbs    // to confirm db has been dropped
 	- quit()
-	- mongorestore --gzip --archive=hsc_12-19-2020.archive
+	- mongorestore --gzip --archive=hsc_20210203_b50993579.archive
 - Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
 - Start the node
+
+## 5c. Restore from hive genesis block.
+
+No extra work needed, the default setting will start syncing
+from the hive genesis block.
 
 ## 6. Checking that your node works
 
@@ -105,3 +110,5 @@ So for example, instead of ```https://api.hive-engine.com/rpc/blockchain``` you 
 ## 7. Enabling and Approving Witness
 
 There is a script called `witness_action.js` that can help with a few quick actions. See `node witness_action.js --help` for a list of commands, noting it uses the settings in your .env file to perform the custom json broadcasts.
+
+Witnesses dashboard where you can also approve witnesses is on tribaldex: https://tribaldex.com/witnesses 
