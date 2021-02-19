@@ -25,19 +25,19 @@ the sidechain blocks being produced, and validators are rewarded
 with tokens. A stake-based approval system determines which nodes
 participate in the validation of blocks.
 
-The block validation process occurs in rounds of 7 blocks
+The block validation process occurs in rounds of 11 blocks
 (determined by the witness contract parameter), and in each
-round, 7 witnesses are chosen to validate 7 blocks. Validation
+round, 11 witnesses are chosen to validate 11 blocks. Validation
 is done by performing hashes, which just combines the hashes of
 the individual block hashes of the round. In the schedule,
  the first witness is designated to propose a round to the
 other witnesses in the schedule, who then respond with the
-computed hash. When 5/7 responses come back with a matching hash,
+computed hash. When 9/11 responses come back with a matching hash,
 this information is recorded to the sidechain as a witness contract
 operation, which advances the schedule and rewards the witnesses
 of that round.
 
-There are 6 top witness spots and 1 backup witnness spot.
+There are 10 top witness spots and 1 backup witnness spot.
 The top six participate in every round while the backup is
 randomly rotated into the last slot in proportion with their
 approval weight.
