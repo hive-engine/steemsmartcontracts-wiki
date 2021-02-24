@@ -16,6 +16,7 @@ Documentation written by [donchate](https://github.com/donchate)
 * [Interface Integration](#interface-integration)
   * [Determining minimum amounts](#determining-minimum-amounts)
   * [Adding Liquidity](#adding-liquidity)
+  * [Removing Liquidity](#removing-liquidity)
 * [Tables available](#tables-available)
   * [params](#params)
   * [pools](#pools)
@@ -67,7 +68,7 @@ A fee of 1000 BEE is required.
   * tokenSymbol (string): Valid and configured token symbol that is being traded per the ```tradeType```
   * tokenOut (string): Amount of tokenSymbol that is being traded per the ```tradeType```
   * tradeType (string): Either ```exactInput``` or ```exactOutput``` indicating the type of trade
-  * maxSlippage (string): Amount of slippage tolerance (must be greater than 0% and less than 50%) The transaction will be cancelled if the price changes unfavorably by more than this percentage. A good default value is 0.5%-1%.
+  * maxSlippage (string): Amount of slippage tolerance (must be greater than 0% and less than 50%). The transaction will be cancelled if the price changes unfavorably by more than this percentage. A good default value is 0.5%-1%. Max precision 3
 
 #### Trade Types
 A trader may wish to receive automatically traded tokens for an exact amount of input tokens. In the example below: 1 GLD is requested out of the swap and the amount required will be automatically calculated and deducted from the holder's token balance.
@@ -100,8 +101,13 @@ A trader may wish to send an exact amount of tokens to the swap contract, and re
 To provide the resources for trading to occur, liquidity must be sent and stored by the smart contract.
 
 ### addLiquidity
-This action will send both tokens in a given pair to the smart contract to provide liquidity for traders to swap tokens. If this is being called on a newly created market pool, the initial liquidity provider sets the starting price for the pair. If the pair tokens have orders in the HE order book, the initial price will be compared to the last price on the order book market for deviation beyond a specified value.
-For existing pools, liquidity can only be added in such a way that the trading price is maintained.
+This action will send both tokens in a given pair to the smart contract to provide liquidity for traders to swap tokens.
+
+If this is being called on a newly created market pool, the initial liquidity provider sets the starting price for the pair. If the pair tokens have orders in the HE order book, the initial price will be compared to the last price on the order book market for deviation beyond 1%. This is to avoid an unintentional arbitrage situation.
+
+For existing pools, liquidity can only be added in such a way that the trading price is maintained. As such, the contract may adjust either base or quote quantity by a small factor to meet these requirements. If the adjustment exceeds the default or specified ```maxSlippage```, the liquidity will not be added.
+
+If the provider is seeding a new pool, the number of shares they will receive will equal ```sqrt(x * y)```, where x and y represent the amount of each token provided.
 
 * requires active key: yes
 * can be called by: anyone
@@ -109,6 +115,7 @@ For existing pools, liquidity can only be added in such a way that the trading p
   * tokenPair (string): Trading pair name describing the two tokens that will be paired in the format ```TOKEN1:TOKEN2```
   * baseQuantity (string): Amount to deposit into the base token reserve (first token in pair)
   * quoteQuantity (string): Amount to deposit into the quote token reserve (second token in pair)
+  * maxSlippage (string) (optional): Amount of tolerance to price changes before the liquidity is added (must be greater than 0% and less than 50%). The transaction will be cancelled if the price changes unfavorably by more than this percentage. If unspecified, the default value is 1%. Max precision 3
 
 * example:
 ```
@@ -116,26 +123,25 @@ For existing pools, liquidity can only be added in such a way that the trading p
   "tokenPair": "GLD:SLV",
   "baseQuantity": "1000",
   "quoteQuantity": "16000",
+  "maxSlippage": 1,
   "isSignedWithActiveKey": true
 }
 ```
 
 ### removeLiquidity
-This action allows a liquidity provider to withdraw their tokens from the market pool. This can only be performed in such a way that the trading price is maintained.
+This action allows a liquidity provider to withdraw their tokens from the market pool.
 
 * requires active key: yes
 * can be called by: anyone
 * parameters:
   * tokenPair (string): Trading pair name describing the two tokens that will be paired in the format ```TOKEN1:TOKEN2```
-  * baseQuantity (string): Amount to withdraw from the base token reserve (first token in pair)
-  * quoteQuantity (string): Amount to withdraw from the quote token reserve (second token in pair)
+  * sharesOut (string): Percentage > 0 <= 100 - amount of liquidity shares to convert into tokens. Max precision 3
 
 * example:
 ```
 {
   "tokenPair": "GLD:SLV",
-  "baseQuantity": "1000",
-  "quoteQuantity": "16000",
+  "sharesOut": "50",
   "isSignedWithActiveKey": true
 }
 ```
@@ -156,9 +162,18 @@ To estimate the minimum token amount received when sending an exact number of to
 ```
 ## Adding liquidity
 To ensure that the addition of new liquidity doesn't move the price, a user can only add to both tokens in the pair in quantities that maintain the same price.
+_Note: This does not apply to the initial liquidity provider, who sets the price if none is available from the internal oracle_
 
 ```
   const price = api.BigNumber(pool.quoteQuantity).dividedBy(pool.baseQuantity);
+```
+
+## Removing Liquidity
+Liquidity is removed by specifying a % of shares to remove. The contract calculates the amount returned of each token based on the position shares relative to the pool ```totalShares```.
+The amount of tokens returned can be estimated by the following formulas:
+```
+  const baseOut = api.BigNumber(sharesDelta).times(pool.baseQuantity).dividedBy(pool.totalShares).toFixed(baseToken.precision, api.BigNumber.ROUND_DOWN);
+  const quoteOut = api.BigNumber(sharesDelta).times(pool.quoteQuantity).dividedBy(pool.totalShares).toFixed(quoteToken.precision, api.BigNumber.ROUND_DOWN);
 ```
 
 # Tables available
@@ -179,6 +194,7 @@ contains the instance configurations
   * quotePrice = trading price quote per base (reverse price)
   * baseVolume = total base tokens traded
   * quoteVolume = total quote tokens traded
+  * totalShares = total shares issued to liquidity providers
   * precision = market pool token precision (maximum of either pair)
   * creator = account name of initial pool creator
 
@@ -187,5 +203,4 @@ contains the instance configurations
   * _id = MongoDB internal primary key
   * account = account name of the LP
   * tokenPair = token pair in which there is a LP
-  * baseQuantity = amount of base token deposited
-  * quoteQuantity = amount of quote token deposited
+  * shares = number of shares of the liquidity pool
