@@ -380,6 +380,8 @@ This does the following:
 
 Smart contract code executes in a constrained sandbox environment. As such, you are not allowed to use arbitrary third party libraries. Some constants and built-in library functions are available for you to use via the ```api``` object (things such as ```api.sender``` and ```api.BigNumber```). As a general rule, If it's not part of the api object, and not a built-in part of the Javascript language, then you may NOT use it! You are NOT allowed to import any modules with the Node.js require function. All smart contracts must be self-contained in a single source file.
 
+Javascript built-in objects that are not available: RegExp
+
 Refer to the [smart contracts API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
 
 ## Working with numbers
