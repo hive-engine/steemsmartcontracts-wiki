@@ -54,8 +54,7 @@ A fee of 1000 BEE is required.
 * example:
 ```
 {
-  "tokenPair": "GLD:SLV",
-  "isSignedWithActiveKey": true
+  "tokenPair": "GLD:SLV"
 }
 ```
 ## Swapping Actions
