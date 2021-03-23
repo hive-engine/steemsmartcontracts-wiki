@@ -13,6 +13,8 @@ Documentation written by [donchate](https://github.com/donchate)
 * [Liquidity Actions](#liquidity-actions)
   * [addLiquidity](#addLiquidity)
   * [removeLiquidity](#removeLiquidity)
+* [Rewarding Liquidity Providers](#rewarding-liquidity-providers)
+  * [createRewardPool](#createRewardPool)
 * [Interface Integration](#interface-integration)
   * [Determining minimum amounts](#determining-minimum-amounts)
   * [Adding Liquidity](#adding-liquidity)
@@ -141,6 +143,54 @@ This action allows a liquidity provider to withdraw their tokens from the market
 {
   "tokenPair": "GLD:SLV",
   "sharesOut": "50",
+  "isSignedWithActiveKey": true
+}
+```
+
+## Rewarding Liquidity Providers
+Its possible to reward liquidity providers to the pool directly on the sidechain. This allows some customization for each pool and for more methods to be added in the future.
+
+### createRewardPool
+This action allows a token issuer to create a reward system fulfilled through the Hive Engine [Mining Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Mining-Contract.md).
+The pool is automatically activated upon creation. A fee of 1000 BEE is required.
+
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * tokenPair (string): Trading pair name describing the two tokens that will be paired in the format ```TOKEN1:TOKEN2```
+  * lotteryWinners (integer >= 1 and <= 20): Number of lottery winners per round.
+  * lotteryIntervalHours (integer >= 1 and <= 720): How often in hours to run a lottery.
+  * lotteryAmount (string): Amount to pay out per round. Split among lotteryWinners winners.
+  * minedToken (string): Which token to issue as reward.
+
+* example (only the following parameters are currently supported):
+```
+{
+  "tokenPair": "GLD:SLV",
+  "lotteryWinners": 20,
+  "lotteryIntervalHours": 1,
+  "lotteryAmount": "1",
+  "minedToken": "GLD",
+  "isSignedWithActiveKey": true
+}
+```
+
+### setRewardPoolActive
+Disable or enable a mining pool. Lotteries will not occur if not active. No fee is required to change the status.
+
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * tokenPair (string): Trading pair name describing the two tokens that will be paired in the format ```TOKEN1:TOKEN2```
+  * minedToken (string): Which token to issue as reward.
+  * active (boolean): Set reward pool to active or inactive
+
+* example:
+```
+{
+  "tokenPair": "GLD:SLV",
+  "minedToken": "GLD",
+  "active": true,
   "isSignedWithActiveKey": true
 }
 ```
