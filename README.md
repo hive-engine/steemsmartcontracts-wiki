@@ -28,7 +28,9 @@
 
 [Tokens Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Tokens-Contract.md)
 
-[Market Smart Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Market-Smart-Contract.md)
+[Market Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Market-Smart-Contract.md)
+
+[Market Pools Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Market-Pools.md)
 
 [NFT Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Contracts.md)
 
@@ -45,3 +47,5 @@
 [Claimdrops Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Claimdrops-Contract.md)
 
 [Distribution Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Distribution-Contract.md)
+
+[Witnesses Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Witness-Contract.md)

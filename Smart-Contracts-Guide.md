@@ -60,9 +60,18 @@ Those design principles and other best practices are explained in detail in the 
 
 1. Make sure you have a Linux server to develop on. Low end specs are fine: 2 GB RAM, a dual core CPU, and at least 10 GB free disk space should work great. Ubuntu is recommended, though other flavors of Linux will probably also work.
 
-2. Install NodeJS and NPM. Node version 12+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
+2. Install NodeJS and NPM. Node version 13+ is recommended: https://linuxize.com/post/how-to-install-node-js-on-ubuntu-18.04/
 
-3. Install MongoDB. Version 4.2.3 is recommended (that's what production nodes are running): https://docs.mongodb.com/v4.2/administration/install-community/
+3. Install MongoDB. Version 4.4.3 is required (that's what production nodes are running): https://docs.mongodb.com/v4.4/administration/install-community/, and it needs to have replication enabled: https://docs.mongodb.com/manual/tutorial/convert-standalone-to-replica-set/.
+  - To enable replication, you just need to add to the replication config in the mongo config:
+    ```
+    replication:
+      replSetName: "rs0"
+    ```
+    and then after restarting mongo with this config, initiating replication in the `mongo` shell:
+    `> rs.initiate()`
+
+
 
 4. Fork this repository: https://github.com/hive-engine/steemsmartcontracts
 
@@ -371,6 +380,8 @@ This does the following:
 
 Smart contract code executes in a constrained sandbox environment. As such, you are not allowed to use arbitrary third party libraries. Some constants and built-in library functions are available for you to use via the ```api``` object (things such as ```api.sender``` and ```api.BigNumber```). As a general rule, If it's not part of the api object, and not a built-in part of the Javascript language, then you may NOT use it! You are NOT allowed to import any modules with the Node.js require function. All smart contracts must be self-contained in a single source file.
 
+Javascript built-in objects that are not available: RegExp
+
 Refer to the [smart contracts API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Smart-Contracts-API.md) section for more information on what is available to you through the api object.
 
 ## Working with numbers
@@ -546,7 +557,7 @@ Some things to keep in mind:
 * keep database queries to a minimum, and fetch objects in batches instead of one-at-a-time when possible
 * avoid any loops that could have potentially unbounded execution times
 * define maximum limits on numbers of objects that can be operated on at once; the [nft contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/nft.js) is once again a good example of this
-* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js]) is an example of a multi-block action.
+* if you do need to perform a costly operation, such as iterating over thousands of database records, break the action up across multiple blocks. The checkPendingLotteries action of the [mining contract](https://github.com/hive-engine/steemsmartcontracts/blob/hive-engine/contracts/mining.js) is an example of a multi-block action.
 
 ## Emitting events
 
