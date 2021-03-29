@@ -49,6 +49,8 @@ The ```config.json``` file has all the settings to make sure your node listens t
 ```
 
 ## 4. Start the node
+**Additional step needed for now** - Set your machine time zone to UTC:  `export TZ=UTC` for consistent contract behavior until the contract level bug is resolved.
+
 You can easily start the node by typing the following command in the folder where the node was installed:
 
 ```npm run start```
