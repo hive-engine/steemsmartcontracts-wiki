@@ -51,3 +51,5 @@
 [Decentralized Token Fund (DTF) Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/TokenFund-Contract.md)
 
 [Witnesses Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Witness-Contract.md)
+
+[Comments Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Comment-Contract.md)
