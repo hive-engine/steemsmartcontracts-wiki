@@ -74,7 +74,7 @@ For now, only one reward pool per token is allowed.
     * config.downvoteRegenerationDays (integer): How long it takes to fully regenerate downvoting power from 0 to 10000.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
-    * config.tags (array of strings): Which tags should be looked at to index a poat for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
 
 
 * examples:
@@ -135,7 +135,7 @@ Update a reward pool. An update fee of 100 BEE is required.
     * config.downvoteRegenerationDays (integer): How long it takes to fully regenerate downvoting power from 0 to 10000.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
-    * config.tags (array of strings): Which tags should be looked at to index a poat for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
 
 * examples:
 ```
