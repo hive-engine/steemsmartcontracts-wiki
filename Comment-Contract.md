@@ -13,6 +13,7 @@ Documentation written by [eonwarped](https://github.com/eonwarped)
   * [comment](#comment)
   * [commentOptions](#commentoptions)
   * [vote](#vote)
+  * [tokenMaintenance](#tokenmaintenance)
 * [Tables available](#tables-available)
   * [params](#params)
   * [rewardPools](#rewardpools)
@@ -257,7 +258,18 @@ A successful action will emit a "newVote" or an "updateVote" event for each rewa
 }
 ```
 
-# Tables available:
+### tokenMaintenance
+Not an action, but automatically performed before processing a comment action, once per block. Processes posts that are pending payout at a rate determined by `maintenanceTokensPerBlock` and `maxPostsProcessedPerRound`.
+
+Note that after payout, the post and votes objects are deleted, but they emit events for how much authors, curators, and beneficiaries are paid:
+
+```
+{
+    "contract": "comments",
+    "event": "authorReward",
+    "data": {
+        "rewardPoolId": 1,
+        "authorperm": "@author/perm"
 
 ## params:
 contains contract parameters such as the current fees
@@ -266,9 +278,10 @@ contains contract parameters such as the current fees
   * updateFee: the cost in BEE to update a pool
   * maxPoolsPerPost: max number of reward pools a comment can be part of.
   * maxTagsPerPool: max number of tags a reward pool config can specify.
-  * maintenenaceTokensPerAction: number of tokens that can do reward maintenance for a given comment contract op.
-  * maintenanceTokenOffset: offset of token to process next for maintenance.
+  * maintenenaceTokensPerBlock: number of tokens that can do reward maintenance per block that contains a comment op.
+  * lastMaintenanceBlock: last sidechain block where maintenance occurred.
   * maxPostsProcessedPerRound: max number of posts to pay out each maintenance round.
+  * voteQueryLimit: number of votes to process at a time (e.g. the limit parameter in fetching votes to pay out for a post). Defaults to 1000.
 
 ## rewardPools:
 contains information about the pool
