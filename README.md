@@ -53,3 +53,5 @@
 [Witnesses Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Witness-Contract.md)
 
 [NFT Auctions Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Auction-Contract.md)
+
+[Comments Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Comment-Contract.md)
