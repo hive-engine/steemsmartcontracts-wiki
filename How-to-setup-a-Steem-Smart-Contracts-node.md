@@ -80,8 +80,13 @@ https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-The latest public DB snapshot is available here, file size is about 6 GB:
-https://api.hive-engine.com/hsc_05-22-2021_b54107973.archive
+~~The latest public DB snapshot is available here, file size is about 6 GB: hsc_05-22-2021_b54107973.archive~~
+
+June 7, 2021 update: sorry, we no longer provide public snapshots due to server bandwidth considerations. We may make them available again in the future, but for now there are some Hive Engine witnesses that provide snapshots as a public service. The latest witness provided snapshot is available here:
+```
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw" -O hsc_05-22-2021_b54107973.archive
+ && rm -rf /tmp/cookies.txt
+ ```
 
 When using this snapshot, set ```startHiveBlock``` to **54107973** in your config file.
 
