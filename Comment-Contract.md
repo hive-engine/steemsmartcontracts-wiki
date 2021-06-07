@@ -270,6 +270,7 @@ Note that after payout, the post and votes objects are deleted, but they emit ev
     "data": {
         "rewardPoolId": 1,
         "authorperm": "@author/perm"
+```
 
 ## params:
 contains contract parameters such as the current fees
