@@ -14,8 +14,13 @@
 * [Get Swap Requests of an account](#get-swap-requests-of-an-account)
 * [SwapRequestCount](#swaprequestcount)
   
+## API urls:
+QA: https://dswap.azurewebsites.net/api/
+
+PROD: https://dswap-api.dswap.trade/api/
 
 ## Actions available:
+
 ### CalculateSwapOutput: 
 Calculates the output token (the token you want to buy) amount and the conversion rate (in SWAP.HIVE) based on given input token (token you want to sell) and input token amount.
 
