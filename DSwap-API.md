@@ -6,7 +6,7 @@
 * [CalculateSwapInput](#calculateswapinput)
 * [SwapRequest](#swaprequest)
   * [Swap Request Hive Engine Tokens](#swap-request-hive-engine-tokens)
-  * [Swap Request BTC LTC, BCH, DOGE, SWIFT (BTC forked tokens)](#swap-request-btc-ltc-bch-doge-swift-(btc-forked-tokens))
+  * [Swap Request BTC LTC, BCH, DOGE, SWIFT](#swap-request-btc-ltc-bch-doge-swift)
   * [Swap Request BTS EOS](#swap-request-bts-eos)
   * [Swap Request HBD SBD STEEM](#swap-request-hbd-sbd-steem)
 * [SwapRequest GET](#swaprequest-get)
@@ -190,7 +190,7 @@ This method is the call to the actual SWAP.
 }
 ```
 
-#### Swap Request BTC LTC BCH DOGE SWIFT (BTC forked tokens)
+#### Swap Request BTC LTC BCH DOGE SWIFT
 An important notice if the INPUT TOKEN is a BTC-forked crypto token is that the Deposit address for the INPUT TOKEN must be retrieved from the converter endpoint for the DSwap account. IMPORTANT: You need to send the dswap account name as "destination" parameter. Because that's the account being used to retrieve and convert deposits.
 
 - example retrieving deposit address from the converter:
