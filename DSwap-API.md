@@ -108,6 +108,7 @@ This method is the call to the actual SWAP.
 	- BaseTokenAmount (decimal): The calculated conversion rate retrieved from CalculateSwapOutput or CalculateSwapInput methods at the time of the Swap request
 	- TokenInputMemo (string): Needs to contain a GUID in case the input token is a crypto token, in order to identify the swap after user manually makes the deposit using this generated GUID as memo. Below you can find different example requests clarifying this.
 
+#### Swap Request Hive Engine Tokens
 - example swap request Hive Engine tokens: 
 ```
 {    
@@ -171,4 +172,119 @@ This method is the call to the actual SWAP.
     "BaseTokenAmountActual": 0.0,
     "TokenInputMemo": ""
 }
+```
+
+#### Swap Request BTC, LTC, BCH, DOGE, SWIFT (BTC forked tokens)
+An important notice if the INPUT TOKEN is a BTC-forked crypto token is that the Deposit address for the INPUT TOKEN must be retrieved from the converter endpoint for the DSwap account. IMPORTANT: You need to send the dswap account name as "destination" parameter. Because that's the account being used to retrieve and convert deposits.
+
+- example retrieving deposit address from the converter:
+```
+const request = await this.http.fetch(`${environment.CONVERTER_API_HE}convert/`, {
+	method: 'POST',
+	body: json({ 
+		from_coin: 'BTC', 
+		to_coin: 'SWAP.BTC', 
+		destination: 'dswap' }) 
+});
+
+const response = await request.json();
+```
+The response of the converter contains a uniquely generated address to which the user needs to deposit the BTC, LTC etc. token:
+```
+response:
+{
+	"ex_rate":1.0,
+	"destination":"dswap",
+	"pair":"BTC -> SWAP.BTC (1.0000 SWAP.BTC per BTC)",
+	"address":"bc1qs7eu9m3feu2e5gsnjtjp5wnj8yyv7kg6lmrs88"
+}
+```
+
+- The swap request for this SWAP from BTC --> DEC would look like:
+```
+{    
+    "Account": "lion200",
+    "TokenInput": "BTC",
+    "TokenInputAmount": 10,
+    "TokenOutput": "DEC",
+    "TokenOutputAmount": 1764507.455,
+    "SwapSourceId": "5fab0821cdef24759c5ae9a9",
+    "ChainTransactionId": "", 
+    "Chain": 1,
+    "MaxSlippageInputToken": 5,
+    "MaxSlippageOutputToken": 5,
+    "BaseTokenAmount": 6450.599625154223,
+    "TokenInputMemo": "bc1qs7eu9m3feu2e5gsnjtjp5wnj8yyv7kg6lmrs88" -- This is the unique deposit address generated & retrieved from the converter API endpoint above.
+}
+```
+
+#### Swap Request BTS, EOS
+For BitShares EOS like crypto tokens the converter API is returning a generic deposit address where the user can make his/her deposit.
+In order to make this deposit unique and match this deposit to a swap request, you need to add a unique identifier in the MEMO of your deposit.
+
+- For BTS and EOS, the crypto converter request looks like:
+```
+const request = await this.http.fetch(`${environment.CONVERTER_API_HE}convert/`, {
+	method: 'POST',
+	body: json({ 
+		from_coin: 'BTS', 
+		to_coin: 'SWAP.BTS', 
+		destination: 'dswap' }) 
+});
+
+const response = await request.json();
+```
+And the response looks like:
+```
+Response: 
+{
+	"ex_rate":1.0,
+	"destination":"dswap",
+	"pair":"BTS -> SWAP.BTS (1.0000 SWAP.BTS per BTS)",
+	"memo":"SWAP.BTS dswap",
+	"account":"steem-engine"
+}
+```
+
+As you can see in the response of the converter. The deposit needs to happen to "steem-engine" address with memo "SWAP.BTS dswap".
+Because this memo is very generic and we actually need to make this deposit unique to the Swap Requestor, the memo should contain a GUID (unique identifier), which should be looking like: 
+
+Deposit address: steem-engine
+
+Memo: SWAP.BTS dswap **1cdc54b3-45b2-44fe-a254-912f1cfa7892**
+
+This unique identifier also needs to be provided to the Swap Request as **TokenInputMemo** which would result in the following request:
+```
+{
+	"Account":"lion200",
+	"Chain":1,
+	"ChainTransactionId":"",
+	"TokenOutput":"DEC",
+	"TokenOutputAmount":5.944,
+	"TokenInput":"BTS",
+	"TokenInputAmount":1,
+	"SwapSourceId":"5fab0821cdef24759c5ae9a9",
+	"BaseTokenAmount":0.02,
+	"MaxSlippageInputToken":5,
+	"MaxSlippageOutputToken":5,
+	"TokenInputMemo":"1cdc54b3-45b2-44fe-a254-912f1cfa7892" -- Unique identifier
+}
+```
+
+After creating the swap request, the user still needs to deposit BTS by using the following details obviously: 
+```
+Deposit address: steem-engine (Retrieved from the Converter API)
+Memo: SWAP.BTS dswap 1cdc54b3-45b2-44fe-a254-912f1cfa7892
+```
+
+#### Swap Request HBD, SBD, STEEM
+The swap request requirements for HBD, SBD, STEEM are comparable to the swap request requirements for BTS and EOS.
+The only difference is that the deposit address for BTS and EOS retrieved from the Converter API is **steem-engine** and for HBD, SBD and STEEM this deposit address is **graphene-swap**.
+
+So the Swap Request paramters are just like the request for BTS and EOS containing a unique identifier given in TokenInputMemo field.
+The only difference is that the user needs to manually deposit HBD, SBD or STEEM using following details:
+
+```
+Deposit address: graphene-swap (Retrieved from the Converter API)
+Memo: SWAP.STEEM dswap 785d9da6-b3f2-4732-8dd2-672131ee9991
 ```
