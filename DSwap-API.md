@@ -1,5 +1,19 @@
-
 # DSwap Api methods
+
+# Table of Contents
+
+* [CalculateSwapOutput](#calculateswapoutput)
+* [CalculateSwapInput](#calculateswapinput)
+* [SwapRequest](#swaprequest)
+  * [Swap Request Hive Engine Tokens](#swap-request-hive-engine-tokens)
+  * [Swap Request BTC, LTC, BCH, DOGE, SWIFT (BTC forked tokens)](#swap-request-btc,-ltc,-bch,-doge,-swift-(btc-forked-tokens))
+  * [Swap Request BTS, EOS](#swap-request-bts,-eos)
+  * [Swap Request HBD, SBD, STEEM](#swap-request-hbd,-sbd,-steem)
+* [SwapRequest GET](#swaprequest-get)
+* [Swap Request Transactions](#swap-request-transactions)
+* [Get Swap Requests of an account](#get-swap-requests-of-an-account)
+* [SwapRequestCount](#swaprequestcount)
+  
 
 ## Actions available:
 ### CalculateSwapOutput: 
@@ -292,7 +306,7 @@ Deposit address: graphene-swap (Retrieved from the Converter API)
 Memo: SWAP.STEEM dswap 785d9da6-b3f2-4732-8dd2-672131ee9991
 ```
 
-### SwapRequest (GET)
+### SwapRequest GET
 You can always pull the last status of a Swap Request by making the following request.
 
 - endpoint: /SwapRequest/$id
@@ -355,7 +369,7 @@ You can always pull the last status of a Swap Request by making the following re
 }
 ```
 
-### Swap Request Transactions (GET)
+### Swap Request Transactions
 A Swap request contains multiple swap request transactions including the initial deposit, first swap, second swap and finally ending with sending the output tokens to the user requesting the swap. You can retrieve all transactions within a swap request by making the following call.
 
 - endpoint: /SwapRequest/SwapRequestTransactions/$id
@@ -494,7 +508,7 @@ You can retrieve all swap requests which are requested by an account.
 ]
 ```
 
-### Swap Request Count
+### SwapRequestCount
 If you want to implement paging, or just want to know the counts of the swap requests, you can call the following method to retrieve the swap request counts.
 
 - endpoint: /SwapRequest/SwapRequestCount/$account/$status
