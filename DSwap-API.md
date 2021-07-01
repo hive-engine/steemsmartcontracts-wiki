@@ -6,7 +6,7 @@
 * [CalculateSwapInput](#calculateswapinput)
 * [SwapRequest](#swaprequest)
   * [Swap Request Hive Engine Tokens](#swap-request-hive-engine-tokens)
-  * [Swap Request BTC LTC, BCH, DOGE, SWIFT](#swap-request-btc-ltc-bch-doge-swift)
+  * [Swap Request BTC LTC BCH DOGE SWIFT](#swap-request-btc-ltc-bch-doge-swift)
   * [Swap Request BTS EOS](#swap-request-bts-eos)
   * [Swap Request HBD SBD STEEM](#swap-request-hbd-sbd-steem)
 * [SwapRequest GET](#swaprequest-get)
