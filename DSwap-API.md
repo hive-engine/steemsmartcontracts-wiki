@@ -93,7 +93,7 @@ This method is the call to the actual SWAP.
 - method: POST
 
  - request parameters:
-  - Account (string): the account creating the swap request
+   - Account (string): the account creating the swap request
 	- TokenInput (string): symbol of the token you want to sell	
 	- TokenInputAmount (decimal): quantity of tokens you want to sell
 	- TokenOutput (string): symbol of the token you want to buy
@@ -131,22 +131,22 @@ This method is the call to the actual SWAP.
   - CreatedAt (string): Contains the datetime string when exactly the swap request is created
   - ModifiedAt (string): Contains the datetime string when  the swap request is modified
   - Account (string): the account creating the swap request
-	- TokenInput (string): symbol of the token you want to sell	
-	- TokenInputAmount (decimal): quantity of tokens you want to sell
-	- TokenOutput (string): symbol of the token you want to buy
-	- TokenOutputAmount (decimal): quantity of tokens you want to buy
-	- TokenOutputAmountActual (decimal): the actual quantity of tokens bought with the swap. this can be different to the TokenOutputAmount value based on given MaxSlippageOutputToken value.
-	- SwapSourceId (string): will be used in the future to identify the source of the swap request. Currently single source.
-	- ChainTransactionId: 
-	  - if the swap is between two hive-engine tokens, this must contain the transaction id of the transaction where input token is sent to the Dswap account
-	  - if the input token is a crypto token (like BTC, LTC, EOS, STEEM etc.) this field contains the transaction id of the pegged token deposit transaction
-	- Chain (integer): Id of the Chain (1 = HIVE)
-	- Message: Contains the failure reason if the swap has failed or any other message which is relevant to the swap.
-	- MaxSlippageInputToken (decimal): Given maximum slippage for the first swap from INPUT TOKEN --> SWAP.HIVE
-	- MaxSlippageOutputToken (decimal): Given maximum slippage for the second swap from SWAP.HIVE --> OUTPUT TOKEN
-	- BaseTokenAmount (decimal): The calculated conversion rate retrieved from CalculateSwapOutput or CalculateSwapInput methods at the time of the Swap request
-	- BaseTokenAmountActual (decimal): The actual conversion rate used in the swap. Can be different from BaseTokenAmount value based on given MaxSlippageInputToken value.
-	- TokenInputMemo (string): Contains given token deposit input memo
+  - TokenInput (string): symbol of the token you want to sell	
+  - TokenInputAmount (decimal): quantity of tokens you want to sell
+  - TokenOutput (string): symbol of the token you want to buy
+  - TokenOutputAmount (decimal): quantity of tokens you want to buy
+  - TokenOutputAmountActual (decimal): the actual quantity of tokens bought with the swap. this can be different to the TokenOutputAmount value based on given MaxSlippageOutputToken value.
+  - SwapSourceId (string): will be used in the future to identify the source of the swap request. Currently single source.
+  - ChainTransactionId: 
+    - if the swap is between two hive-engine tokens, this must contain the transaction id of the transaction where input token is sent to the Dswap account
+    - if the input token is a crypto token (like BTC, LTC, EOS, STEEM etc.) this field contains the transaction id of the pegged token deposit transaction
+  - Chain (integer): Id of the Chain (1 = HIVE)
+  - Message: Contains the failure reason if the swap has failed or any other message which is relevant to the swap.
+  - MaxSlippageInputToken (decimal): Given maximum slippage for the first swap from INPUT TOKEN --> SWAP.HIVE
+  - MaxSlippageOutputToken (decimal): Given maximum slippage for the second swap from SWAP.HIVE --> OUTPUT TOKEN
+  - BaseTokenAmount (decimal): The calculated conversion rate retrieved from CalculateSwapOutput or CalculateSwapInput methods at the time of the Swap request
+  - BaseTokenAmountActual (decimal): The actual conversion rate used in the swap. Can be different from BaseTokenAmount value based on given MaxSlippageInputToken value.
+  - TokenInputMemo (string): Contains given token deposit input memo
 	
 - example response: 
 ```
