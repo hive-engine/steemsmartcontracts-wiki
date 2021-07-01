@@ -6,9 +6,9 @@
 * [CalculateSwapInput](#calculateswapinput)
 * [SwapRequest](#swaprequest)
   * [Swap Request Hive Engine Tokens](#swap-request-hive-engine-tokens)
-  * [Swap Request BTC, LTC, BCH, DOGE, SWIFT (BTC forked tokens)](#swap-request-btc,-ltc,-bch,-doge,-swift-(btc-forked-tokens))
-  * [Swap Request BTS, EOS](#swap-request-bts,-eos)
-  * [Swap Request HBD, SBD, STEEM](#swap-request-hbd,-sbd,-steem)
+  * [Swap Request BTC LTC, BCH, DOGE, SWIFT (BTC forked tokens)](#swap-request-btc-ltc-bch-doge-swift-(btc-forked-tokens))
+  * [Swap Request BTS EOS](#swap-request-bts-eos)
+  * [Swap Request HBD SBD STEEM](#swap-request-hbd-sbd-steem)
 * [SwapRequest GET](#swaprequest-get)
 * [Swap Request Transactions](#swap-request-transactions)
 * [Get Swap Requests of an account](#get-swap-requests-of-an-account)
@@ -190,7 +190,7 @@ This method is the call to the actual SWAP.
 }
 ```
 
-#### Swap Request BTC, LTC, BCH, DOGE, SWIFT (BTC forked tokens)
+#### Swap Request BTC LTC BCH DOGE SWIFT (BTC forked tokens)
 An important notice if the INPUT TOKEN is a BTC-forked crypto token is that the Deposit address for the INPUT TOKEN must be retrieved from the converter endpoint for the DSwap account. IMPORTANT: You need to send the dswap account name as "destination" parameter. Because that's the account being used to retrieve and convert deposits.
 
 - example retrieving deposit address from the converter:
@@ -234,7 +234,7 @@ response:
 }
 ```
 
-#### Swap Request BTS, EOS
+#### Swap Request BTS EOS
 For BitShares EOS like crypto tokens the converter API is returning a generic deposit address where the user can make his/her deposit.
 In order to make this deposit unique and match this deposit to a swap request, you need to add a unique identifier in the MEMO of your deposit.
 
@@ -294,7 +294,7 @@ Deposit address: steem-engine (Retrieved from the Converter API)
 Memo: SWAP.BTS dswap 1cdc54b3-45b2-44fe-a254-912f1cfa7892
 ```
 
-#### Swap Request HBD, SBD, STEEM
+#### Swap Request HBD SBD STEEM
 The swap request requirements for HBD, SBD, STEEM are comparable to the swap request requirements for BTS and EOS.
 The only difference is that the deposit address for BTS and EOS retrieved from the Converter API is **steem-engine** and for HBD, SBD and STEEM this deposit address is **graphene-swap**.
 
