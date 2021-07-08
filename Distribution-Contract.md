@@ -5,7 +5,10 @@ Documentation written by [donchate](https://github.com/donchate)
 # Table of Contents
 
 * [Introduction](#introduction)
-* Actions:
+  * [Execution](#execution)
+  * [Fixed Distribution](#fixed-distribution)
+  * [Diesel Pools Distribution](#diesel-pools-distribution)
+* [Actions available](#actions-available)
   * [create](#create)
   * [update](#update)
   * [flush](#flush)
@@ -16,18 +19,25 @@ Documentation written by [donchate](https://github.com/donchate)
   * [batches](#batches)
 
 # Introduction
-
 This contract allows a decentralized organization (i.e DAO) to collect and
-distribute payments to a roll of users or contracts. The contract will collect
-tokens to a threshold amount, and distribute them according to a percentage share.
-Its payout thresholds for each configured token are checked upon every _deposit_ and paid out
-immediately when they are exceeded.
-The distribution batch only accepts tokens defined in its configuration, which can be updated
-by the creator at any time. The distribution can be deactivated (suspended), during which time
+distribute payments to a roll of users or contracts. The contract supports multiple strategies
+for determination of the recipients.
+The distribution can be deactivated (suspended), during which time
 new deposits are rejected and payouts are not made. There is also a means for the creator to
 manually release (_flush_) any outstanding balance in the distribution.
+Distribution payout thresholds for each configured token are checked and paid out according to the configured number of ticks.
 
-# Actions available:
+## Execution
+This contract is executed by virtual transaction, providing a scheduled distribution option, as well
+as manually by calling relevant actions from another application.
+
+## Fixed Distribution
+This strategy will collect tokens to a threshold amount, and distribute them according to a fixed percentage share.
+
+## Diesel Pools Distribution
+This strategy calculates the recipient list based on liquidity provider share in a given diesel pool. Accounts may also be excluded from the share calculation.
+
+# Actions available
 
 ### create:
 Create a distribution batch for each unique set of tokens and recipient shares that is required.
@@ -36,15 +46,21 @@ A fee of 500 BEE is required.
 * requires active key: yes
 * can be called by: anyone
 * parameters:
-  * tokenMinPayout (list): List of accepted tokens
-    * tokenMiners[].symbol (string): Valid token symbol
-    * tokenMiners[].quantity (decimal > 0): Payout threshold (_must have no more than 3 decimal places_)
-  * tokenRecipients (list): List of payment recipients
-    * tokenMiners[].account (string): Valid graphene account string
-    * tokenMiners[].type (string): _user_ or _contract_ only
-    * tokenMiners[].pct (integer >= 1 and <= 100): Percentage share
+  * strategy (string): distribution strategy, one of ```[ 'fixed', 'pool' ] ```
+  * numTicks (string): number of periods to distribute deposited tokens
+  * _Pool strategy_
+    * excludeAccount (array): list of account names to be excluded from pool share calculation
+    * tokenPair (string): marketpool tokenPair for recipient determination
+  * _Fixed strategy_
+    * tokenMinPayout (list): List of accepted tokens
+      * tokenMiners[].symbol (string): Valid token symbol
+      * tokenMiners[].quantity (decimal > 0): Payout threshold (_must have no more than 3 decimal places_)
+    * tokenRecipients (list): List of payment recipients
+      * tokenMiners[].account (string): Valid graphene account string
+      * tokenMiners[].type (string): _user_ or _contract_ only
+      * tokenMiners[].pct (integer >= 1 and <= 100): Percentage share
 
-* example:
+* example (fixed strategy):
 ```
 {
   "tokenMinPayout": [
@@ -63,52 +79,36 @@ A fee of 500 BEE is required.
   "isSignedWithActiveKey": true
 }
 ```
+* example (pool strategy)
+```
+{ 
+  strategy": "pool",
+  "numTicks": "30",
+  "tokenPair": "TKNA:TKNB",
+  "excludeAccount": ["donchate"],
+  "isSignedWithActiveKey": true
+}
+```
 
 ### update
-You may update the payment thresholds or recipients using this action.
+You may update the payment thresholds or recipients using this action. Strategy cannot be changed, create a new distribution.
 A fee of 250 BEE is required.
 
 * requires active key: yes
 * can be called by: distribution creator
 * parameters:
-  * id (int): ID of distribution to update
-  * tokenMinPayout (list): List of accepted tokens
-    * tokenMiners[].symbol (string): Valid token symbol
-    * tokenMiners[].quantity (decimal > 0): Payout threshold (_must have no more than 3 decimal places_)
-  * tokenRecipients (list): List of payment recipients
-    * tokenMiners[].account (string): Valid graphene account string
-    * tokenMiners[].type (string): _user_ or _contract_ only
-    * tokenMiners[].pct (integer >= 1 and <= 100): Percentage share
-
-* example:
-```
-{
-  "id": 1, 
-  "tokenMinPayout": [
-    {
-      "symbol": "TKN", 
-      "quantity": 100
-    },
-    {
-      "symbol": "TKNA", 
-      "quantity": 50
-    }    
-  ], 
-  "tokenRecipients": [
-    {
-      "account": "donchate", 
-      "type": "user", 
-      "pct": 50
-    }, 
-    {
-      "account": "dantheman", 
-      "type": "user", 
-      "pct": 50
-    }
-  ], 
-  "isSignedWithActiveKey": true
-}
-```
+  * numTicks (string): number of periods to distribute deposited tokens
+  * _Pool strategy_
+    * excludeAccount (array): list of account names to be excluded from pool share calculation
+    * tokenPair (string): marketpool tokenPair for recipient determination
+  * _Fixed strategy_
+    * tokenMinPayout (list): List of accepted tokens
+      * tokenMiners[].symbol (string): Valid token symbol
+      * tokenMiners[].quantity (decimal > 0): Payout threshold (_must have no more than 3 decimal places_)
+    * tokenRecipients (list): List of payment recipients
+      * tokenMiners[].account (string): Valid graphene account string
+      * tokenMiners[].type (string): _user_ or _contract_ only
+      * tokenMiners[].pct (integer >= 1 and <= 100): Percentage share
 
 ### flush
 You can manually trigger a distribution by using this action. It will release the outstanding
@@ -118,13 +118,11 @@ token balance to tokenRecipients immediately. No fee required.
 * can be called by: distribution creator
 * parameters:
   * id (int): ID of distribution to flush
-  * symbol (string): Valid and configured token symbol
 
 * example:
 ```
 {
   "id": 1, 
-  "symbol": "TKN", 
   "isSignedWithActiveKey": true
 }
 ```
@@ -135,7 +133,7 @@ and no new deposits are accepted. Newly created distributions need to be activat
 No fee required.
 
 * requires active key: yes
-* can be called by: token issuer
+* can be called by: distribution creator
 * parameters:
   * id (int): ID of distribution to flush
   * active (boolean): true to activate, false to deactivate
@@ -157,19 +155,51 @@ No fee required.
 }
 ```
 
+### deposit
+Deposit tokens to an existing distribution. This action also restarts the number of ticks remaining and schedule of the distribution at the time of deposit. Anyone can deposit tokens to a distribution and deposits are non-refundable.
+
+* requires active key: yes
+* can be called by: anyone
+* parameters:
+  * id (int): ID of distribution to flush
+  * symbol (string): token symbol to deposit
+  * quantity (string): token amount to deposit
+
+* example
+```
+{
+  "id": 1,
+  "symbol": "BEE",
+  "quantity": "100",
+  "isSignedWithActiveKey": true
+}
+```
+
 # Tables available:
 
 ## params:
 contains internal contract parameters
 * fields
-  * distCreationFee = the cost in BEE to create a pool
-  * distUpdateFee = the cost in BEE to update a pool
+  * distCreationFee: the cost in BEE to create a pool
+  * distUpdateFee: the cost in BEE to update a pool
+  * distTickHours: tick (payment) frequency, defaulted to 24hours for daily payout
+  * maxDistributionsLimit: number of distributions to process per block
+  * processQueryLimit: database query limit
+  * updateIndex: db schema revision index
 
 ## batches:
 contains the instance configurations
 * fields
-  * _id = MongoDB internal primary key
-  * tokenMinPayout = JSON object of configured tokens and their payment thresholds
-  * tokenRecipients = JSON object of configured recipients and their share
-  * active = whether or not the distribution instance is active
-  * creator = account or contract that created the instance
+  * _id: MongoDB internal primary key
+  * active: whether or not the distribution instance is active
+  * strategy: distribution recipient strategy
+  * lastTickTime: last time distribution was processed
+  * numTicks: configured number of payments for repeating distributions
+  * numTicksLeft: number of payments remaining in the distribution
+  * creator: account or contract that created the instance  
+  * _Fixed strategy fields_
+    * tokenMinPayout: JSON object of configured tokens and their payment thresholds
+    * tokenRecipients: JSON object of configured recipients and their share
+  * _Pool strategy fields_
+    * excludeAccount: accounts excluded from pool calculation
+    * tokenPair: assigned tokenPair for pool calculation
