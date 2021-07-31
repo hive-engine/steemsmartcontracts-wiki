@@ -35,7 +35,7 @@ as manually by calling relevant actions from another application.
 This strategy will collect tokens to a threshold amount, and distribute them according to a fixed percentage share.
 
 ## Diesel Pools Distribution
-This strategy calculates the recipient list based on liquidity provider share in a given diesel pool. Accounts may also be excluded from the share calculation.
+This strategy calculates the recipient list based on liquidity provider share in a given diesel pool. Accounts may also be excluded from the share calculation and a holding duration bonus applied.
 
 # Actions available
 
@@ -49,8 +49,11 @@ A fee of 500 BEE is required.
   * strategy (string): distribution strategy, one of ```[ 'fixed', 'pool' ] ```
   * numTicks (string): number of periods to distribute deposited tokens
   * _Pool strategy_
-    * excludeAccount (array): list of account names to be excluded from pool share calculation
     * tokenPair (string): marketpool tokenPair for recipient determination
+    * excludeAccount (array, optional): list of account names to be excluded from pool share calculation
+    * bonusCurve (object, optional): settings for optional bonus curve applied to LP shares
+      * numPeriods (string): number of periods over which to apply bonus curve, after which there is no more growth (integer 1-5555)
+      * periodBonusPct (string): percentage bonus per period LP is held (integer 1-100)
   * _Fixed strategy_
     * tokenMinPayout (list): List of accepted tokens
       * tokenMiners[].symbol (string): Valid token symbol
@@ -86,12 +89,16 @@ A fee of 500 BEE is required.
   "numTicks": "30",
   "tokenPair": "TKNA:TKNB",
   "excludeAccount": ["donchate"],
+  "bonusCurve": { 
+    "numPeriods": "100",
+    "periodBonusPct": "1"
+  },
   "isSignedWithActiveKey": true
 }
 ```
 
 ### update
-You may update the payment thresholds or recipients using this action. Strategy cannot be changed, create a new distribution.
+You may update the payment thresholds or recipients using this action. Strategy cannot be changed, create a new distribution. Including a numTicks parameter will restart the distribution schedule and reset numTicks and numTicksLeft. Changes to bonus curve are applied on the next tick, bonus curve can be disabled by setting the property to an empty object ```{}```.
 A fee of 250 BEE is required.
 
 * requires active key: yes
@@ -99,8 +106,11 @@ A fee of 250 BEE is required.
 * parameters:
   * numTicks (string): number of periods to distribute deposited tokens
   * _Pool strategy_
-    * excludeAccount (array): list of account names to be excluded from pool share calculation
     * tokenPair (string): marketpool tokenPair for recipient determination
+    * excludeAccount (array, optional): list of account names to be excluded from pool share calculation
+    * bonusCurve (object, optional): settings for optional bonus curve applied to LP shares
+      * numPeriods (string): number of periods over which to apply bonus curve, after which there is no more growth (integer 1-5555)
+      * periodBonusPct (string): percentage bonus per period LP is held (integer 1-100)
   * _Fixed strategy_
     * tokenMinPayout (list): List of accepted tokens
       * tokenMiners[].symbol (string): Valid token symbol
@@ -201,5 +211,6 @@ contains the instance configurations
     * tokenMinPayout: JSON object of configured tokens and their payment thresholds
     * tokenRecipients: JSON object of configured recipients and their share
   * _Pool strategy fields_
-    * excludeAccount: accounts excluded from pool calculation
     * tokenPair: assigned tokenPair for pool calculation
+    * excludeAccount: accounts excluded from pool calculation
+    * bonusCurve: settings for optional bonus curve applied to LP shares
