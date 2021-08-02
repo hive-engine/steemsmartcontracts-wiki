@@ -117,6 +117,7 @@ If the provider is seeding a new pool, the number of shares they will receive wi
   * baseQuantity (string): Amount to deposit into the base token reserve (first token in pair)
   * quoteQuantity (string): Amount to deposit into the quote token reserve (second token in pair)
   * maxSlippage (string) (optional): Amount of tolerance to price changes before the liquidity is added (must be greater than 0% and less than 50%). The transaction will be cancelled if the price changes unfavorably by more than this percentage. If unspecified, the default value is 1%. Max precision 3
+  * maxDeviation (string) (optional): Amount of tolerance to price difference versus the regular HE market for the pair. Must be an integer equal to or greater than 0. To disable this check, set this value to '0'. If unspecified, the default value is 1%.
 
 * example:
 ```
@@ -125,6 +126,7 @@ If the provider is seeding a new pool, the number of shares they will receive wi
   "baseQuantity": "1000",
   "quoteQuantity": "16000",
   "maxSlippage": 1,
+  "maxDeviation": 1,
   "isSignedWithActiveKey": true
 }
 ```
