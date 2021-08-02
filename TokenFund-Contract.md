@@ -266,16 +266,29 @@ To configure your contract to handle payments from the DTF, add an action called
 Upon making a token transfer to a contract's balance, the DTF will also call this action and pass a payload configured by the proposal, as well as the symbol and quantity of tokens transferred.
 This action should be configured to only accept calls from the ```tokenfunds``` contract. It should also verify the receipt of tokens, and then perform contract logic accordingly.
 
-* example action:
+* example custom_json action:
 ```
 {
     "contractName": "mycontract",
     "contractAction": "receiveDtfTokens",
     "contractPayload": {
-        "data": { "id": 100 },
+        "data": { "id": "100" },
         "symbol": "TKN",
         "quantity": "1.00000000",
     }
+}
+```
+
+* example contract action:
+```
+actions.receiveDtfTokens = async (payload) => {
+  const {
+    data, symbol, quantity,
+    callingContractInfo,
+  } = payload;
+
+  if (!api.assert(callingContractInfo && callingContractInfo.name === 'tokenfunds', 'not authorized')) return;
+  ...
 }
 ```
 
