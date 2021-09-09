@@ -14,6 +14,7 @@ Documentation written by [donchate](https://github.com/donchate)
   * [flush](#flush)
   * [setActive](#setactive)
   * [deposit](#deposit)
+* [Contract Integration](#contract-integration)
 * [Tables available](#tables-available)
   * [params](#params)
   * [batches](#batches)
@@ -41,7 +42,7 @@ This strategy calculates the recipient list based on liquidity provider share in
 
 ### create:
 Create a distribution batch for each unique set of tokens and recipient shares that is required.
-A fee of 500 BEE is required.
+A fee of 100 BEE is required.
 
 * requires active key: yes
 * can be called by: anyone
@@ -98,8 +99,8 @@ A fee of 500 BEE is required.
 ```
 
 ### update
-You may update the payment thresholds or recipients using this action. Strategy cannot be changed, create a new distribution. Including a numTicks parameter will restart the distribution schedule and reset numTicks and numTicksLeft. Changes to bonus curve are applied on the next tick, bonus curve can be disabled by setting the property to an empty object ```{}```.
-A fee of 250 BEE is required.
+You may update the payment thresholds or recipients using this action. Strategy cannot be changed. Including a numTicks parameter will restart the distribution schedule and reset numTicks and numTicksLeft. Changes to bonus curve are applied on the next tick, bonus curve can be disabled by setting the property to an empty object ```{}```.
+A fee of 100 BEE is required.
 
 * requires active key: yes
 * can be called by: distribution creator
@@ -122,7 +123,7 @@ A fee of 250 BEE is required.
 
 ### flush
 You can manually trigger a distribution by using this action. It will release the outstanding
-token balance to tokenRecipients immediately. No fee required.
+token balance to tokenRecipients immediately and end payment periods. No fee required.
 
 * requires active key: yes
 * can be called by: distribution creator
@@ -166,12 +167,12 @@ No fee required.
 ```
 
 ### deposit
-Deposit tokens to an existing distribution. This action also restarts the number of ticks remaining and schedule of the distribution at the time of deposit. Anyone can deposit tokens to a distribution and deposits are non-refundable.
+Deposit tokens to an existing distribution. Anyone can deposit tokens to a distribution and deposits are non-refundable.
 
 * requires active key: yes
 * can be called by: anyone
 * parameters:
-  * id (int): ID of distribution to flush
+  * id (int): ID of distribution to deposit
   * symbol (string): token symbol to deposit
   * quantity (string): token amount to deposit
 
@@ -182,6 +183,37 @@ Deposit tokens to an existing distribution. This action also restarts the number
   "symbol": "BEE",
   "quantity": "100",
   "isSignedWithActiveKey": true
+}
+```
+
+# Contract Integration
+To configure your contract to handle payments from the distribution contract, add an action called ```receiveDistTokens```.
+Upon making a token transfer to a contract's balance, the contract will also call this action and pass a payload, as well as the symbol and quantity of tokens transferred.
+This action should be configured to only accept calls from the ```distribution``` contract. It should also verify the receipt of tokens, and then perform contract logic accordingly.
+
+* example custom_json action:
+```
+{
+    "contractName": "mycontract",
+    "contractAction": "receiveDistTokens",
+    "contractPayload": {
+        "data": { "id": "100" },
+        "symbol": "TKN",
+        "quantity": "1.00000000",
+    }
+}
+```
+
+* example contract action:
+```
+actions.receiveDistTokens = async (payload) => {
+  const {
+    data, symbol, quantity,
+    callingContractInfo,
+  } = payload;
+
+  if (!api.assert(callingContractInfo && callingContractInfo.name === 'distribution', 'not authorized')) return;
+  ...
 }
 ```
 
