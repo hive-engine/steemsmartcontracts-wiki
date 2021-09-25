@@ -24,6 +24,8 @@
 
 [How to setup a Steem or Hive Smart Contracts node](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/How-to-setup-a-Steem-Smart-Contracts-node.md)
 
+[DSwap API](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/DSwap-API.md)
+
 ## Contract Documentation
 
 [Tokens Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Tokens-Contract.md)
@@ -48,8 +50,12 @@
 
 [Distribution Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Distribution-Contract.md)
 
+[Decentralized Token Fund (DTF) Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/TokenFund-Contract.md)
+
 [Witnesses Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Witness-Contract.md)
 
 [NFT Auctions Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Auction-Contract.md)
+
+[Comments Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Comment-Contract.md)
 
 [dMarket Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/dMarket-Contract.md)

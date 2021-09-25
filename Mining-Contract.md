@@ -108,7 +108,7 @@ A successful action will emit a "createPool" event, e.g.:
 }
 ```
 ### updatePool
-Update a mining pool. An update fee of 300 BEE is required. The symbols themselves cannot be changed.
+Update a mining pool. An update fee of 100 BEE is required. The symbols themselves cannot be changed.
 * requires active key: yes
 * can be called by: token issuer
 * parameters:

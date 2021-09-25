@@ -49,6 +49,8 @@ The ```config.json``` file has all the settings to make sure your node listens t
 ```
 
 ## 4. Start the node
+**Additional step needed for now** - Set your machine time zone to UTC:  `export TZ=UTC` for consistent contract behavior until the contract level bug is resolved.
+
 You can easily start the node by typing the following command in the folder where the node was installed:
 
 ```npm run start```
@@ -78,10 +80,15 @@ https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
 
-The latest public DB snapshot is available here, file size is about 10 GB:
-http://api2.hive-engine.com/hsc_20210203_b50993579.archive
+~~The latest public DB snapshot is available here, file size is about 6 GB: hsc_05-22-2021_b54107973.archive~~
 
-When using this snapshot, set ```startHiveBlock``` to **50993579** in your config file.
+June 7, 2021 update: sorry, we no longer provide public snapshots due to server bandwidth considerations. We may make them available again in the future, but for now there are some Hive Engine witnesses that provide snapshots as a public service. The latest witness provided snapshot is available here:
+```
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1YEa1Wvgo65V9ouvbBJ4vU6O3J3HbFlBw" -O hsc_05-22-2021_b54107973.archive
+ && rm -rf /tmp/cookies.txt
+ ```
+
+When using this snapshot, set ```startHiveBlock``` to **54107973** in your config file.
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
@@ -92,7 +99,7 @@ When using this snapshot, set ```startHiveBlock``` to **50993579** in your confi
 	- db.dropDatabase()
 	- show dbs    // to confirm db has been dropped
 	- quit()
-	- mongorestore --gzip --archive=hsc_20210203_b50993579.archive
+	- mongorestore --gzip --archive=hsc_05-22-2021_b54107973.archive
 - Update the "config.json" file with the "startHiveBlock" that matches the dump you just restored
 - Start the node
 

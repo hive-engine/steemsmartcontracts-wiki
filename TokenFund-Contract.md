@@ -148,7 +148,7 @@ In the case of a smart contract recipient, that contract may receive a payload v
   * startDate (string YYYY-MM-DDThh:mm:ss.sssZ): Proposal start date at least 1 day in the future
   * endDate (string YYYY-MM-DDThh:mm:ss.sssZ): Proposal end date, not exceeding the max duration of the token fund
   * amountPerDay (string): Requested funding per day
-  * authorperm (string): identifier to a Hive post/comment in the form of ``@author/permlink``
+  * authorPermlink (string): identifier to a Hive post/comment in the form of ``@author/permlink``
   * payout (object): Configuration for payout of the proposal amount
     * type (string): one of ```user``` or ```contract```
     * contractPayload (object) (optional): Custom object that is passed to the target contract's ```receiveDtfTokens``` action
@@ -162,7 +162,7 @@ In the case of a smart contract recipient, that contract may receive a payload v
   "startDate": "2021-03-30T00:00:00.000Z",
   "endDate": "2021-04-30T00:00:00.000Z",
   "amountPerDay": "1000",
-  "authorperm": "@abc123/test",
+  "authorPermlink": "@abc123/test",
   "payout": {
     "type": "user",
     "name": "projectfund"
@@ -179,7 +179,7 @@ In the case of a smart contract recipient, that contract may receive a payload v
   "startDate": "2021-03-30T00:00:00.000Z",
   "endDate": "2021-04-30T00:00:00.000Z",
   "amountPerDay": "1000",
-  "authorperm": "@abc123/test",
+  "authorPermlink": "@abc123/test",
   "payout": {
     "type": "contract",
     "contractPayload": {
@@ -201,7 +201,7 @@ This action allows limited updates to be made a proposal.
   * title (string): Brief headline describing the proposal between 1 and 80 characters
   * endDate (string YYYY-MM-DDThh:mm:ss.sssZ): Proposal end date, not exceeding the max duration of the token fund, duration cannot be increased
   * amountPerDay (string): Requested funding per day, cannot be increased
-  * authorperm (string): identifier to a Hive post/comment in the form of ``@author/permlink``
+  * authorPermlink (string): identifier to a Hive post/comment in the form of ``@author/permlink``
 
 * example:
 ```
@@ -210,7 +210,7 @@ This action allows limited updates to be made a proposal.
   "title": "The Biggest Community Project",
   "endDate": "2021-04-29T00:00:00.000Z",
   "amountPerDay": "1000",
-  "authorperm": "@abc123/testers",
+  "authorPermlink": "@abc123/testers",
   "isSignedWithActiveKey": true
 }
 ```
@@ -266,16 +266,29 @@ To configure your contract to handle payments from the DTF, add an action called
 Upon making a token transfer to a contract's balance, the DTF will also call this action and pass a payload configured by the proposal, as well as the symbol and quantity of tokens transferred.
 This action should be configured to only accept calls from the ```tokenfunds``` contract. It should also verify the receipt of tokens, and then perform contract logic accordingly.
 
-* example action:
+* example custom_json action:
 ```
 {
     "contractName": "mycontract",
     "contractAction": "receiveDtfTokens",
     "contractPayload": {
-        "data": { "id": 100 },
+        "data": { "id": "100" },
         "symbol": "TKN",
         "quantity": "1.00000000",
     }
+}
+```
+
+* example contract action:
+```
+actions.receiveDtfTokens = async (payload) => {
+  const {
+    data, symbol, quantity,
+    callingContractInfo,
+  } = payload;
+
+  if (!api.assert(callingContractInfo && callingContractInfo.name === 'tokenfunds', 'not authorized')) return;
+  ...
 }
 ```
 
@@ -312,7 +325,7 @@ contains the instance configurations
   * startDate
   * endDate
   * amountPerDay = amount of funding requested per day
-  * authorperm = identifier to a Hive post/comment in the form of ``@author/permlink``
+  * authorPermlink = identifier to a Hive post/comment in the form of ``@author/permlink``
   * payout = object describing how to pay out funding to user or contract
   * creator = proposal creator account
   * approvalWeight = current cumulative stake weight
