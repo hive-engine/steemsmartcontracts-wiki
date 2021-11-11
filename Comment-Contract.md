@@ -10,6 +10,8 @@ Documentation written by [eonwarped](https://github.com/eonwarped)
   * [createRewardPool](#createrewardpool)
   * [updateRewardPool](#updaterewardpool)
   * [setActive](#setactive)
+  * [setMute](#setmute)
+  * [resetPool](#resetpool)
   * [comment](#comment)
   * [commentOptions](#commentoptions)
   * [vote](#vote)
@@ -185,6 +187,54 @@ Disable or enable a reward pool. Posts and votes will stop being processed while
 }
 ```
 
+### setMute
+Sets mute status for an account in a reward pool. 
+Votes from a muted account will count for 0 rshares
+and any payouts to the muted account will not pay out,
+but a log will still be emitted for how much would
+have paid out.
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * rewardPoolId (id): ID of pool to modify.
+  * account (string): Account to set mute for.
+  * mute (boolean): Whether account should be muted.
+
+* examples:
+```
+{
+    "contractName": "comments",
+    "contractAction": "setMute",
+    "contractPayload": {
+        "rewardPoolId": 1,
+        "account": "spammer",
+        "mute": true
+    }
+}
+```
+
+### resetPool
+Resets a reward pool. Reward pool is set to 0, 
+timestamps are set to current, as if the pool
+was just created. Note pending payouts will
+pay out at the next reward interval.
+
+* requires active key: yes
+* can be called by: token issuer
+* parameters:
+  * rewardPoolId (id): ID of pool to modify.
+
+* examples:
+```
+{
+    "contractName": "comments",
+    "contractAction": "resetPool",
+    "contractPayload": {
+        "rewardPoolId": 1
+    }
+}
+```
+
 ### comment
 Automatic action derived from comment on main chain.
 This action cannot be called with custom json or by other
@@ -334,3 +384,4 @@ contains information about an account's voting power
   * lastVoteTimestamp: timestamp of last vote or downvote
   * votingPower: voting power at last vote timestamp
   * downvotingPower: downvoting power at last vote timestamp
+  * mute: whether account is muted
