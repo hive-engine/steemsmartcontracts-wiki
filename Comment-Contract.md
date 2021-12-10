@@ -78,6 +78,8 @@ For now, only one reward pool per token is allowed.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
     * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.disableDownvote (boolean): Whether to disable downvotes.
+    * config.ignoreDeclinePayout (boolean): Whether to ignore decline payout in comment options.
 
 
 * examples:
