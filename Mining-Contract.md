@@ -66,6 +66,15 @@ assigned to the pool.
             to change this property is the amount desired multiplied by this quantity.
     * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
          order of the properties list, and they should be BigNumber-compatible strings.
+    * nftTokenMiner.equipField (string): Property of nft to use to denote whether an nft should be
+         considered as equipped. If not specified, a token is considered equipped when delegated to
+         the mining contract or delegated to another user. Otherwise, the source of truth for who
+         currently equips the nft is on the property identified by `equipField`, which must be a
+         string property.
+    * nftTokenMiner.miningPowerField (string): Property of nft to use to add additional mining power.
+         Can be specified along with `typeMap`, and contract will add the two together to determine the
+         final mining power of a given nft. The NFT property should be a string property, with a valid
+         BigNumber format. Any invalid mining power will be ignored (treated as "0").
 
 * examples:
 ```
@@ -91,7 +100,9 @@ assigned to the pool.
             "typeMap": {
                 "bear": ["-1.0", "0.8"],
                 "bull": ["1.0", "2.0"]
-            }
+            },
+            "equipField": "equip",
+            "miningPowerField": "miningPower"
         }
     }
 }
@@ -132,6 +143,15 @@ Update a mining pool. An update fee of 100 BEE is required. The symbols themselv
             to change this property is the amount desired multiplied by this quantity.
     * nftTokenMiner.typeMap (object): Map type to power attributes. Value should match
          order of the properties list, and they should be BigNumber-compatible strings.
+    * nftTokenMiner.equipField (string): Property of nft to use to denote whether an nft should be
+         considered as equipped. If not specified, a token is considered equipped when delegated to
+         the mining contract or delegated to another user. Otherwise, the source of truth for who
+         currently equips the nft is on the property identified by `equipField`, which must be a
+         string property.
+    * nftTokenMiner.miningPowerField (string): Property of nft to use to add additional mining power.
+         Can be specified along with `typeMap`, and contract will add the two together to determine the
+         final mining power of a given nft. The NFT property should be a string property, with a valid
+         BigNumber format. Any invalid mining power will be ignored (treated as "0").
 
 
 * examples:
@@ -157,7 +177,9 @@ Update a mining pool. An update fee of 100 BEE is required. The symbols themselv
             "typeMap": {
                 "bear": ["-1.0", "0.8"],
                 "bull": ["1.0", "2.0"]
-            }
+            },
+            "equipField": "equip",
+            "miningPowerField": "miningPower"
         }
     }
 }
