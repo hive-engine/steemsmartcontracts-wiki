@@ -80,6 +80,12 @@ For now, only one reward pool per token is allowed.
     * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
     * config.disableDownvote (boolean): Whether to disable downvotes.
     * config.ignoreDeclinePayout (boolean): Whether to ignore decline payout in comment options.
+    * config.appTaxConfig (object): Configure an app tax for posts not using a designated app.
+      * config.appTaxConfig.app (string): App to compare. Matches to a comment's `jsonMetadata.app` field.
+      * config.appTaxConfig.percent (integer): Percent to deduct from non-curation portion of rewards. This portion is deducted first, then author beneficiary split is processed on the remaining amount. Must be between 1 and 100, inclusive.
+      * config.appTaxConfig.beneficiary (string): Account to send deducted rewards to. Will be paid out fully liquid.
+    * config.excludeTags (array of strings): Which tags should be ignored when indexing a post for this reward pool.
+      
 
 
 * examples:
@@ -104,6 +110,14 @@ For now, only one reward pool per token is allowed.
             "votePowerConsumption": 200,
             "downvotePowerConsumption": 2000,
             "tags": ["scottest"],
+            "disableDownvote": true,
+            "ignoreDeclinePayout": true,
+            "appTaxConfig": {
+                "app": "leofinance",
+                "percent": 20,
+                "beneficiary": "null"
+            },
+            "excludeTags": ["spam"]
         }
     }
 }
@@ -141,6 +155,14 @@ Update a reward pool. An update fee of 100 BEE is required.
     * config.downvotePowerConsumption (integer): How much downvote power is consumed at full downvoting power for a 100% downvote.
     * config.stakedRewardPercentage (integer): What percentage of rewards should be given as staked. Should be between 0 and 100, inclusive.
     * config.tags (array of strings): Which tags should be looked at to index a post for this reward pool. This will also look at the community (stored in parent_permlink for the root post).
+    * config.disableDownvote (boolean): Whether to disable downvotes.
+    * config.ignoreDeclinePayout (boolean): Whether to ignore decline payout in comment options.
+    * config.appTaxConfig (object): Configure an app tax for posts not using a designated app.
+      * config.appTaxConfig.app (string): App to compare. Matches to a comment's `jsonMetadata.app` field.
+      * config.appTaxConfig.percent (integer): Percent to deduct from non-curation portion of rewards. This portion is deducted first, then author beneficiary split is processed on the remaining amount. Must be between 1 and 100, inclusive.
+      * config.appTaxConfig.beneficiary (string): Account to send deducted rewards to. Will be paid out fully liquid.
+    * config.excludeTags (array of strings): Which tags should be ignored when indexing a post for this reward pool.
+      
 
 * examples:
 ```
@@ -164,6 +186,14 @@ Update a reward pool. An update fee of 100 BEE is required.
             "votePowerConsumption": 200,
             "downvotePowerConsumption": 2000,
             "tags": ["scottest"],
+            "disableDownvote": true,
+            "ignoreDeclinePayout": true,
+            "appTaxConfig": {
+                "app": "leofinance",
+                "percent": 20,
+                "beneficiary": "null"
+            },
+            "excludeTags": ["spam"]
         }
     }
 }
