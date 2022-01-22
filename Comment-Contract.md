@@ -113,7 +113,7 @@ For now, only one reward pool per token is allowed.
             "disableDownvote": true,
             "ignoreDeclinePayout": true,
             "appTaxConfig": {
-                "app": "hive.blog/v0",
+                "app": "leofinance",
                 "percent": 20,
                 "beneficiary": "null"
             },
@@ -189,7 +189,7 @@ Update a reward pool. An update fee of 100 BEE is required.
             "disableDownvote": true,
             "ignoreDeclinePayout": true,
             "appTaxConfig": {
-                "app": "hive.blog/v0",
+                "app": "leofinance",
                 "percent": 20,
                 "beneficiary": "null"
             },
