@@ -10,8 +10,6 @@ Documentation written by [bennierex](https://github.com/bennierex)
   - [Introduction](#introduction)
   - [Actions available](#actions-available)
     - [`newAirdrop`](#newairdrop)
-      - [Example](#example)
-      - [A successful action will emit a "newNftAirdrop" event](#a-successful-action-will-emit-a-newnftairdrop-event)
   - [Tables available](#tables-available)
     - [`params`](#params)
     - [`pendingAirdrops`](#pendingairdrops)
@@ -40,7 +38,7 @@ Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for 
     in case the airdrop is initiated by another contract, this can be set to 'contract' to specify the NFT's to be airdropped are owned by the calling contract.  
     **NOTE:** This is currently _not_ supported by the NFT contract.
 
-#### Example
+**Example**
 ```json
 {
     "contractName": "nftairdrops",
@@ -59,10 +57,10 @@ Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for 
 }
 ```
 
-#### A successful action will emit a "newNftAirdrop" event
+**A successful action will emit a "newNftAirdrop" event**
 ```json
 {
-    "contract": "airdrops",
+    "contract": "nftairdrops",
     "event": "newNftAirdrop",
     "data": {
         "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11"
@@ -73,7 +71,7 @@ Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for 
 After being initialized, distribution will automatically start from either the next block, or the block specified by `startBlockNumber`.
 
 ## Tables available
-Note: all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
+**Note:** all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
 
 ### `params`
 Contains contract parameters such as the current fees and transaction limits.
