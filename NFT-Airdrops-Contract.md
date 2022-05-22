@@ -77,11 +77,11 @@ After being initialized, distribution will automatically start from either the n
 Contains contract parameters such as the current fees and transaction limits.
 * `feePerTransaction` (default: 0.1 BEE)  
   Sets the fee (in `UTILITY_TOKEN_SYMBOL`) required to be paid per NFT transaction.
-* `maxTransactionsPerAirdrop` (default: 50000)  
+* `maxTransactionsPerAirdrop` (default: 10000)  
   Sets the maximum number of NFT's that can be airdropped in a single airdrop. (this is more likely limited by maximum Hive custom_json operation length)
 * `maxTransactionsPerAccount` (default: 50)  
   Sets the maximum number of NFT's that can be airdropped to a single account.
-* `maxTransactionsPerBlock` (default: 50)  
+* `maxTransactionsPerBlock` (default: 500)  
   Sets the maximum transactions that can be processed each block. Setting this to a too low value will cause airdrops with many transactions to take a long time to complete. If more than one airdrop is processed in a single block (see `maxAirdropsPerBlock`), the transaction limit is spread evenly over all the airdrops. Even if some of the airdrops do not use up all transactions.
 * `maxAirdropsPerBlock` (default: 1)  
   Sets the maximum number of airdrops that can be processed in a single block. See also `maxTransactionsPerBlock` on how this affects the processing of pending airdrops.
