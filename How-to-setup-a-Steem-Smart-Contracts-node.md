@@ -44,9 +44,23 @@ The ```config.json``` file has all the settings to make sure your node listens t
     ],
     "startHiveBlock": 41967000,   // last Hive block parsed by the node
     "genesisHiveBlock": 41967000,   // first block that was parsed by the sidechain, needs to be the same on all nodes listening to the sidechain id previously defined
-    "witnessEnabled": false
+    "witnessEnabled": false,
+    "defaultLogLevel": "warn",
+    "lightNode": false,
+    "blocksToKeep": 864000,
+    "domain" : ""
 }
 ```
+
+Optional config settings which you may wish to edit:
+
+**domain** - if you have a domain name for your node, put the fully qualified domain name here. This information will be returned when status queries are made to your node's API.
+
+**lightNode** - if set to true, your node will run in light configuration. A light node does not keep full transaction & block information, which reduces the disk space requirements for running the software (old blocks & transactions are cleaned up periodically). Note that you can't switch from a light node back to running as a full node later on (you would need to restore from a full node snapshot).
+
+**blocksToKeep** - only used when lightNode = true. Specifies how many recent blocks worth of block data & transactions should be kept by light nodes. Defaults to 30 days worth, assuming a perfect 3 second block time.
+
+For more details about light nodes, see the documentation on the pull request here: https://github.com/hive-engine/steemsmartcontracts/pull/144
 
 ## 4. Start the node
 **Additional step needed for now** - Set your machine time zone to UTC:  `export TZ=UTC` for consistent contract behavior until the contract level bug is resolved.
@@ -65,7 +79,7 @@ You may also use `pm2` as well, in which case you should run with the command
 
 Or else `pm2 stop` will kill all sub processes prematurely and not allow for a clean exit.
 
-## 5a. Replay from a blocks.log file (DO NOT USE, WILL NOT WORK)
+## 5a. Replay from a blocks.log file (DO NOT USE, CURRENTLY NOT WORKING)
 When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
@@ -87,6 +101,8 @@ June 7, 2021 update: sorry, we no longer provide public snapshots due to server 
 https://snap.primersion.com/
 
 https://jedigeiss.tech/
+
+snapshots for light nodes:  https://snap.primersion.com/light/
 
 - Make sure node is stopped
 - Download a dump of the MongoDB database
