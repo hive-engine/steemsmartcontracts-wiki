@@ -83,13 +83,10 @@ Or else `pm2 stop` will kill all sub processes prematurely and not allow for a c
 When starting a node for the first time you can either replay the whole sidechain from the Hive blockchain (which can last very long) or replay from a blocks.log file.
 The blocks.log file is actually the table called "chain" that you can find in your MongoDB database.
 
-- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table) or download our official one
+- Find a blocks.log file (ask someone to provide you a JSON version of their "chain" table)
 - Start the tool via ```node app.js --replay file```
 
 This command will basically read the file located under "blocksLogFilePath" from the "config.json" file and rebuild the sidechain from the blocks stored in this file.
-
-The latest public blocks.log file is available here in zipped format, file size is about 2.8 GB:
-https://api.hive-engine.com/blocks_01-19-2021.log.tar.gz
 
 ## 5b. Restore a MongoDB dump (recommended approach)
 The fastest way to fire up a node is by restoring a MongoDB dump.
