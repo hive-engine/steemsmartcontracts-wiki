@@ -36,7 +36,7 @@ Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for 
     specifies whether or not the airdrop should fail (`false`) or continue (`true`) when encountering a transfer error.
   * `fromType` (string, optional, default: 'user')  
     in case the airdrop is initiated by another contract, this can be set to 'contract' to specify the NFT's to be airdropped are owned by the calling contract.  
-    **NOTE:** This is currently _not_ supported by the NFT contract.
+    **NOTE:** This is currently _not_ supported by the NFT contract, and therefore not enabled via the param `enabledFromTypes`.
 
 **Example**
 ```json
@@ -57,18 +57,59 @@ Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for 
 }
 ```
 
-**A successful action will emit a "newNftAirdrop" event**
+**A successful initiation will emit a "newNftAirdrop" event**
 ```json
 {
-    "contract": "nftairdrops",
-    "event": "newNftAirdrop",
-    "data": {
-        "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11"
-    }
+  "contract": "nftairdrops",
+  "event": "newNftAirdrop",
+  "data": {
+    "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11",
+    "sender": "bennierex",
+    "senderType": "user",
+    "symbol": "TUNZ",
+    "startBlockNumber": 10000005
+  }
 }
 ```
 
 After being initialized, distribution will automatically start from either the next block, or the block specified by `startBlockNumber`.
+
+**Distribution emits an "nftAirdropDistribution" event**
+```json
+{
+  "contract": "nftairdrops",
+    "event": "nftAirdropDistribution",
+    "data": {
+      "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11",
+      "symbol": "TUNZ",
+      "transactionCount": 50
+    }
+}
+```
+
+**A finished airdrop emits an "nftAirdropFinished" event**
+```json
+{
+  "contract": "nftairdrops",
+    "event": "nftAirdropFinished",
+    "data": {
+      "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11",
+      "symbol": "TUNZ"
+    }
+}
+```
+
+**Failure emits an "nftAirdropFailed" event**
+```json
+{
+  "contract": "nftairdrops",
+    "event": "nftAirdropFailed",
+    "data": {
+      "airdropId": "9a21888421bb6520fc6e5e33bec966af72212a11",
+      "symbol": "TUNZ"
+    }
+}
+```
 
 ## Tables available
 **Note:** all tables below have an implicit _id field that provides a unique numeric identifier for each particular object in the database. Most of the time the _id field is not important, so we have omitted it from table descriptions.
@@ -87,6 +128,8 @@ Contains contract parameters such as the current fees and transaction limits.
   Sets the maximum number of airdrops that can be processed in a single block. See also `maxTransactionsPerBlock` on how this affects the processing of pending airdrops.
 * `processingBatchSize` (default: 50)  
   This setting is used internally when transferring NFT's to/from the contract. It is important to keep this setting at or below the `MAX_NUM_NFTS_OPERABLE` constant of the NFT Smart Contract, or else NFT airdrops with more transactions than the limit imposed by the NFT Smart Contract will fail.
+* `enabledFromTypes` (default: ['user'])  
+  A list of allowed values for the `fromType` payload value. Should match any or all values of the `ALLOWED_FROM_TYPES` constant.
 
 ### `pendingAirdrops`
 Contains information about pending airdrops
