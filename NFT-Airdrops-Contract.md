@@ -21,7 +21,7 @@ This Smart Contract allows NFT's to be airdropped, much like the Airdrops Contra
 ## Actions available
 
 ### `newAirdrop`
-Initiate a new airdrop. A fee of 0.1 BEE (can be changed by contract owner) for each NFT in the airdrop list is required (i.e 100 BEE/1000 NFT's). Note that there must be enough tokens in the sender's account to initiate the airdrop.
+Initiate a new airdrop. A fee of 0.01 BEE (can be changed by contract owner) for each NFT in the airdrop list is required (i.e 100 BEE/10,000 NFTs). Note that there must be enough tokens in the sender's account to initiate the airdrop.
 
 * requires active key: **yes**
 * can be called by: **anyone** (holding tokens and the NFT's to be airdropped)
@@ -116,7 +116,7 @@ After being initialized, distribution will automatically start from either the n
 
 ### `params`
 Contains contract parameters such as the current fees and transaction limits.
-* `feePerTransaction` (default: 0.1 BEE)  
+* `feePerTransaction` (default: 0.01 BEE)  
   Sets the fee (in `UTILITY_TOKEN_SYMBOL`) required to be paid per NFT transaction.
 * `maxTransactionsPerAirdrop` (default: 10000)  
   Sets the maximum number of NFT's that can be airdropped in a single airdrop. (this is more likely limited by maximum Hive custom_json operation length)
