@@ -59,3 +59,5 @@
 [NFT Auctions Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/NFT-Auction-Contract.md)
 
 [Comments Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/Comment-Contract.md)
+
+[dMarket Contract](https://github.com/hive-engine/steemsmartcontracts-wiki/blob/master/dMarket-Contract.md)
