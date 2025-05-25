@@ -3,6 +3,7 @@
 # Table of Contents
 
 * [SwapRequestDCA (MARKET)](#swaprequestdca)
+* [SwapRequestDCA (POOLS)](#swaprequestdcapools)
 * [CancelSwapRequestDCA](#cancelswaprequestdca)
 * [SwapDCARequests GET](#swapdcarequests-get)
 * [SwapDCADetail GET](#swapdcadetail-get)
@@ -32,6 +33,7 @@ This method is the call to submit the DCA request to initiate a market dca.
 	- RecurrenceTypeAmount (integer): 1 for every minute/hour/day/week/month if you wish to do 1 swap every minute/hour/day/week/month. 
 	- OrderCount (integer): Number of orders to be created for the DCA request. Between 2 and 20 for now.
 	- TokenInputMemo (string): Needs to contain a GUID which matches the GUID passed during transfer of funds in the chain.
+   	- DCAType (integer): Type of the DCA (1 = Market 2 = Pools)
 
 #### Swap Request DCA Hive Engine Tokens
 - example swap dca request Hive Engine tokens: 
@@ -43,10 +45,11 @@ This method is the call to submit the DCA request to initiate a market dca.
     "TokenOutput": "BEE",
     "SwapSourceId": "5fab0821cdef24759c5ae9a9",
     "Chain": 1,
-	"RecurrenceType": "minute",
-	"RecurrenceTypeAmount": 1,
-	"OrderCount": 10,
-    "TokenInputMemo": "{{GUID}}"	
+    "RecurrenceType": "minute",
+    "RecurrenceTypeAmount": 1,
+    "OrderCount": 10,
+    "TokenInputMemo": "{{GUID}}",
+    "DCAType": 1
 }
 ```
 
@@ -75,9 +78,79 @@ This method is the call to submit the DCA request to initiate a market dca.
     "SwapSourceId": "5fab0821cdef24759c5ae9a9",
     "ChainTransactionId": "4c7d8c4b94dc8c66e0aa114898d98db9138b6a07",    
     "Chain": 1,
-	"RecurrenceType": "minute",
-	"RecurrenceTypeAmount": 1,
-	"OrderCount": 10,
+    "RecurrenceType": "minute",
+    "RecurrenceTypeAmount": 1,
+    "OrderCount": 10,
+    "TokenInputMemo": "{{GUID}}"
+}
+```
+### SwapRequestDCAPools: 
+This method is the call to submit the DCA request to initiate a pools dca. 
+
+- endpoint: /SwapRequest/DCA?api-version=3.0
+- method: POST
+
+ - request parameters:
+	- Account (string): the account creating the swap dca request
+	- TokenInput (string): symbol of the token you want to sell	
+	- TokenInputAmount (decimal): quantity of tokens you want to sell
+	- TokenOutput (string): symbol of the token you want to buy
+	- SwapSourceId (string): will be used in the future to identify the source of the swap request. Currently single source.
+	- Chain (integer): Id of the Chain (1 = HIVE)
+	- RecurrenceType (string): One of the following values: "minute", "hour", "day", "week", "month"
+	- RecurrenceTypeAmount (integer): 1 for every minute/hour/day/week/month if you wish to do 1 swap every minute/hour/day/week/month. 
+	- OrderCount (integer): Number of orders to be created for the DCA request. Between 2 and 20 for now.
+	- TokenInputMemo (string): Needs to contain a GUID which matches the GUID passed during transfer of funds in the chain.
+ 	- DCAType (integer): Type of the DCA (1 = Market 2 = Pools)
+  	- PoolTokenPair (string): Pool token pair in the format ("token1":"token2")
+
+#### Swap Request DCA Hive Engine Tokens
+- example swap dca request Hive Engine tokens: 
+```
+{    
+    "Account": "lion200",
+    "TokenInput": "DEC",
+    "TokenInputAmount": 200,
+    "TokenOutput": "BEE",
+    "SwapSourceId": "5fab0821cdef24759c5ae9a9",
+    "Chain": 1,
+    "RecurrenceType": "minute",
+    "RecurrenceTypeAmount": 1,
+    "OrderCount": 10,
+    "TokenInputMemo": "{{GUID}}",
+    "DCAType": 2,
+    "PoolTokenPair": "SWAP.HIVE:BEE"	
+}
+```
+
+- response parameters:
+  - Id (string): The swap dca request id which can be used to retrieve last statuses and the corresponding transactions
+  - Account (string): the account creating the swap request
+  - TokenInput (string): symbol of the token you want to sell	
+  - TokenInputAmount (decimal): quantity of tokens you want to sell
+  - TokenOutput (string): symbol of the token you want to buy  
+  - SwapSourceId (string): will be used in the future to identify the source of the swap request. Currently single source.
+  - ChainTransactionId: if the swap is between two hive-engine tokens, this contains the transaction id of the transaction where input token is sent to the Dswap account  
+  - Chain (integer): Id of the Chain (1 = HIVE)  
+  - TokenInputMemo (string): Contains given token deposit input memo
+  - RecurrenceType (string): One of the following values: "minute", "hour", "day", "week", "month"
+  - RecurrenceTypeAmount (integer): 1 for every minute/hour/day/week/month if you wish to do 1 swap every minute/hour/day/week/month. Max value = 20 for now
+  - OrderCount (integer): Number of orders to be created for the DCA request. Between 2 and 20 for now.
+	
+- example response: 
+```
+{
+    "Id": "60de18bc5f1d5568d94ac9d2",
+    "Account": "lion200",
+    "TokenInput": "DEC",
+    "TokenInputAmount": 200,
+    "TokenOutput": "BEE",
+    "SwapSourceId": "5fab0821cdef24759c5ae9a9",
+    "ChainTransactionId": "4c7d8c4b94dc8c66e0aa114898d98db9138b6a07",    
+    "Chain": 1,
+    "RecurrenceType": "minute",
+    "RecurrenceTypeAmount": 1,
+    "OrderCount": 10,
     "TokenInputMemo": "{{GUID}}"
 }
 ```
